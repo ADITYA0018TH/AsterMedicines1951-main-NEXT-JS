@@ -1,0 +1,177 @@
+import React, { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Microscope, ChevronRight } from "lucide-react";
+import LottieAnimation from "./LottieAnimation";
+
+const Hero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [lottieData, setLottieData] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Lottie animation removed due to binary file format issue and LCP optimization
+  // useEffect(() => {
+  //   fetch("/loop-header.lottie")
+  //     .then((response) => response.json())
+  //     .then((data) => setLottieData(data))
+  //     .catch((error) => {
+  //       console.warn("Failed to load Lottie animation, falling back to static image.", error);
+  //       setLottieData(null);
+  //     });
+  // }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current || !imageRef.current) return;
+      const { left, top, width, height } =
+        containerRef.current.getBoundingClientRect();
+      const x = (e.clientX - left) / width - 0.5;
+      const y = (e.clientY - top) / height - 0.5;
+      imageRef.current.style.transform = `perspective(1000px) rotateY(${x * 2.5
+        }deg) rotateX(${-y * 2.5}deg) scale3d(1.02, 1.02, 1.02)`;
+    };
+    const handleMouseLeave = () => {
+      if (!imageRef.current) return;
+      imageRef.current.style.transform =
+        "perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+    };
+    const container = containerRef.current;
+    container?.addEventListener("mousemove", handleMouseMove);
+    container?.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      container?.removeEventListener("mousemove", handleMouseMove);
+      container?.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile) return;
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const elements = document.querySelectorAll(".parallax");
+      elements.forEach((el) => {
+        const element = el as HTMLElement;
+        const speed = parseFloat(element.dataset.speed || "0.1");
+        const yPos = -scrollY * speed;
+        element.style.setProperty("--parallax-y", `${yPos}px`);
+      });
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
+
+  return (
+    <section
+      className="relative w-full min-h-screen flex items-center bg-white dark:bg-black overflow-hidden animate-on-scroll opacity-0"
+      id="hero"
+    >
+      {/* 1. Technical Data Grid Overlay - Very subtle */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white dark:via-black/50 dark:to-black"></div>
+
+        {/* Animated Flowing Lines - Heartbeat / ECG Pattern */}
+        <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-40" viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Line 1: Top - User requested FAST and LIGHT */}
+          <path d="M0 200 L100 200 L115 170 L130 230 L145 200 L250 200 L265 150 L280 250 L295 200 L400 200 L415 170 L430 230 L445 200 L550 200 L565 150 L580 250 L595 200 L700 200 L715 170 L730 230 L745 200 L850 200 L865 150 L880 250 L895 200 L1000 200 L1015 170 L1030 230 L1045 200 L1150 200 L1165 150 L1180 250 L1195 200 L1300 200 L1315 170 L1330 230 L1345 200 L1440 200" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 20" style={{ animationDuration: "5s" }} />
+
+          {/* Line 2: Middle - Very Fast */}
+          <path d="M0 400 L150 400 L170 380 L190 400 L205 400 L215 320 L225 480 L235 400 L250 400 L270 370 L290 400 L440 400 L460 380 L480 400 L495 400 L505 320 L515 480 L525 400 L540 400 L560 370 L580 400 L730 400 L750 380 L770 400 L785 400 L795 320 L805 480 L815 400 L830 400 L850 370 L870 400 L1020 400 L1040 380 L1060 400 L1075 400 L1085 320 L1095 480 L1105 400 L1120 400 L1140 370 L1160 400 L1310 400 L1330 380 L1350 400 L1365 400 L1375 320 L1385 480 L1395 400 L1410 400 L1440 400" stroke="currentColor" strokeWidth="2" className="text-slate-300 dark:text-white/60 animate-dash" strokeDasharray="500 50" style={{ animationDuration: "3s" }} />
+
+          {/* Line 3: Bottom - Varying speed */}
+          <path d="M0 600 L200 600 L215 630 L230 570 L245 600 L450 600 L465 630 L480 570 L495 600 L700 600 L715 630 L730 570 L745 600 L950 600 L965 630 L980 570 L995 600 L1200 600 L1215 630 L1230 570 L1245 600 L1440 600" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 30" style={{ animationDuration: "7s", animationDirection: "reverse" }} />
+        </svg>
+      </div>
+
+      <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto h-full flex flex-col justify-center py-20 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+          {/* Left Column: Typography (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col justify-center text-left">
+            {/* Clinical Label */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-[1px] w-12 bg-pulse-500"></div>
+              <span className="text-xs font-mono tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
+                Est. 1951
+              </span>
+            </div>
+
+            <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
+              <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] font-bold text-slate-900 dark:text-white leading-none mb-2 -ml-1">
+                Aster Medicines
+              </span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
+                Precision
+              </span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-light text-slate-400 dark:text-slate-500 mt-1">
+                in every dose.
+              </span>
+            </h1>
+
+            <p className="mt-8 sm:mt-12 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed font-light border-l border-slate-200 dark:border-slate-800 pl-6">
+              Pioneering pharmaceutical manufacturing with state-of-the-art automation and unyielding quality control standards.
+            </p>
+
+            <div className="mt-10 sm:mt-16 flex flex-wrap gap-5">
+              <a
+                href="/contact"
+                className="group inline-flex items-center justify-between gap-4 px-6 py-4 text-white bg-gradient-to-r from-[#FE5C02] to-[#FE5C02] rounded-full shadow-[inset_2px_2px_6px_rgba(255,255,255,0.2),_inset_-2px_-2px_6px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 active:scale-95 active:shadow-[inset_1px_1px_4px_rgba(0,0,0,0.2)] animate-bounce hover:animate-none"
+              >
+                <span className="text-lg font-medium">Contact Us</span>
+                <span className="flex items-center justify-center w-10 h-10 bg-white rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.6)] group-hover:animate-pulse shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4),_inset_-2px_-2px_5px_rgba(0,0,0,0.1)] active:shadow-inner active:scale-90">
+                  <ChevronRight className="text-[#FE5C02] w-5 h-5" />
+                </span>
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Visual Anchor (5 cols) */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative z-10 p-8">
+              {/* Decorative Glass Backdrop */}
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-100/50 to-white/20 dark:from-slate-800/50 dark:to-black/20 backdrop-blur-3xl rounded-[3rem] -z-10 border border-white/20 dark:border-white/10"></div>
+
+              {/* Image */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3]">
+                <img
+                  ref={imageRef}
+                  src="/lovable-uploads/Ondansetron.png"
+                  alt="Precision Pharmaceutical Manufacturing"
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  fetchPriority="high"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
+
+              {/* Floating Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 animate-bounce-slow">
+                <div className="w-12 h-12 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
+                  <Microscope className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-slate-900 dark:text-white">99.9%</div>
+                  <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Purity Grade</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
