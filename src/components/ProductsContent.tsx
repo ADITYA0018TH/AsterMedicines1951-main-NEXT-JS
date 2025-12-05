@@ -66,14 +66,16 @@ const ProductsContent = () => {
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Animation
+        // Hero Animation - Runs once
         gsap.from(".hero-content", {
             opacity: 0,
             y: 20,
             duration: 0.6,
             ease: "power3.out"
         });
+    }, []);
 
+    useGSAP(() => {
         // Products Grid Animation
         if (filteredProducts.length > 0) {
             gsap.from(".product-card", {
@@ -97,7 +99,6 @@ const ProductsContent = () => {
                 { y: 0, duration: 0.4, ease: "power3.out" }
             );
         }
-
     }, [filteredProducts, selectedProducts.length]);
 
     return (
@@ -106,10 +107,10 @@ const ProductsContent = () => {
 
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-                <div className="absolute inset-0 bg-brand-accent/5 blur-3xl pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-brand-accent/5 to-transparent pointer-events-none" />
                 <div className="container mx-auto text-center relative z-10">
                     <div className="hero-content">
-                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6">
+                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 subpixel-antialiased">
                             Our <span className="text-brand-accent">Products</span>
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">

@@ -21,32 +21,28 @@ const AdminDashboardContent = () => {
 
     return (
         <div
-            className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
-            style={{
-                backgroundImage: 'url("/Header-background.webp")',
-                backgroundPosition: 'center 30%'
-            }}
+            className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
         >
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-6xl">
                     <div className="glass-card p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex items-center justify-between mb-8">
-                            <h1 className="text-3xl font-display font-bold text-gray-900">
+                            <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
                                 Admin <span className="text-pulse-500">Dashboard</span>
                             </h1>
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                             >
                                 <LogOut className="h-4 w-4" />
                                 Logout
                             </button>
                         </div>
 
-                        <p className="text-gray-600 mb-8">Welcome to the admin panel. Choose an option below to get started.</p>
+                        <p className="text-gray-600 dark:text-gray-300 mb-8">Welcome to the admin panel. Choose an option below to get started.</p>
 
                         <div className="grid md:grid-cols-2 gap-6">
                             {/* Manage Products Card */}
@@ -56,8 +52,8 @@ const AdminDashboardContent = () => {
                                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pulse-500 to-pulse-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                             <Package className="h-10 w-10 text-white" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900">Manage Products</h2>
-                                        <p className="text-gray-600">
+                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Products</h2>
+                                        <p className="text-gray-600 dark:text-gray-300">
                                             Add, edit, or delete products from your catalog. Manage inventory and pricing.
                                         </p>
                                         <div className="button-primary mt-4">
@@ -74,8 +70,8 @@ const AdminDashboardContent = () => {
                                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                             <MessageSquare className="h-10 w-10 text-white" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900">View Messages</h2>
-                                        <p className="text-gray-600">
+                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">View Messages</h2>
+                                        <p className="text-gray-600 dark:text-gray-300">
                                             Read and manage customer messages and inquiries from the contact form.
                                         </p>
                                         <div className="button-primary mt-4">

@@ -155,20 +155,16 @@ const AdminProductsContent = () => {
 
     return (
         <div
-            className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
-            style={{
-                backgroundImage: 'url("/Header-background.webp")',
-                backgroundPosition: 'center 30%'
-            }}
+            className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
         >
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-7xl">
                     <div className="glass-card p-4 sm:p-6 md:p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
-                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 dark:text-white">
                                 Product <span className="text-pulse-500">Management</span>
                             </h1>
                             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -196,7 +192,7 @@ const AdminProductsContent = () => {
                                             <span className="sm:hidden">Add</span>
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full bg-white">
+                                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full bg-white dark:bg-gray-900 text-foreground">
                                         <DialogHeader>
                                             <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
                                         </DialogHeader>
@@ -289,39 +285,39 @@ const AdminProductsContent = () => {
                             <div className="rounded-lg overflow-x-auto glass-card">
                                 <Table>
                                     <TableHeader>
-                                        <TableRow className="border-b border-gray-200/50 hover:bg-white/10">
-                                            <TableHead className="text-gray-700 font-semibold">Image</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold">Name</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold hidden md:table-cell">Category</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold">Price</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold hidden lg:table-cell">Stock</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold text-right">Actions</TableHead>
+                                        <TableRow className="border-b border-gray-200/50 dark:border-gray-700/50 hover:bg-white/10 dark:hover:bg-white/5">
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Image</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Name</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden md:table-cell">Category</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Price</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden lg:table-cell">Stock</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {products.map((product) => (
-                                            <TableRow key={product._id} className="border-b border-gray-200/30 hover:bg-white/10 transition-colors">
+                                            <TableRow key={product._id} className="border-b border-gray-200/30 dark:border-gray-700/30 hover:bg-white/10 dark:hover:bg-white/5 transition-colors">
                                                 <TableCell>
                                                     <img src={product.images?.[0] || '/placeholder.svg'} alt={product.name} className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded" />
                                                 </TableCell>
-                                                <TableCell className="text-gray-800 font-medium">
+                                                <TableCell className="text-gray-800 dark:text-gray-200 font-medium">
                                                     <div className="min-w-[100px] max-w-[150px] sm:max-w-none">
                                                         {product.name}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 mt-1 md:hidden">
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 md:hidden">
                                                         {product.category}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="text-gray-800 hidden md:table-cell">{product.category}</TableCell>
-                                                <TableCell className="text-gray-800 whitespace-nowrap">₹{product.price}</TableCell>
-                                                <TableCell className="text-gray-800 hidden lg:table-cell">{product.stock}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden md:table-cell">{product.category}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 whitespace-nowrap">₹{product.price}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden lg:table-cell">{product.stock}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-1 sm:gap-2">
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
                                                             onClick={() => handleEdit(product)}
-                                                            className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 min-w-[44px] min-h-[44px]"
+                                                            className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 min-w-[44px] min-h-[44px]"
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -333,7 +329,7 @@ const AdminProductsContent = () => {
                                                                     deleteMutation.mutate(product._id);
                                                                 }
                                                             }}
-                                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 min-w-[44px] min-h-[44px]"
+                                                            className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 min-w-[44px] min-h-[44px]"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
@@ -346,7 +342,7 @@ const AdminProductsContent = () => {
                             </div>
                         ) : (
                             <div className="text-center py-12 glass-card rounded-lg">
-                                <p className="text-gray-600 text-lg">No products yet</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-lg">No products yet</p>
                             </div>
                         )}
                     </div>

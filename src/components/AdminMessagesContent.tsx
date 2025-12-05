@@ -116,17 +116,13 @@ const AdminMessagesContent = () => {
     if (isLoading) {
         return (
             <div
-                className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
-                style={{
-                    backgroundImage: 'url("/Header-background.webp")',
-                    backgroundPosition: 'center 30%'
-                }}
+                className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
             >
                 <CustomCursor />
                 <Navbar />
                 <main className="flex-grow flex items-center justify-center">
                     <div className="glass-card p-8">
-                        <p className="text-gray-900">Loading messages...</p>
+                        <p className="text-gray-900 dark:text-gray-100">Loading messages...</p>
                     </div>
                 </main>
                 <Footer />
@@ -137,17 +133,13 @@ const AdminMessagesContent = () => {
     if (error) {
         return (
             <div
-                className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
-                style={{
-                    backgroundImage: 'url("/Header-background.webp")',
-                    backgroundPosition: 'center 30%'
-                }}
+                className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
             >
                 <CustomCursor />
                 <Navbar />
                 <main className="flex-grow flex items-center justify-center">
                     <div className="glass-card p-8">
-                        <p className="text-red-600">Error loading messages</p>
+                        <p className="text-red-600 dark:text-red-400">Error loading messages</p>
                     </div>
                 </main>
                 <Footer />
@@ -157,20 +149,16 @@ const AdminMessagesContent = () => {
 
     return (
         <div
-            className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
-            style={{
-                backgroundImage: 'url("/Header-background.webp")',
-                backgroundPosition: 'center 30%'
-            }}
+            className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
         >
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-7xl">
                     <div className="glass-card p-4 sm:p-6 md:p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
-                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 dark:text-white">
                                 Contact <span className="text-pulse-500">Messages</span>
                             </h1>
                             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -206,32 +194,32 @@ const AdminMessagesContent = () => {
                             <div className="rounded-lg overflow-x-auto glass-card">
                                 <Table>
                                     <TableHeader>
-                                        <TableRow className="border-b border-gray-200/50 hover:bg-white/10">
-                                            <TableHead className="text-gray-700 font-semibold hidden md:table-cell">Date</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold">Name</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold hidden lg:table-cell">Email</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold hidden lg:table-cell">Mobile</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold hidden md:table-cell">Subject</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold">Message</TableHead>
-                                            <TableHead className="text-gray-700 font-semibold text-right">Actions</TableHead>
+                                        <TableRow className="border-b border-gray-200/50 dark:border-gray-700/50 hover:bg-white/10 dark:hover:bg-white/5">
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden md:table-cell">Date</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Name</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden lg:table-cell">Email</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden lg:table-cell">Mobile</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold hidden md:table-cell">Subject</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Message</TableHead>
+                                            <TableHead className="text-gray-700 dark:text-gray-300 font-semibold text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {messages.map((msg) => (
-                                            <TableRow key={msg._id} className="border-b border-gray-200/30 hover:bg-white/10 transition-colors">
-                                                <TableCell className="text-gray-800 hidden md:table-cell whitespace-nowrap">
+                                            <TableRow key={msg._id} className="border-b border-gray-200/30 dark:border-gray-700/30 hover:bg-white/10 dark:hover:bg-white/5 transition-colors">
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden md:table-cell whitespace-nowrap">
                                                     {format(new Date(msg.createdAt), "MMM dd, yyyy")}
                                                 </TableCell>
-                                                <TableCell className="text-gray-800 font-medium">
+                                                <TableCell className="text-gray-800 dark:text-gray-200 font-medium">
                                                     <div className="min-w-[120px]">{msg.firstName} {msg.lastName}</div>
-                                                    <div className="text-xs text-gray-600 mt-1 md:hidden">
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 md:hidden">
                                                         {format(new Date(msg.createdAt), "MMM dd, yyyy")}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="text-gray-800 hidden lg:table-cell">{msg.email}</TableCell>
-                                                <TableCell className="text-gray-800 hidden lg:table-cell">{msg.mobileNumber}</TableCell>
-                                                <TableCell className="text-gray-800 hidden md:table-cell max-w-[150px] truncate">{msg.subject}</TableCell>
-                                                <TableCell className="text-gray-800 max-w-[200px] md:max-w-xs truncate">
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden lg:table-cell">{msg.email}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden lg:table-cell">{msg.mobileNumber}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 hidden md:table-cell max-w-[150px] truncate">{msg.subject}</TableCell>
+                                                <TableCell className="text-gray-800 dark:text-gray-200 max-w-[200px] md:max-w-xs truncate">
                                                     {msg.message}
                                                 </TableCell>
                                                 <TableCell className="text-right">
@@ -239,7 +227,7 @@ const AdminMessagesContent = () => {
                                                         variant="ghost"
                                                         size="icon"
                                                         onClick={() => handleDelete(msg._id, `${msg.firstName} ${msg.lastName}`)}
-                                                        className="text-red-500 hover:text-red-700 hover:bg-red-50 min-w-[44px] min-h-[44px]"
+                                                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 min-w-[44px] min-h-[44px]"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
@@ -251,7 +239,7 @@ const AdminMessagesContent = () => {
                             </div>
                         ) : (
                             <div className="text-center py-12 glass-card rounded-lg">
-                                <p className="text-gray-600 text-lg">No messages yet</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-lg">No messages yet</p>
                             </div>
                         )}
                     </div>
