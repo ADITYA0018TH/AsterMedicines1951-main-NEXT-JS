@@ -82,7 +82,7 @@ export const products: Product[] = [
     features: ["Diuretic Action", "Prescription Only", "Hospital Use"],
     images: [
       "/My-uploads/70431e03-47c8-45ed-bc72-a1dcf7c8da03.png",
-      "/My-uploads/4cfbb6be-5e01-417e-8e46-bc266c554a97.png"
+      "/My-uploads/FRUSEMIDE INJECTION IP (2).png"
     ],
     detailedDescription: "Frusemide is a potent loop diuretic used in the treatment of edema and hypertension.",
     composition: "Frusemide 20mg in 2ml sterile aqueous solution",

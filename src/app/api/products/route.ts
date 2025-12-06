@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         `Category: ${product.category}`,
         product.featured ? 'Featured Product' : 'Quality Assured'
       ],
-      images: product.images,
+      images: product.images.map((img: string) => img.replace(/lovable-uploads/gi, 'My-uploads')),
       price: product.price,
       availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
       detailedDescription: product.description,
