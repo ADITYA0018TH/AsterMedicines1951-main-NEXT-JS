@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: "Aster Medicines PVT LTD",
     images: [
       {
-        url: "/og-image-update.png",
+        url: "/og-image-update.webp",
         width: 1200,
         height: 630,
       },
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aster Medicines PVT LTD - Leading Pharmaceutical Company",
     description: "Aster Medicines PVT LTD - Advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",
-    images: ["/og-image-update.png"],
+    images: ["/og-image-update.webp"],
   },
 };
 

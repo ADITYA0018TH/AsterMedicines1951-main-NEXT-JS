@@ -46,7 +46,7 @@ const DetailsSection = () => {
             {/* Card Header with background image instead of gradient */}
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex items-end overflow-hidden">
               <Image
-                src="/background-section3.png"
+                src="/background-section3.webp"
                 alt="Facility Specifications Background"
                 fill
                 className="object-cover object-center"
@@ -94,7 +94,7 @@ const DetailsSection = () => {
             {/* Card Header with background image instead of gradient */}
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex flex-col items-start overflow-hidden">
               <Image
-                src="/background-section1.png"
+                src="/background-section1.webp"
                 alt="Contact Aster Medicines Background"
                 fill
                 className="object-cover object-center"

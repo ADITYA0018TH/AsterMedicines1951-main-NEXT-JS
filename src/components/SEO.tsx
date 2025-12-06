@@ -14,7 +14,7 @@ const SEO = ({
   title = "Aster Medicines PVT LTD - Leading Pharmaceutical Company",
   description = "Aster Medicines PVT LTD - Advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",
   keywords = "pharmaceutical, medicines, healthcare, drugs, medical, pharmacy, health solutions, pharmaceutical company, medical products",
-  image = "/og-image-update.png",
+  image = "/og-image-update.webp",
   url = window.location.href,
   type = "website",
   structuredData
@@ -27,7 +27,7 @@ const SEO = ({
     const updateMetaTag = (name: string, content: string, property?: boolean) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let meta = document.querySelector(selector) as HTMLMetaElement;
-      
+
       if (!meta) {
         meta = document.createElement('meta');
         if (property) {

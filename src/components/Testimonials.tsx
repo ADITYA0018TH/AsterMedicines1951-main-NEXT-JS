@@ -13,7 +13,7 @@ const testimonials: TestimonialProps[] = [{
   author: "Sarah Chen",
   role: "VP of Operations, Axion Manufacturing",
   gradient: "from-blue-700 via-indigo-800 to-purple-900",
-  backgroundImage: "/background-section1.png"
+  backgroundImage: "/background-section1.webp"
 }, {
   content: "Implementing Atlas in our fulfillment centers reduced workplace injuries by 40% while improving order accuracy. The learning capabilities are remarkable.",
   author: "Michael Rodriguez",
@@ -25,20 +25,20 @@ const testimonials: TestimonialProps[] = [{
   author: "Dr. Amara Patel",
   role: "Lead Scientist, BioAdvance Research",
   gradient: "from-purple-800 via-pink-700 to-red-500",
-  backgroundImage: "/background-section3.png"
+  backgroundImage: "/background-section3.webp"
 }, {
   content: "As a mid-size business, we never thought advanced robotics would be accessible to us. Atlas changed that equation entirely with its versatility and ease of deployment.",
   author: "Jason Lee",
   role: "CEO, Innovative Solutions Inc.",
   gradient: "from-orange-600 via-red-500 to-purple-600",
-  backgroundImage: "/background-section1.png"
+  backgroundImage: "/background-section1.webp"
 }];
 
 const TestimonialCard = ({
   content,
   author,
   role,
-  backgroundImage = "/background-section1.png"
+  backgroundImage = "/background-section1.webp"
 }: TestimonialProps) => {
   return <div className="bg-cover bg-center rounded-lg p-8 h-full flex flex-col justify-between text-white transform transition-transform duration-300 hover:-translate-y-2 relative overflow-hidden" style={{
     backgroundImage: `url('${backgroundImage}')`

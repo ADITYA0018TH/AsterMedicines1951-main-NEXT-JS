@@ -124,7 +124,7 @@ const PharmaceuticalSection = () => {
               <div
                 className="absolute inset-0 z-0 opacity-80"
                 style={{
-                  backgroundImage: "url('/background-section1.png')",
+                  backgroundImage: "url('/background-section1.webp')",
                   backgroundSize: "cover",
                   backgroundPosition: "top center",
                 }}
@@ -199,7 +199,7 @@ const PharmaceuticalSection = () => {
               <div
                 className="absolute inset-0 z-0 opacity-80"
                 style={{
-                  backgroundImage: "url('/background-section3.png')",
+                  backgroundImage: "url('/background-section3.webp')",
                   backgroundSize: "cover",
                   backgroundPosition: "bottom center",
                 }}

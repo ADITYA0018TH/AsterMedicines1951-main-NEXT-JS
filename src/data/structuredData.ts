@@ -11,7 +11,7 @@ export const organizationStructuredData = {
     "width": "250",
     "height": "60"
   },
-  "image": "https://astermedicines.com/og-image-update.png",
+  "image": "https://astermedicines.com/og-image-update.webp",
   "foundingDate": "2015",
   "industry": "Pharmaceutical Manufacturing",
   "numberOfEmployees": {
@@ -59,7 +59,7 @@ export const localBusinessStructuredData = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Aster Medicines PVT LTD",
-  "image": "https://astermedicines.com/og-image-update.png",
+  "image": "https://astermedicines.com/og-image-update.webp",
   "@id": "https://astermedicines.com",
   "url": "https://astermedicines.com",
   "telephone": "+91-7061452180",
