@@ -108,7 +108,7 @@ const ProductDetailContent = () => {
             <section className="pt-36 pb-8 px-4">
                 <div className="container mx-auto">
                     <Link href="/products">
-                        <Button variant="ghost" className="mb-4">
+                        <Button variant="ghost" className="mb-4 rounded-[2rem] border border-gray-100 dark:border-slate-800">
                             <ArrowLeft className="mr-2" /> Back to Products
                         </Button>
                     </Link>

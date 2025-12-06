@@ -63,7 +63,7 @@ const ImageShowcaseSection = () => {
               </p>
             </div>
 
-            <div className="bg-white dark:bg-black p-8 sm:p-10 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-xl max-w-xl mr-auto -ml-4 sm:-ml-6 lg:-ml-8 relative overflow-hidden group hover:border-orange-200 dark:hover:border-orange-900/50 transition-colors">
+            <div className="bg-white dark:bg-black p-8 sm:p-10 rounded-xl border border-gray-100 dark:border-slate-800 shadow-xl max-w-xl mr-auto -ml-4 sm:-ml-6 lg:-ml-8 relative overflow-hidden group hover:border-orange-200 dark:hover:border-orange-900/50 transition-colors">
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
               <h3 className="text-2xl sm:text-3xl font-display font-bold mb-4 rounded-3xl text-slate-900 dark:text-white">
                 <span className="text-orange-500">Next Gen</span> Manufacturing
