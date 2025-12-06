@@ -28,7 +28,7 @@ export async function GET(
         'GMP Certified',
         'WHO Approved'
       ],
-      images: product.images,
+      images: product.images.map((img: string) => img.replace(/lovable-uploads/gi, 'My-uploads')),
       price: product.price,
       availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
       detailedDescription: product.description,

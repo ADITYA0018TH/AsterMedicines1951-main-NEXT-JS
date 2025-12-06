@@ -105,7 +105,7 @@ const ProductDetailContent = () => {
             <Navbar />
 
             {/* Breadcrumb */}
-            <section className="pt-24 pb-8 px-4">
+            <section className="pt-36 pb-8 px-4">
                 <div className="container mx-auto">
                     <Link href="/products">
                         <Button variant="ghost" className="mb-4">
