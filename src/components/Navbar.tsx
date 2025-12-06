@@ -50,6 +50,7 @@ const Navbar = () => {
             backgroundOpacity={0}
             opacity={isScrolled ? 0.93 : 0}
             className="px-6 py-2 transition-all duration-300"
+            id="navbar-logo-surface"
           >
             <Link href="/" className="flex items-center gap-2 group">
               <img
@@ -71,6 +72,7 @@ const Navbar = () => {
             backgroundOpacity={0}
             opacity={isScrolled ? 0.93 : 0}
             className="hidden md:flex flex-1 px-6 py-2 items-center justify-end gap-8 transition-all duration-300"
+            id="navbar-content-surface"
           >
             {/* Desktop Links */}
             <div className="flex items-center space-x-8">

@@ -39,6 +39,7 @@ export interface GlassSurfaceProps {
     | 'plus-lighter';
     className?: string;
     style?: React.CSSProperties;
+    id?: string;
 }
 
 const useDarkMode = () => {
@@ -78,9 +79,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     yChannel = 'G',
     mixBlendMode = 'difference',
     className = '',
-    style = {}
+    style = {},
+    id
 }) => {
-    const uniqueId = useId().replace(/:/g, '-');
+    const generatedId = useId().replace(/:/g, '-');
+    const uniqueId = id || generatedId;
     const filterId = `glass-filter-${uniqueId}`;
     const redGradId = `red-grad-${uniqueId}`;
     const blueGradId = `blue-grad-${uniqueId}`;

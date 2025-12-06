@@ -1,15 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { MagicBentoGrid, MagicBentoCard } from "@/components/ui/MagicBento";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   index: number;
+  className?: string; // Add className prop for grid positioning
 }
 
-const FeatureCard = ({ icon, title, description, index }: FeatureCardProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+const FeatureCard = ({ icon, title, description, index, className }: FeatureCardProps) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,39 +26,51 @@ const FeatureCard = ({ icon, title, description, index }: FeatureCardProps) => {
       { threshold: 0.1 }
     );
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+    if (wrapperRef.current) {
+      observer.observe(wrapperRef.current);
     }
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (wrapperRef.current) {
+        observer.unobserve(wrapperRef.current);
       }
     };
   }, []);
 
   return (
     <div
-      ref={cardRef}
-      className={cn(
-        "feature-card glass-card opacity-0 p-4 sm:p-6",
-        "lg:hover:bg-gradient-to-br lg:hover:from-white dark:lg:hover:from-slate-900 lg:hover:to-pulse-50 dark:lg:hover:to-pulse-900/20",
-        "transition-all duration-300"
-      )}
+      ref={wrapperRef}
+      className={cn("opacity-0 transition-opacity duration-700 h-full", className)} // Wrapper handles layout and fade-in
       style={{ animationDelay: `${0.1 * index}s` }}
     >
-      <div className="rounded-full bg-pulse-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-pulse-500 mb-4 sm:mb-5">
-        {icon}
-      </div>
-      <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 dark:text-white">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">{description}</p>
+      <MagicBentoCard
+        className="magic-bento-card h-full p-8 rounded-3xl bg-white dark:bg-black border border-gray-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl"
+        glowColor="255, 165, 0" // Orange color
+        enableStars={false} // Stars might be too noisy for features, let's keep it clean or enable if requested. User snippet had it enabled. Let's enable it but maybe subtle. Actually user snippet had enableStars={true}. I will use true.
+        enableTilt={false}
+        enableMagnetism={false}
+        particleCount={8} // Slightly reduced count for cleaner look
+      >
+        <div className="flex flex-col justify-between h-full relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white flex items-center justify-center mb-4 group-hover:bg-pulse-500 group-hover:text-white transition-colors duration-300">
+            {icon}
+          </div>
+
+          <div>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
+              {title}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              {description}
+            </p>
+          </div>
+        </div>
+      </MagicBentoCard>
     </div>
   );
 };
 
 const Features = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   const features = [
     {
       title: "Quality Control",
@@ -106,34 +120,18 @@ const Features = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px] md:auto-rows-[300px]">
+        <MagicBentoGrid className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px] md:auto-rows-[300px]">
           {features.map((feature, index) => (
-            <div
+            <FeatureCard
               key={index}
-              className={cn(
-                "group relative overflow-hidden rounded-3xl bg-white dark:bg-black p-8 border border-gray-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1",
-                index === 0 || index === 3 ? "md:col-span-2" : "md:col-span-1"
-              )}
-            >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 dark:bg-slate-800/50 rounded-full blur-3xl -mr-32 -mt-32 transition-colors group-hover:bg-pulse-50 dark:group-hover:bg-pulse-900/10"></div>
-
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white flex items-center justify-center mb-4 group-hover:bg-pulse-500 group-hover:text-white transition-colors duration-300">
-                  {feature.icon}
-                </div>
-
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            </div>
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              index={index}
+              className={index === 0 || index === 3 ? "md:col-span-2" : "md:col-span-1"}
+            />
           ))}
-        </div>
+        </MagicBentoGrid>
       </div>
     </section>
   );
