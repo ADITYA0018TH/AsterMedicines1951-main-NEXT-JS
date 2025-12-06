@@ -53,7 +53,7 @@ const Navbar = () => {
           >
             <Link href="/" className="flex items-center gap-2 group">
               <img
-                src="/lovable-uploads/logo.png"
+                src="/My-uploads/logo.png"
                 alt="Aster Medicines Logo"
                 width={160}
                 height={64}

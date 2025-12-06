@@ -145,7 +145,7 @@ const Hero = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3]">
                 <img
                   ref={imageRef}
-                  src="/lovable-uploads/Ondansetron.png"
+                  src="/My-uploads/Ondansetron.png"
                   alt="Precision Pharmaceutical Manufacturing"
                   width={800}
                   height={600}

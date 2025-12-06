@@ -169,7 +169,7 @@ const AboutContent = () => {
                                         <Users className="w-20 h-20 opacity-20" />
                                     </div>
                                     <img
-                                        src="/lovable-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png"
+                                        src="/My-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png"
                                         alt="Rupesh Anand"
                                         className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
                                     />

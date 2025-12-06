@@ -11,19 +11,19 @@ const products = [
     {
         id: 1,
         name: "Cardiology",
-        image: "/lovable-uploads/cardiology.png",
+        image: "/My-uploads/cardiology.png",
         description: "Advanced solutions for heart health and cardiovascular care."
     },
     {
         id: 2,
         name: "Neurology",
-        image: "/lovable-uploads/neurology.png",
+        image: "/My-uploads/neurology.png",
         description: "Pioneering treatments for neurological disorders."
     },
     {
         id: 3,
         name: "Oncology",
-        image: "/lovable-uploads/oncology.png",
+        image: "/My-uploads/oncology.png",
         description: "Targeted therapies for effective cancer treatment."
     }
 ];

@@ -66,7 +66,7 @@ const LoginContent = () => {
                         <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
                             <div className="flex justify-center lg:justify-start">
                                 <img
-                                    src="/lovable-uploads/logo.png"
+                                    src="/My-uploads/logo.png"
                                     alt="Aster Medicines Logo"
                                     className="h-32 w-auto drop-shadow-2xl"
                                     style={{ filter: "drop-shadow(0 0 15px rgba(254,92,2,0.3))" }}

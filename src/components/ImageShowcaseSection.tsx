@@ -85,7 +85,7 @@ const ImageShowcaseSection = () => {
             >
               <div className="h-full flex flex-col rounded-3xl">
                 <img
-                  src="/lovable-uploads/AD_OIL_170.png"
+                  src="/My-uploads/AD_OIL_170.png"
                   alt="Advanced pharmaceutical manufacturing facility with modern equipment"
                   className="w-full h-full object-cover rounded-[30px]"
                 />

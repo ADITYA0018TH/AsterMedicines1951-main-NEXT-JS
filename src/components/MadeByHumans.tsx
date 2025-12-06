@@ -12,7 +12,7 @@ const MadeByHumans = () => {
             backgroundImage: "url('https://images.unsplash.com/photo-1644426358812-879f02d1d867?q=80&w=3028&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
           }}>
             <div className="flex items-center text-white">
-              <img src="/lovable-uploads/27b27ae1-593f-43db-bac4-6cbf13acb7de.png" alt="Aster - Care for Life Logo" className="h-8 sm:h-10 w-auto mr-3" />
+              <img src="/My-uploads/27b27ae1-593f-43db-bac4-6cbf13acb7de.png" alt="Aster - Care for Life Logo" className="h-8 sm:h-10 w-auto mr-3" />
             </div>
 
             <div style={{

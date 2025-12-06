@@ -52,15 +52,15 @@ interface ProfileCardProps {
 }
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
-  avatarUrl = "/lovable-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png",
-  iconUrl = "/lovable-uploads/logo.png",
-  grainUrl = "/lovable-uploads/24864a25-5701-47f0-b89e-f6ffd8986ed4.png",
+  avatarUrl = "/My-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png",
+  iconUrl = "/My-uploads/logo.png",
+  grainUrl = "/My-uploads/24864a25-5701-47f0-b89e-f6ffd8986ed4.png",
   behindGradient,
   innerGradient,
   showBehindGradient = true,
   className = "",
   enableTilt = true,
-  miniAvatarUrl = "/lovable-uploads/logo.png",
+  miniAvatarUrl = "/My-uploads/logo.png",
   name = "Rupesh Anand",
   title = "Founder & Chairman",
   handle = "Aster Medicines",

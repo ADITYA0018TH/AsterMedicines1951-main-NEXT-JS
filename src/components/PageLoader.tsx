@@ -68,7 +68,7 @@ const PageLoader: React.FC<PageLoaderProps> = ({ isLoading, onComplete }) => {
               className="mb-8"
             >
               <img
-                src="/lovable-uploads/logo.png"
+                src="/My-uploads/logo.png"
                 alt="Aster Medicines"
                 className="h-16 w-auto mx-auto"
               />
@@ -127,7 +127,7 @@ const PageLoader: React.FC<PageLoaderProps> = ({ isLoading, onComplete }) => {
                 <motion.div
                   key={i}
                   className="absolute"
-                  initial={{ 
+                  initial={{
                     x: Math.random() * window.innerWidth,
                     y: window.innerHeight + 50,
                     rotate: 0,

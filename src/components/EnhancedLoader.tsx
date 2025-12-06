@@ -137,7 +137,7 @@ const EnhancedLoader: React.FC<EnhancedLoaderProps> = ({
               exit="exit"
             >
               <img
-                src="/lovable-uploads/logo.png"
+                src="/My-uploads/logo.png"
                 alt="Aster Logo"
                 className="h-16 w-auto mx-auto"
                 style={{

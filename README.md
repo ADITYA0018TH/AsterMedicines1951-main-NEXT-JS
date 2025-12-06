@@ -32,7 +32,7 @@ The project is organized as follows:
 │   ├── Header-background.webp
 │   ├── loop-animation.webm
 │   ├── loop-header.lottie
-│   ├── lovable-uploads
+│   ├── My-uploads
 │   │   ├── ... (various image uploads)
 │   ├── next.svg
 │   ├── og-image-update.png
