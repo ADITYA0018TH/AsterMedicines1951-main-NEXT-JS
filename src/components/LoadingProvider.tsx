@@ -51,7 +51,7 @@ export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) =>
       const timer = setTimeout(() => {
         setIsNavigating(false);
         setPreviousPathname(pathname);
-      }, 800);
+      }, 400);
 
       return () => clearTimeout(timer);
     }

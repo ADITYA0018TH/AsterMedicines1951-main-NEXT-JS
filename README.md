@@ -91,7 +91,7 @@ AsterMedicines1951-main-NEXT-JS/
 │
 ├── 📁 src/
 │   ├── 🚀 app/                         # Next.js App Router
-│   │   ├── page. tsx                    # Home page
+│   │   ├── page.tsx                    # Home page
 │   │   ├── layout.tsx                  # Root layout
 │   │   ├── (routes)/
 │   │   │   ├── about/                  # About page
@@ -109,53 +109,61 @@ AsterMedicines1951-main-NEXT-JS/
 │   │   ├── robots.ts
 │   │   └── sitemap.ts
 │   │
-│   ├── 🧩 components/                  # Reusable React components
+│   ├── 🧩 components/                  # Reusable React components (49 files)
 │   │   ├── Layout Components
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   └── Breadcrumb.tsx
+│   │   │   ├── Navbar.tsx              # Navigation with glass effects
+│   │   │   ├── Footer.tsx              # Site footer
+│   │   │   └── Breadcrumb.tsx          # Navigation trail
 │   │   ├── Page Components
-│   │   │   ├── HomeContent.tsx
-│   │   │   ├── ProductsContent.tsx
+│   │   │   ├── HomeContent.tsx         # Home page content
+│   │   │   ├── ProductsContent.tsx     # Product catalog
 │   │   │   ├── ProductDetailContent.tsx
-│   │   │   ├── AboutContent.tsx
-│   │   │   ├── ContactContent. tsx
-│   │   │   └── LoginContent.tsx
+│   │   │   ├── AboutContent.tsx        # About page
+│   │   │   ├── ContactContent.tsx      # Contact form
+│   │   │   └── LoginContent.tsx        # Admin login
 │   │   ├── Feature Components
-│   │   │   ├── Hero.tsx
-│   │   │   ├── Features.tsx
-│   │   │   ├── FeaturedProducts.tsx
-│   │   │   ├── Testimonials.tsx
-│   │   │   ├── HowItWorks.tsx
-│   │   │   └── CallToAction.tsx
-│   │   ├── UI Components (src/components/ui/)
+│   │   │   ├── Hero.tsx                # Landing hero section
+│   │   │   ├── Features.tsx            # Product features
+│   │   │   ├── FeaturedProducts.tsx    # Showcase products
+│   │   │   ├── Testimonials.tsx        # Customer reviews
+│   │   │   ├── HowItWorks.tsx          # Process steps
+│   │   │   ├── CallToAction.tsx        # CTA sections
+│   │   │   ├── HumanoidSection.tsx     # Pharmaceutical showcase
+│   │   │   ├── ImageShowcaseSection.tsx
+│   │   │   ├── SpecsSection.tsx        # Product specifications
+│   │   │   └── TrustSection.tsx        # Trust badges
+│   │   ├── UI Components (src/components/ui/) - 55 files
 │   │   │   ├── Button, Input, Dialog
 │   │   │   ├── Card, Badge, Avatar
 │   │   │   ├── Accordion, Tabs, Drawer
 │   │   │   ├── Form, Modal, Popover
 │   │   │   ├── Charts, Tables, Progress
+│   │   │   ├── GlassSurface.tsx        # Glassmorphism effects
 │   │   │   └── Toast, Tooltip, Notifications
 │   │   ├── Animation Components
-│   │   │   ├── PageTransition.tsx
-│   │   │   ├── ScrollReveal.tsx
-│   │   │   ├── ScrambledText.tsx
-│   │   │   └── LottieAnimation.tsx
+│   │   │   ├── ScrollReveal.tsx        # Scroll animations
+│   │   │   ├── LottieAnimation.tsx     # Lottie integration
+│   │   │   ├── AnimatedList.tsx        # List animations
+│   │   │   └── container-scroll-animation.tsx
 │   │   ├── Admin Components
 │   │   │   ├── AdminDashboardContent.tsx
 │   │   │   ├── AdminProductsContent.tsx
 │   │   │   └── AdminMessagesContent.tsx
+│   │   ├── Loading Components
+│   │   │   ├── EnhancedLoader.tsx      # Premium preloader
+│   │   │   └── LoadingProvider.tsx     # Loading state context
 │   │   └── Utility Components
-│   │       ├── LoadingSpinner.tsx
-│   │       ├── PageLoader.tsx
-│   │       ├── ProtectedRoute.tsx
-│   │       └── CustomCursor.tsx
+│   │       ├── ProtectedRoute.tsx      # Auth protection
+│   │       ├── CustomCursor.tsx        # Custom cursor
+│   │       ├── Providers.tsx           # App providers
+│   │       └── SEO.tsx                 # SEO management
 │   │
 │   ├── 📊 data/                        # Static data & utilities
 │   │   ├── products.ts                 # Product seed data
 │   │   └── structuredData.ts           # JSON-LD schemas
 │   │
 │   ├── 🪝 hooks/                       # Custom React hooks
-│   │   ├── use-mobile. tsx              # Mobile detection
+│   │   ├── use-mobile.tsx              # Mobile detection
 │   │   ├── use-toast.ts                # Toast notifications
 │   │   └── useRecentlyViewed.ts        # Product history
 │   │
@@ -171,14 +179,14 @@ AsterMedicines1951-main-NEXT-JS/
 │   ├── 🔌 services/                    # External services
 │   │   └── api.ts                      # API client
 │   │
-│   ├── 🛡️ middleware. ts                # Next.js middleware
+│   ├── 🛡️ middleware.ts                # Next.js middleware
 │   ├── 🛡️ proxy.ts                     # Proxy configuration
 │   └── 🛠️ utils/
 │       ├── schemaGenerators.ts         # Schema generation
 │       └── sitemap.ts                  # Sitemap utility
 │
 ├── ⚙️ Configuration Files
-│   ├── next. config.ts                  # Next.js configuration
+│   ├── next.config.ts                  # Next.js configuration
 │   ├── tsconfig.json                   # TypeScript configuration
 │   ├── tailwind.config.ts              # Tailwind configuration
 │   ├── postcss.config.mjs              # PostCSS configuration
@@ -187,7 +195,7 @@ AsterMedicines1951-main-NEXT-JS/
 │
 └── 📖 Documentation
     ├── README.md                       # This file
-    └── . gitignore
+    └── .gitignore
 ```
 
 ---
@@ -407,4 +415,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by Aster Medicines Team**
 
-*Last Updated: December 10, 2025*
+*Last Updated: December 14, 2025*
