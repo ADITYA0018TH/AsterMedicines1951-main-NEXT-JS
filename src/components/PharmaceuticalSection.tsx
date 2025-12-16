@@ -88,22 +88,24 @@ const PharmaceuticalSection = () => {
       className="relative animate-on-scroll opacity-0"
       style={{ height: '300vh' }}
     >
-      <section className="w-full h-screen py-10 md:py-16 sticky top-0 overflow-hidden bg-white dark:bg-black" id="why-pharmaceutical">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-pulse-100/20 via-transparent to-transparent dark:from-pulse-900/10"></div>
+      <section className="w-full h-screen py-10 md:py-16 sticky top-0 overflow-hidden bg-background" id="why-pharmaceutical">
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-30 dark:opacity-20">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         </div>
-        <div className="container px-6 lg:px-8 mx-auto h-full flex flex-col">
+
+        <div className="container px-6 lg:px-8 mx-auto h-full flex flex-col relative z-10">
           <div className="mb-2 md:mb-3">
             <div className="flex items-center gap-4 mb-2 md:mb-2 pt-8 sm:pt-6 md:pt-4">
               <div className="pulse-chip opacity-0 animate-fade-in" style={{
                 animationDelay: "0.1s"
               }}>
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-pulse-500 text-white mr-2">02</span>
-                <span>Manufacturing</span>
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-accent text-white mr-2">02</span>
+                <span className="text-muted-foreground">Manufacturing</span>
               </div>
             </div>
 
-            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2">
+            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2 text-foreground">
               Why Aster
             </h2>
           </div>
@@ -111,35 +113,34 @@ const PharmaceuticalSection = () => {
           <div ref={cardsContainerRef} className="relative flex-1 perspective-1000">
             {/* First Card */}
             <div
-              className={`absolute inset-0 overflow-hidden shadow-2xl rounded-[2rem] border border-white/20 dark:border-white/10 ${isFirstCardVisible ? 'animate-card-enter' : ''}`}
+              className={`absolute inset-0 overflow-hidden shadow-xl ${isFirstCardVisible ? 'animate-card-enter' : ''}`}
               style={{
                 ...cardStyle,
                 zIndex: 10,
-                transform: `translateY(${isFirstCardVisible ? '4rem' : '15rem'}) scale(0.92)`,
-                opacity: isFirstCardVisible ? 0.6 : 0,
-                backdropFilter: 'blur(10px)',
+                transform: `translateY(${isFirstCardVisible ? '90px' : '200px'}) scale(0.9)`,
+                opacity: isFirstCardVisible ? 0.9 : 0
               }}
             >
-              <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 z-10"></div> {/* Glass layer */}
               <div
-                className="absolute inset-0 z-0 opacity-80"
+                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
                 style={{
                   backgroundImage: "url('/background-section1.webp')",
                   backgroundSize: "cover",
                   backgroundPosition: "top center",
+                  backgroundBlendMode: "overlay"
                 }}
               ></div>
 
-              <div className="absolute top-6 right-6 z-30">
-                <div className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-slate-900 dark:text-white border border-white/20 shadow-lg">
-                  <span className="text-xs font-semibold tracking-wider uppercase">Our Vision</span>
+              <div className="absolute top-4 right-4 z-20">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                  <span className="text-sm font-medium">Our Vision</span>
                 </div>
               </div>
 
-              <div className="relative z-20 p-8 sm:p-12 h-full flex flex-col justify-end">
-                <div className="max-w-2xl">
-                  <h3 className="text-4xl sm:text-5xl md:text-6xl font-display text-slate-900 dark:text-white font-bold leading-tight mb-6">
-                    Advancing healthcare through <span className="text-pulse-600 dark:text-pulse-500">precision medicine</span>
+              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
+                <div className="max-w-lg">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
+                    Advancing healthcare through <span className="text-brand-accent">precision medicine</span>
                   </h3>
                 </div>
               </div>
@@ -147,37 +148,35 @@ const PharmaceuticalSection = () => {
 
             {/* Second Card */}
             <div
-              className={`absolute inset-0 overflow-hidden shadow-2xl rounded-[2rem] border border-white/20 dark:border-white/10 ${isSecondCardVisible ? 'animate-card-enter' : ''}`}
+              className={`absolute inset-0 overflow-hidden shadow-xl ${isSecondCardVisible ? 'animate-card-enter' : ''}`}
               style={{
                 ...cardStyle,
                 zIndex: 20,
-                transform: `translateY(${isSecondCardVisible ? activeCardIndex === 1 ? '7rem' : '4rem' : '20rem'}) scale(0.96)`,
+                transform: `translateY(${isSecondCardVisible ? activeCardIndex === 1 ? '55px' : '45px' : '200px'}) scale(0.95)`,
                 opacity: isSecondCardVisible ? 1 : 0,
-                pointerEvents: isSecondCardVisible ? 'auto' : 'none',
-                backdropFilter: 'blur(10px)',
+                pointerEvents: isSecondCardVisible ? 'auto' : 'none'
               }}
             >
-              <div className="absolute inset-0 bg-white/60 dark:bg-slate-900/60 z-10 transition-opacity duration-500"></div>
-
               <div
-                className="absolute inset-0 z-0 opacity-80"
+                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
                 style={{
                   backgroundImage: "url('/background-section2.png')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
+                  backgroundBlendMode: "overlay"
                 }}
               ></div>
 
-              <div className="absolute top-6 right-6 z-30">
-                <div className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-slate-900 dark:text-white border border-white/20 shadow-lg">
-                  <span className="text-xs font-semibold tracking-wider uppercase">Our Mission</span>
+              <div className="absolute top-4 right-4 z-20">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                  <span className="text-sm font-medium">Our Mission</span>
                 </div>
               </div>
 
-              <div className="relative z-20 p-8 sm:p-12 h-full flex flex-col justify-end">
-                <div className="max-w-2xl">
-                  <h3 className="text-4xl sm:text-5xl md:text-6xl font-display text-slate-900 dark:text-white font-bold leading-tight mb-6">
-                    Global solutions for <br /> <span className="text-blue-600 dark:text-blue-400">global healthcare</span>
+              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
+                <div className="max-w-lg">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
+                    Global solutions for <br /> <span className="text-brand-accent">global healthcare</span>
                   </h3>
                 </div>
               </div>
@@ -185,41 +184,35 @@ const PharmaceuticalSection = () => {
 
             {/* Third Card */}
             <div
-              className={`absolute inset-0 overflow-hidden shadow-2xl rounded-[2rem] border border-white/20 dark:border-white/10 ${isThirdCardVisible ? 'animate-card-enter' : ''}`}
+              className={`absolute inset-0 overflow-hidden shadow-xl ${isThirdCardVisible ? 'animate-card-enter' : ''}`}
               style={{
                 ...cardStyle,
                 zIndex: 30,
-                transform: `translateY(${isThirdCardVisible ? activeCardIndex === 2 ? '10rem' : '0' : '25rem'}) scale(1)`,
+                transform: `translateY(${isThirdCardVisible ? activeCardIndex === 2 ? '15px' : '0' : '200px'}) scale(1)`,
                 opacity: isThirdCardVisible ? 1 : 0,
-                pointerEvents: isThirdCardVisible ? 'auto' : 'none',
+                pointerEvents: isThirdCardVisible ? 'auto' : 'none'
               }}
             >
-              <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 z-10"></div>
-
               <div
-                className="absolute inset-0 z-0 opacity-80"
+                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
                 style={{
                   backgroundImage: "url('/background-section3.webp')",
                   backgroundSize: "cover",
                   backgroundPosition: "bottom center",
+                  backgroundBlendMode: "overlay"
                 }}
               ></div>
 
-              <div className="absolute top-6 right-6 z-30">
-                <div className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-slate-900 dark:text-white border border-white/20 shadow-lg">
-                  <span className="text-xs font-semibold tracking-wider uppercase">Our Promise</span>
+              <div className="absolute top-4 right-4 z-20">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                  <span className="text-sm font-medium">Our Promise</span>
                 </div>
               </div>
 
-              <div className="relative z-20 p-8 sm:p-12 h-full flex flex-col justify-end">
-                <div className="max-w-2xl">
-                  <h3 className="text-4xl sm:text-5xl md:text-6xl font-display text-slate-900 dark:text-white font-bold leading-tight mb-6">
-                    Life-saving medicines, <br /> <span className="text-[#FC4D0A] relative inline-block">
-                      not just products
-                      <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#FC4D0A]/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                        <line x1="0" y1="5" x2="100" y2="5" stroke="currentColor" strokeWidth="2" />
-                      </svg>
-                    </span>
+              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
+                <div className="max-w-lg">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
+                    We're creating <span className="text-brand-accent">life-saving medicines</span>, not just products
                   </h3>
                 </div>
               </div>

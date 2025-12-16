@@ -37,7 +37,7 @@ const AdminMessagesContent = () => {
     const { data: messages, isLoading, error } = useQuery({
         queryKey: ["admin-messages"],
         queryFn: async () => {
-            const response = await fetch("http://localhost:3000/api/contact");
+            const response = await fetch("/api/contact");
             if (!response.ok) {
                 throw new Error("Failed to fetch messages");
             }
@@ -97,7 +97,7 @@ const AdminMessagesContent = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/contact/${id}`, {
+            const response = await fetch(`/api/contact/${id}`, {
                 method: "DELETE",
             });
 

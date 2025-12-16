@@ -46,7 +46,7 @@ const AdminProductsContent = () => {
     const { data: products, isLoading } = useQuery({
         queryKey: ["admin-products"],
         queryFn: async () => {
-            const response = await fetch("http://localhost:3000/api/products");
+            const response = await fetch("/api/products");
             if (!response.ok) throw new Error("Failed to fetch products");
             return response.json() as Promise<Product[]>;
         },
@@ -54,7 +54,7 @@ const AdminProductsContent = () => {
 
     const createMutation = useMutation({
         mutationFn: async (data: any) => {
-            const response = await fetch("http://localhost:3000/api/products", {
+            const response = await fetch("/api/products", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -75,7 +75,7 @@ const AdminProductsContent = () => {
 
     const updateMutation = useMutation({
         mutationFn: async ({ id, data }: { id: string; data: any }) => {
-            const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+            const response = await fetch(`/api/products/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -96,7 +96,7 @@ const AdminProductsContent = () => {
 
     const deleteMutation = useMutation({
         mutationFn: async (id: string) => {
-            const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+            const response = await fetch(`/api/products/${id}`, {
                 method: "DELETE",
             });
             if (!response.ok) throw new Error("Failed to delete product");
