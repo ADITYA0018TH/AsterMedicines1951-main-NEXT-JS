@@ -1,202 +1,312 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Award, Users, Globe, Building2, Heart, Lightbulb, Shield } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const AboutContent = () => {
-    const router = useRouter();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [hoveredValue, setHoveredValue] = useState<number | null>(null);
 
     useGSAP(() => {
-        gsap.registerPlugin(ScrollTrigger);
+        const ctx = gsap.context(() => {
 
-        // Hero Animation
-        gsap.from(".hero-content", {
-            opacity: 0,
-            y: 30,
-            duration: 0.8,
-            ease: "power3.out"
-        });
+            // --- 1. PREMIUM HERO SEQUENCE ---
+            const tl = gsap.timeline();
 
-        // Mission & Values Stagger
-        gsap.from(".mission-card", {
-            scrollTrigger: {
-                trigger: ".mission-grid",
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-            },
-            opacity: 0,
-            y: 30,
-            duration: 0.6,
-            stagger: 0.2,
-            ease: "power3.out"
-        });
+            // A. Main Title Reveal
+            tl.from(".hero-line-inner", {
+                yPercent: 100,
+                duration: 1.2,
+                stagger: 0.15,
+                ease: "power4.out",
+                delay: 0.2
+            });
 
-        // Founder Section
-        gsap.from(".founder-text", {
-            scrollTrigger: {
-                trigger: ".founder-section",
-                start: "top 75%",
-                toggleActions: "play none none reverse"
-            },
-            opacity: 0,
-            x: -50,
-            duration: 0.8,
-            ease: "power3.out"
-        });
+            // B. Vertical Line Grows Down
+            tl.from(".hero-separator", {
+                scaleY: 0,
+                transformOrigin: "top",
+                duration: 0.8,
+                ease: "power3.inOut"
+            }, "-=0.8");
 
-        gsap.from(".founder-image", {
-            scrollTrigger: {
-                trigger: ".founder-section",
-                start: "top 75%",
-                toggleActions: "play none none reverse"
-            },
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.8,
-            ease: "power3.out"
-        });
+            // C. Description Text Slides Up (Line by Line)
+            tl.from(".hero-desc-line", {
+                yPercent: 100,
+                duration: 0.8,
+                stagger: 0.05,
+                ease: "power3.out"
+            }, "-=0.6");
 
-        // Stats Stagger
-        gsap.from(".stat-item", {
-            scrollTrigger: {
-                trigger: ".stats-grid",
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-            },
-            opacity: 0,
-            y: 30,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "power3.out"
-        });
+            // D. Meta Info / Scroll Arrow
+            tl.from(".hero-meta", {
+                opacity: 0,
+                y: 20,
+                duration: 1,
+                ease: "power3.out"
+            }, "-=0.5");
 
-    }, []);
+
+            // --- 2. The Manifesto (Text Highlighting) ---
+            const words = gsap.utils.toArray(".manifesto-word");
+            gsap.to(words, {
+                scrollTrigger: {
+                    trigger: ".manifesto-section",
+                    start: "top 60%",
+                    end: "bottom 60%",
+                    scrub: 0.5,
+                },
+                color: "inherit",
+                opacity: 1,
+                stagger: 0.1
+            });
+
+            // --- 3. Founder Section (Pin & Reveal) ---
+            const founderTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".founder-section",
+                    start: "top top",
+                    end: "+=150%",
+                    pin: true,
+                    scrub: true,
+                    anticipatePin: 1
+                }
+            });
+
+            founderTl.to(".founder-img-mask", {
+                clipPath: "inset(0% 0% 0% 0%)",
+                scale: 1,
+                duration: 1,
+                ease: "power2.inOut"
+            })
+                .to(".founder-text-content", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5
+                }, "-=0.3");
+
+            // --- 4. Stats Animation ---
+            gsap.from(".stat-item", {
+                scrollTrigger: {
+                    trigger: ".stats-section",
+                    start: "top 80%",
+                },
+                y: 60,
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "back.out(1.7)"
+            });
+
+            // --- 5. Stats Counter Animation ---
+            const counters = document.querySelectorAll(".stat-counter");
+            counters.forEach((counter) => {
+                const target = parseInt(counter.getAttribute("data-value") || "0");
+                const suffix = counter.getAttribute("data-suffix") || "";
+                const obj = { value: 0 };
+
+                gsap.to(obj, {
+                    value: target,
+                    duration: 2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: ".stats-section",
+                        start: "top 80%",
+                    },
+                    onUpdate: () => {
+                        counter.textContent = Math.round(obj.value) + suffix;
+                    }
+                });
+            });
+
+        }, containerRef);
+    }, { scope: containerRef });
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div ref={containerRef} className="bg-background text-foreground selection:bg-brand-accent selection:text-white">
             <Navbar />
 
-            {/* Hero Section */}
-            <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-                <div className="absolute inset-0 bg-brand-accent/5 blur-3xl pointer-events-none" />
-                <div className="container mx-auto text-center relative z-10">
-                    <div className="hero-content">
-                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6">
-                            About <span className="text-brand-accent">Aster Medicines</span>
+            {/* --- 1. REVISED HERO SECTION --- */}
+            <section className="h-screen relative flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden">
+                <div className="absolute top-0 right-0 p-12 hero-meta hidden md:block">
+                    <div className="text-sm font-mono tracking-widest uppercase opacity-60 text-right">
+                        ( Est. 1993 ) <br /> Global Excellence
+                    </div>
+                </div>
+
+                <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+
+                    {/* Big Title */}
+                    <div className="lg:col-span-8">
+                        <h1 className="text-[13vw] lg:text-[10vw] leading-[0.8] font-display font-bold uppercase tracking-tighter">
+                            <div className="overflow-hidden"><span className="hero-line-inner block">Beyond</span></div>
+                            <div className="overflow-hidden"><span className="hero-line-inner block text-brand-accent">Chemistry</span></div>
+                            <div className="overflow-hidden"><span className="hero-line-inner block">We Engineer</span></div>
+                            <div className="overflow-hidden"><span className="hero-line-inner block">Life.</span></div>
                         </h1>
-                        <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                            Leading healthcare innovation with compassionate care and cutting-edge pharmaceutical solutions for over three decades.
+                    </div>
+
+                    {/* The Animated Description */}
+                    <div className="lg:col-span-4 flex flex-row lg:flex-col items-start gap-6 pb-2 lg:pb-4">
+                        <div className="hero-separator w-[2px] h-24 lg:h-32 bg-brand-accent hidden lg:block" />
+
+                        <div className="space-y-1">
+                            <div className="overflow-hidden">
+                                <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
+                                    <span className="font-medium text-brand-accent">Aster Medicines </span>bridges the gap
+                                </p>
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
+                                    between <span className="font-medium text-brand-accent">scientific breakthrough</span>
+                                </p>
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
+                                    and human compassion.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Scroll Indicator */}
+                <div className="hero-meta absolute bottom-8 left-6 md:left-12 flex items-center gap-4 opacity-50">
+                    <div className="w-10 h-10 rounded-full border border-foreground/30 flex items-center justify-center animate-bounce">
+                        <ArrowDown className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-mono uppercase tracking-widest">Scroll to Explore</span>
+                </div>
+
+                {/* Subtle Grain Overlay */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+            </section>
+
+            {/* --- 2. The Manifesto --- */}
+            <section className="manifesto-section min-h-[80vh] flex items-center justify-center px-6 md:px-20 py-24 bg-white dark:bg-black">
+                <div className="max-w-4xl text-black dark:text-white">
+                    <p className="text-3xl md:text-5xl lg:text-6xl font-display font-medium leading-[1.3]">
+                        {`Healthcare is a right, not a privilege. For over 18 years, our mission has been singular: to democratize access to world-class medicine. We don't just treat symptoms; we treat people. Every pill, every protocol, every innovation is designed with one metric in mind—human impact.`.split(" ").map((word, i) => (
+                            <span key={i} className="manifesto-word opacity-20 transition-colors inline-block mr-[0.25em]">
+                                {word}
+                            </span>
+                        ))}
+                    </p>
+                </div>
+            </section>
+
+            {/* --- 3. Founder Section --- */}
+            <section className="founder-section h-screen w-full relative overflow-hidden flex flex-col md:flex-row bg-white dark:bg-black text-black dark:text-white">
+                <div className="w-full md:w-1/2 h-full relative flex items-center justify-center p-10">
+                    <div
+                        className="founder-img-mask w-full h-[80%] md:h-full relative overflow-hidden"
+                        style={{ clipPath: "inset(10% 20% 10% 20%)", scale: 1.1 }}
+                    >
+                        <img
+                            src="/My-uploads/DP.webp"
+                            alt="Rupesh Anand"
+                            className="w-full h-full object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700"
+                        />
+                        <div className="absolute bottom-8 left-8 p-4 rounded-xl border border-orange-500/30 bg-black/50 backdrop-blur-sm">
+                            <h3 className="text-4xl font-display font-bold text-orange-500">Rupesh Anand</h3>
+                            <p className="text-white/60 font-mono text-sm mt-2">FOUNDER & CHAIRMAN</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="w-full md:w-1/2 h-full flex items-center px-8 md:px-20">
+                    <div className="founder-text-content opacity-0 translate-y-10 space-y-8">
+                        <div className="w-16 h-1 bg-brand-accent mb-8" />
+                        <h2 className="text-5xl md:text-7xl font-display font-bold leading-tight">
+                            The Architect <br /> of Care.
+                        </h2>
+                        <p className="text-xl opacity-70 leading-relaxed font-light max-w-md">
+                            "I founded Aster with a simple belief: that quality healthcare should not be determined by geography. Three decades later, that belief has become a global reality."
                         </p>
+
+                        <div className="pt-8 grid grid-cols-2 gap-8 border-t border-black/20 dark:border-white/20">
+                            <div>
+                                <span className="block text-3xl font-bold text-brand-accent">1993</span>
+                                <span className="text-sm opacity-50 uppercase tracking-wider">Inception</span>
+                            </div>
+                            <div>
+                                <span className="block text-3xl font-bold text-brand-accent">25K+</span>
+                                <span className="text-sm opacity-50 uppercase tracking-wider">Staff Guided</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Mission & Values */}
-            <section className="py-20 px-6 bg-secondary/30">
+            {/* --- 4. Values List --- */}
+            <section className="py-32 px-6 md:px-12">
                 <div className="container mx-auto">
-                    <div className="mission-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
+                        <h2 className="text-4xl font-display font-bold">Our Core <span className="text-brand-accent">DNA</span></h2>
+                        <p className="opacity-50 mt-4 md:mt-0 max-w-md text-right">
+                            The non-negotiable principles that drive our research, operations, and patient care.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10">
                         {[
-                            {
-                                icon: <Globe className="w-10 h-10 text-brand-accent" />,
-                                title: "Our Mission",
-                                description: "To provide world-class healthcare services that are accessible, affordable, and delivered with compassion."
-                            },
-                            {
-                                icon: <Lightbulb className="w-10 h-10 text-brand-orange" />,
-                                title: "Innovation",
-                                description: "Continuously advancing medical technology and pharmaceutical research to develop breakthrough treatments."
-                            },
-                            {
-                                icon: <Heart className="w-10 h-10 text-red-500" />,
-                                title: "Compassion",
-                                description: "Treating every patient with dignity, respect, and empathy, ensuring holistic care for their wellbeing."
-                            }
+                            { title: "Global Accessibility", id: "01", desc: "Breaking barriers of cost and geography." },
+                            { title: "Radical Innovation", id: "02", desc: "Pioneering treatments for the incurable." },
+                            { title: "Holistic Compassion", id: "03", desc: "Treating the soul, not just the body." },
+                            { title: "Ethical Integrity", id: "04", desc: "Transparency in every trial and transaction." }
                         ].map((item, index) => (
-                            <div key={index} className="mission-card">
-                                <Card className="bg-card border-border hover:border-brand-accent/50 transition-all duration-300 h-full">
-                                    <CardHeader>
-                                        <div className="mb-4 p-3 bg-secondary rounded-xl w-fit">
-                                            {item.icon}
-                                        </div>
-                                        <CardTitle className="text-2xl text-foreground">{item.title}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <CardDescription className="text-muted-foreground text-base leading-relaxed">
-                                            {item.description}
-                                        </CardDescription>
-                                    </CardContent>
-                                </Card>
+                            <div
+                                key={index}
+                                className="group py-12 flex flex-col md:flex-row items-baseline justify-between cursor-pointer transition-all hover:px-4 hover:bg-foreground/5"
+                                onMouseEnter={() => setHoveredValue(index)}
+                                onMouseLeave={() => setHoveredValue(null)}
+                            >
+                                <div className="flex items-baseline gap-6 md:gap-12">
+                                    <span className="font-mono text-sm opacity-40">{item.id}</span>
+                                    <h3 className="text-3xl md:text-5xl font-display font-bold group-hover:translate-x-2 transition-transform duration-300">
+                                        {item.title}
+                                    </h3>
+                                </div>
+                                <div className="flex items-center gap-4 mt-4 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <span className="text-sm uppercase tracking-widest">{item.desc}</span>
+                                    <ArrowUpRight className="w-6 h-6" />
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Founder Section */}
-            <section className="founder-section py-20 px-6">
-                <div className="container mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div className="founder-text">
-                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
-                                Meet Our <span className="text-brand-accent">Founder</span>
-                            </h2>
-                            <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
-                                <p>
-                                    Rupesh Anand is the visionary founder and Chairman of Aster Medicines. With over three decades of experience, he has been instrumental in revolutionizing medical care across multiple countries.
-                                </p>
-                                <p>
-                                    Under his leadership, Aster has grown from a single clinic to a global network of hospitals, clinics, and pharmacies, serving millions of patients with world-class healthcare services.
-                                </p>
-                                <div className="flex items-center gap-4 pt-4">
-                                    <div className="h-px bg-border flex-grow" />
-                                    <span className="text-brand-accent font-display font-bold text-xl">Rupesh Anand</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="founder-image relative">
-                            <div className="absolute inset-0 bg-brand-accent/20 blur-3xl rounded-full" />
-                            <div className="relative bg-card border border-border rounded-2xl p-8 backdrop-blur-sm">
-                                <div className="aspect-[4/5] rounded-xl overflow-hidden bg-secondary relative">
-                                    {/* Placeholder for Founder Image */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                                        <Users className="w-20 h-20 opacity-20" />
-                                    </div>
-                                    <img
-                                        src="/My-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png"
-                                        alt="Rupesh Anand"
-                                        className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="py-20 px-6 bg-brand-accent/5 border-y border-border">
-                <div className="container mx-auto">
-                    <div className="stats-grid grid grid-cols-2 md:grid-cols-4 gap-8">
+            {/* --- 5. Stats --- */}
+            <section className="stats-section pb-32 px-6">
+                <div className="container mx-auto border border-foreground/10 rounded-3xl p-12 md:p-24 bg-white dark:bg-black text-black dark:text-white">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
                         {[
-                            { value: "30+", label: "Years of Excellence", color: "text-brand-accent" },
-                            { value: "400+", label: "Healthcare Facilities", color: "text-brand-orange" },
-                            { value: "15M+", label: "Patients Served", color: "text-green-400" },
-                            { value: "25K+", label: "Professionals", color: "text-purple-400" }
-                        ].map((stat, index) => (
-                            <div key={index} className="stat-item text-center">
-                                <div className={`text-4xl md:text-6xl font-bold mb-2 ${stat.color}`}>
-                                    {stat.value}
-                                </div>
-                                <div className="text-muted-foreground font-medium">
+                            { label: "Facilities", value: 400, suffix: "+" },
+                            { label: "Countries", value: 12, suffix: "+" },
+                            { label: "Patients", value: 15, suffix: "M" },
+                            { label: "Years", value: 18, suffix: "" },
+                        ].map((stat, i) => (
+                            <div key={i} className="stat-item flex flex-col items-center group">
+                                <span
+                                    className="stat-counter text-6xl md:text-8xl font-display font-bold tracking-tighter mb-4 group-hover:scale-110 group-hover:text-brand-accent transition-all duration-300"
+                                    data-value={stat.value}
+                                    data-suffix={stat.suffix}
+                                >
+                                    0{stat.suffix}
+                                </span>
+                                <span className="text-sm font-mono uppercase tracking-widest opacity-70">
                                     {stat.label}
-                                </div>
+                                </span>
                             </div>
                         ))}
                     </div>

@@ -52,7 +52,7 @@ interface ProfileCardProps {
 }
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
-  avatarUrl = "/My-uploads/7d9319f2-3afe-40b4-9c44-963d708b81b9.png",
+  avatarUrl = "/My-uploads/DP.webp",
   iconUrl = "/My-uploads/logo.png",
   grainUrl = "/My-uploads/24864a25-5701-47f0-b89e-f6ffd8986ed4.png",
   behindGradient,

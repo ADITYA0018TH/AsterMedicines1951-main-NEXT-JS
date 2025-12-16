@@ -258,7 +258,7 @@ const ContactContent = () => {
                                             onChange={handleChange}
                                             required
                                             className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
-                                            placeholder="+91 9876543210"
+                                            placeholder="+91 **********"
                                         />
                                     </div>
 

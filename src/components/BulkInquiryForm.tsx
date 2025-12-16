@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle, Mail, User, Phone, Building, MessageSquare } from "lucide-react";
+import { CheckCircle, Mail, User, Phone, Building, MessageSquare, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -116,101 +116,106 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl backdrop-blur-xl bg-background/95 border-brand-accent/20 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
+          <DialogTitle className="text-2xl font-display font-bold text-brand-accent">
             Bulk Product Inquiry
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-muted-foreground">
             Request information or quotes for {selectedProducts.length} selected products
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mb-4 p-4 bg-muted rounded-lg">
-          <h4 className="font-semibold mb-2">Selected Products:</h4>
-          <ul className="space-y-1">
+        <div className="mb-6 p-4 bg-secondary/50 rounded-xl border border-border">
+          <h4 className="font-semibold mb-3 text-foreground">Selected Products:</h4>
+          <ul className="space-y-2">
             {selectedProducts.map((product) => (
-              <li key={product.id} className="flex items-center text-sm">
-                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+              <li key={product.id} className="flex items-center text-sm text-foreground/90">
+                <CheckCircle className="w-4 h-4 text-brand-accent mr-2" />
                 <span>{product.name}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name" className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              Full Name *
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              className={errors.name ? "border-destructive" : ""}
-            />
-            {errors.name && (
-              <p className="text-sm text-destructive mt-1">{errors.name}</p>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="name" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                <User className="w-4 h-4" />
+                Full Name *
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Full name"
+                className={`w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
+              />
+              {errors.name && (
+                <p className="text-sm text-destructive mt-1">{errors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="email" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                <Mail className="w-4 h-4" />
+                Email Address *
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="astermedicines@example.com"
+                className={`w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground ${errors.email ? "border-destructive" : ""}`}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive mt-1">{errors.email}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="phone" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                <Phone className="w-4 h-4" />
+                Phone Number *
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+91 **********"
+                className={`w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground ${errors.phone ? "border-destructive" : ""}`}
+              />
+              {errors.phone && (
+                <p className="text-sm text-destructive mt-1">{errors.phone}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="company" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                <Building className="w-4 h-4" />
+                Company Name (Optional)
+              </Label>
+              <Input
+                id="company"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="Your Company name"
+                className={`w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground ${errors.company ? "border-destructive" : ""}`}
+              />
+            </div>
           </div>
 
           <div>
-            <Label htmlFor="email" className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              Email Address *
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="john@example.com"
-              className={errors.email ? "border-destructive" : ""}
-            />
-            {errors.email && (
-              <p className="text-sm text-destructive mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="phone" className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              Phone Number *
-            </Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+91 9876543210"
-              className={errors.phone ? "border-destructive" : ""}
-            />
-            {errors.phone && (
-              <p className="text-sm text-destructive mt-1">{errors.phone}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="company" className="flex items-center gap-2">
-              <Building className="w-4 h-4" />
-              Company Name (Optional)
-            </Label>
-            <Input
-              id="company"
-              name="company"
-              value={formData.company}
-              onChange={handleChange}
-              placeholder="Your Company"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="message" className="flex items-center gap-2">
+            <Label htmlFor="message" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
               <MessageSquare className="w-4 h-4" />
               Message / Requirements *
             </Label>
@@ -221,19 +226,38 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
               onChange={handleChange}
               placeholder="Please provide details about your inquiry, required quantities, delivery location, etc."
               rows={5}
-              className={errors.message ? "border-destructive" : ""}
+              className={`w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none ${errors.message ? "border-destructive" : ""}`}
             />
             {errors.message && (
               <p className="text-sm text-destructive mt-1">{errors.message}</p>
             )}
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <Button type="submit" className="flex-1" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Inquiry"}
-            </Button>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <div className="flex gap-4 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="px-6 py-6 h-auto border-border hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+            >
               Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="flex-1 px-6 py-6 h-auto bg-brand-accent hover:bg-brand-accent/90 text-white font-medium rounded-lg shadow-lg hover:shadow-brand-accent/25 transition-all duration-300 group"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Submit Inquiry
+                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </Button>
           </div>
         </form>

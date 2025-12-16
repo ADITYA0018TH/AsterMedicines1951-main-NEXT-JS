@@ -53,7 +53,7 @@ const LoginContent = () => {
 
     return (
         <div
-            className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
+            className="min-h-screen flex flex-col bg-background"
         >
             <CustomCursor />
             <Navbar />

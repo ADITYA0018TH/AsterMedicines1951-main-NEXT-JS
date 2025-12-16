@@ -155,7 +155,7 @@ const AdminProductsContent = () => {
 
     return (
         <div
-            className="min-h-screen bg-cover bg-no-repeat flex flex-col bg-[url('/Header-background.webp')] bg-[center_30%] dark:bg-none dark:bg-background"
+            className="min-h-screen flex flex-col bg-background"
         >
             <CustomCursor />
             <Navbar />
@@ -192,32 +192,34 @@ const AdminProductsContent = () => {
                                             <span className="sm:hidden">Add</span>
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full bg-white dark:bg-gray-900 text-foreground">
+                                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden w-[95vw] sm:w-full rounded-2xl backdrop-blur-xl bg-background/95 border-brand-accent/20 shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-4 [&::-webkit-scrollbar-thumb]:bg-orange-500 [&::-webkit-scrollbar-thumb]:rounded-full">
                                         <DialogHeader>
-                                            <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
+                                            <DialogTitle className="text-2xl font-display font-bold text-brand-accent">{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
                                         </DialogHeader>
                                         <form onSubmit={handleSubmit} className="space-y-4">
                                             <div>
-                                                <Label htmlFor="name">Product Name</Label>
+                                                <Label htmlFor="name" className="text-sm font-medium text-muted-foreground mb-2 block">Product Name</Label>
                                                 <Input
                                                     id="name"
                                                     value={formData.name}
                                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                     required
+                                                    className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="description">Description</Label>
+                                                <Label htmlFor="description" className="text-sm font-medium text-muted-foreground mb-2 block">Description</Label>
                                                 <Textarea
                                                     id="description"
                                                     value={formData.description}
                                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                                     required
+                                                    className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
                                                 />
                                             </div>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                                 <div>
-                                                    <Label htmlFor="price">Price</Label>
+                                                    <Label htmlFor="price" className="text-sm font-medium text-muted-foreground mb-2 block">Price</Label>
                                                     <Input
                                                         id="price"
                                                         type="number"
@@ -225,51 +227,54 @@ const AdminProductsContent = () => {
                                                         value={formData.price}
                                                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                                         required
+                                                        className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <Label htmlFor="stock">Stock</Label>
+                                                    <Label htmlFor="stock" className="text-sm font-medium text-muted-foreground mb-2 block">Stock</Label>
                                                     <Input
                                                         id="stock"
                                                         type="number"
                                                         value={formData.stock}
                                                         onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                                                         required
+                                                        className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <Label htmlFor="category">Category</Label>
+                                                <Label htmlFor="category" className="text-sm font-medium text-muted-foreground mb-2 block">Category</Label>
                                                 <Input
                                                     id="category"
                                                     value={formData.category}
                                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                                     required
+                                                    className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                                                 />
                                             </div>
                                             <div>
-                                                <Label>Product Images</Label>
+                                                <Label className="text-sm font-medium text-muted-foreground mb-2 block">Product Images</Label>
                                                 <ImageDropzone
                                                     onImagesUploaded={(urls) => setFormData({ ...formData, images: urls })}
                                                     existingImages={formData.images}
                                                     maxFiles={10}
                                                 />
                                             </div>
-                                            <div className="flex items-center space-x-2">
+                                            <div className="flex items-center space-x-2 bg-secondary/30 p-4 rounded-lg border border-border/50">
                                                 <input
                                                     type="checkbox"
                                                     id="featured"
                                                     checked={formData.featured}
                                                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                                    className="rounded"
+                                                    className="rounded border-border text-brand-accent focus:ring-brand-accent"
                                                 />
-                                                <Label htmlFor="featured">Featured Product</Label>
+                                                <Label htmlFor="featured" className="text-sm font-medium text-foreground cursor-pointer">Featured Product</Label>
                                             </div>
-                                            <div className="flex gap-2 justify-end">
-                                                <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                                            <div className="flex gap-4 justify-end pt-4">
+                                                <Button type="button" variant="outline" onClick={handleCloseDialog} className="px-6 h-12 border-border hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
                                                     Cancel
                                                 </Button>
-                                                <Button type="submit" className="button-primary">
+                                                <Button type="submit" className="px-6 h-12 bg-brand-accent hover:bg-brand-accent/90 text-white font-medium rounded-lg shadow-lg hover:shadow-brand-accent/25 transition-all duration-300">
                                                     {editingProduct ? "Update" : "Create"} Product
                                                 </Button>
                                             </div>
