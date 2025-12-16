@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -125,11 +126,13 @@ const ProductDetailContent = () => {
                                 <CarouselContent>
                                     {product.images.map((img, index) => (
                                         <CarouselItem key={index}>
-                                            <div className="aspect-square bg-background flex items-center justify-center p-8 rounded-md">
-                                                <img
+                                            <div className="aspect-square bg-background flex items-center justify-center p-8 rounded-md relative">
+                                                <Image
                                                     src={img}
                                                     alt={`${product.name} - ${product.category} - Detailed view ${index + 1}`}
-                                                    className="max-w-full max-h-full object-contain"
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                                    className="object-contain p-8"
                                                 />
                                             </div>
                                         </CarouselItem>

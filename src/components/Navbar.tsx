@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
@@ -53,13 +54,16 @@ const Navbar = () => {
             id="navbar-logo-surface"
           >
             <Link href="/" className="flex items-center gap-2 group">
-              <img
-                src="/My-uploads/logo.png"
-                alt="Aster Medicines Logo"
-                width={160}
-                height={64}
-                className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              />
+              <div className="relative h-16 w-24">
+                <Image
+                  src="/My-uploads/logo.png"
+                  alt="Aster Medicines Logo"
+                  fill
+                  sizes="(max-width: 768px) 120px, 160px"
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+              </div>
             </Link>
           </GlassSurface>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { Microscope, ChevronRight } from "lucide-react";
 import LottieAnimation from "./LottieAnimation";
 
@@ -143,15 +144,14 @@ const Hero = () => {
 
               {/* Image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3]">
-                <img
-                  ref={imageRef}
+                <Image
+                  ref={imageRef as any}
                   src="/My-uploads/Ondansetron.png"
                   alt="Precision Pharmaceutical Manufacturing"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                  fetchPriority="high"
-                  loading="eager"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>

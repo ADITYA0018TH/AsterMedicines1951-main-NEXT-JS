@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
@@ -184,10 +185,12 @@ const ProductsContent = () => {
                                         >
                                             <div className="aspect-square bg-secondary/50 p-6 flex items-center justify-center relative overflow-hidden">
                                                 {product.images && product.images.length > 0 ? (
-                                                    <img
+                                                    <Image
                                                         src={product.images[0]}
                                                         alt={product.name}
-                                                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                        className="object-contain group-hover:scale-110 transition-transform duration-500 p-4"
                                                     />
                                                 ) : (
                                                     <Pill className="w-20 h-20 text-muted-foreground/20 group-hover:text-brand-accent/50 transition-colors" />

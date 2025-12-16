@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
@@ -211,10 +212,12 @@ const AboutContent = () => {
                         className="founder-img-mask w-full h-[80%] md:h-full relative overflow-hidden"
                         style={{ clipPath: "inset(10% 20% 10% 20%)", scale: 1.1 }}
                     >
-                        <img
+                        <Image
                             src="/My-uploads/DP.webp"
                             alt="Rupesh Anand"
-                            className="w-full h-full object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700"
                         />
                         <div className="absolute bottom-8 left-8 p-4 rounded-xl border border-orange-500/30 bg-black/50 backdrop-blur-sm">
                             <h3 className="text-4xl font-display font-bold text-orange-500">Rupesh Anand</h3>
