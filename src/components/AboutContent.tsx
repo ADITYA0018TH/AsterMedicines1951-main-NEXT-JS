@@ -136,9 +136,9 @@ const AboutContent = () => {
             <Navbar />
 
             {/* --- 1. REVISED HERO SECTION --- */}
-            <section className="h-screen relative flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden">
-                <div className="absolute top-0 right-0 p-12 hero-meta hidden md:block">
-                    <div className="text-sm font-mono tracking-widest uppercase opacity-60 text-right">
+            <section className="min-h-screen relative flex flex-col justify-center px-4 md:px-12 pt-16 md:pt-20 overflow-hidden">
+                <div className="absolute top-0 right-0 p-6 md:p-12 hero-meta hidden md:block">
+                    <div className="text-xs md:text-sm font-mono tracking-widest uppercase opacity-60 text-right">
                         ( Est. 1993 ) <br /> Global Excellence
                     </div>
                 </div>
@@ -147,7 +147,7 @@ const AboutContent = () => {
 
                     {/* Big Title */}
                     <div className="lg:col-span-8">
-                        <h1 className="text-[13vw] lg:text-[10vw] leading-[0.8] font-display font-bold uppercase tracking-tighter">
+                        <h1 className="text-[15vw] md:text-[13vw] lg:text-[10vw] leading-[0.9] lg:leading-[0.8] font-display font-bold uppercase tracking-tighter">
                             <div className="overflow-hidden"><span className="hero-line-inner block">Beyond</span></div>
                             <div className="overflow-hidden"><span className="hero-line-inner block text-brand-accent">Chemistry</span></div>
                             <div className="overflow-hidden"><span className="hero-line-inner block">We Engineer</span></div>
@@ -156,12 +156,12 @@ const AboutContent = () => {
                     </div>
 
                     {/* The Animated Description */}
-                    <div className="lg:col-span-4 flex flex-row lg:flex-col items-start gap-6 pb-2 lg:pb-4">
+                    <div className="lg:col-span-4 flex flex-row lg:flex-col items-start gap-4 md:gap-6 pb-2 lg:pb-4 mt-8 lg:mt-0">
                         <div className="hero-separator w-[2px] h-24 lg:h-32 bg-brand-accent hidden lg:block" />
 
                         <div className="space-y-1">
                             <div className="overflow-hidden">
-                                <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
+                                <p className="hero-desc-line text-lg md:text-2xl font-light leading-tight block">
                                     <span className="font-medium text-brand-accent">Aster Medicines </span>bridges the gap
                                 </p>
                             </div>
@@ -193,9 +193,9 @@ const AboutContent = () => {
             </section>
 
             {/* --- 2. The Manifesto --- */}
-            <section className="manifesto-section min-h-[80vh] flex items-center justify-center px-6 md:px-20 py-24 bg-white dark:bg-black">
+            <section className="manifesto-section min-h-[60vh] md:min-h-[80vh] flex items-center justify-center px-4 md:px-20 py-16 md:py-24 bg-white dark:bg-black">
                 <div className="max-w-4xl text-black dark:text-white">
-                    <p className="text-3xl md:text-5xl lg:text-6xl font-display font-medium leading-[1.3]">
+                    <p className="text-2xl md:text-5xl lg:text-6xl font-display font-medium leading-[1.3] text-center md:text-left">
                         {`Healthcare is a right, not a privilege. For over 18 years, our mission has been singular: to democratize access to world-class medicine. We don't just treat symptoms; we treat people. Every pill, every protocol, every innovation is designed with one metric in mind—human impact.`.split(" ").map((word, i) => (
                             <span key={i} className="manifesto-word opacity-20 transition-colors inline-block mr-[0.25em]">
                                 {word}
@@ -206,11 +206,11 @@ const AboutContent = () => {
             </section>
 
             {/* --- 3. Founder Section --- */}
-            <section className="founder-section h-screen w-full relative overflow-hidden flex flex-col md:flex-row bg-white dark:bg-black text-black dark:text-white">
-                <div className="w-full md:w-1/2 h-full relative flex items-center justify-center p-10">
+            <section className="founder-section min-h-screen w-full relative overflow-hidden flex flex-col md:flex-row bg-white dark:bg-black text-black dark:text-white">
+                <div className="w-full md:w-1/2 h-[50vh] md:h-full relative flex items-center justify-center p-6 md:p-10">
                     <div
-                        className="founder-img-mask w-full h-[80%] md:h-full relative overflow-hidden"
-                        style={{ clipPath: "inset(10% 20% 10% 20%)", scale: 1.1 }}
+                        className="founder-img-mask w-full h-full relative overflow-hidden rounded-2xl md:rounded-none"
+                        style={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1.1 }}
                     >
                         <Image
                             src="/My-uploads/DP.webp"
@@ -226,13 +226,13 @@ const AboutContent = () => {
                     </div>
                 </div>
 
-                <div className="w-full md:w-1/2 h-full flex items-center px-8 md:px-20">
-                    <div className="founder-text-content opacity-0 translate-y-10 space-y-8">
-                        <div className="w-16 h-1 bg-brand-accent mb-8" />
-                        <h2 className="text-5xl md:text-7xl font-display font-bold leading-tight">
+                <div className="w-full md:w-1/2 h-full flex items-center px-6 md:px-20 py-10 md:py-0">
+                    <div className="founder-text-content opacity-0 translate-y-10 space-y-6 md:space-y-8">
+                        <div className="w-16 h-1 bg-brand-accent mb-6 md:mb-8" />
+                        <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">
                             The Architect <br /> of Care.
                         </h2>
-                        <p className="text-xl opacity-70 leading-relaxed font-light max-w-md">
+                        <p className="text-lg md:text-xl opacity-70 leading-relaxed font-light max-w-md">
                             "I founded Aster with a simple belief: that quality healthcare should not be determined by geography. Three decades later, that belief has become a global reality."
                         </p>
 
@@ -251,11 +251,11 @@ const AboutContent = () => {
             </section>
 
             {/* --- 4. Values List --- */}
-            <section className="py-32 px-6 md:px-12">
+            <section className="py-16 md:py-32 px-4 md:px-12">
                 <div className="container mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
-                        <h2 className="text-4xl font-display font-bold">Our Core <span className="text-brand-accent">DNA</span></h2>
-                        <p className="opacity-50 mt-4 md:mt-0 max-w-md text-right">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20">
+                        <h2 className="text-3xl md:text-4xl font-display font-bold">Our Core <span className="text-brand-accent">DNA</span></h2>
+                        <p className="opacity-50 mt-4 md:mt-0 max-w-md text-left md:text-right text-sm md:text-base">
                             The non-negotiable principles that drive our research, operations, and patient care.
                         </p>
                     </div>
@@ -269,17 +269,17 @@ const AboutContent = () => {
                         ].map((item, index) => (
                             <div
                                 key={index}
-                                className="group py-12 flex flex-col md:flex-row items-baseline justify-between cursor-pointer transition-all hover:px-4 hover:bg-foreground/5"
+                                className="group py-8 md:py-12 flex flex-col md:flex-row items-baseline justify-between cursor-pointer transition-all hover:px-4 hover:bg-foreground/5"
                                 onMouseEnter={() => setHoveredValue(index)}
                                 onMouseLeave={() => setHoveredValue(null)}
                             >
-                                <div className="flex items-baseline gap-6 md:gap-12">
+                                <div className="flex items-baseline gap-4 md:gap-12">
                                     <span className="font-mono text-sm opacity-40">{item.id}</span>
-                                    <h3 className="text-3xl md:text-5xl font-display font-bold group-hover:translate-x-2 transition-transform duration-300">
+                                    <h3 className="text-2xl md:text-5xl font-display font-bold group-hover:translate-x-2 transition-transform duration-300">
                                         {item.title}
                                     </h3>
                                 </div>
-                                <div className="flex items-center gap-4 mt-4 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="flex items-center gap-4 mt-4 md:mt-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                                     <span className="text-sm uppercase tracking-widest">{item.desc}</span>
                                     <ArrowUpRight className="w-6 h-6" />
                                 </div>
@@ -290,9 +290,9 @@ const AboutContent = () => {
             </section>
 
             {/* --- 5. Stats --- */}
-            <section className="stats-section pb-32 px-6">
-                <div className="container mx-auto border border-foreground/10 rounded-3xl p-12 md:p-24 bg-white dark:bg-black text-black dark:text-white">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+            <section className="stats-section pb-16 md:pb-32 px-4 md:px-6">
+                <div className="container mx-auto border border-foreground/10 rounded-3xl p-6 md:p-24 bg-white dark:bg-black text-black dark:text-white">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center">
                         {[
                             { label: "Facilities", value: 400, suffix: "+" },
                             { label: "Countries", value: 12, suffix: "+" },
@@ -301,7 +301,7 @@ const AboutContent = () => {
                         ].map((stat, i) => (
                             <div key={i} className="stat-item flex flex-col items-center group">
                                 <span
-                                    className="stat-counter text-6xl md:text-8xl font-display font-bold tracking-tighter mb-4 group-hover:scale-110 group-hover:text-brand-accent transition-all duration-300"
+                                    className="stat-counter text-4xl md:text-6xl lg:text-8xl font-display font-bold tracking-tighter mb-2 md:mb-4 group-hover:scale-110 group-hover:text-brand-accent transition-all duration-300"
                                     data-value={stat.value}
                                     data-suffix={stat.suffix}
                                 >
