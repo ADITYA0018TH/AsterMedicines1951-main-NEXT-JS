@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Microscope, ChevronRight } from "lucide-react";
-import LottieAnimation from "./LottieAnimation";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const [lottieData, setLottieData] = useState<any>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -18,17 +16,6 @@ const Hero = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  // Lottie animation removed due to binary file format issue and LCP optimization
-  // useEffect(() => {
-  //   fetch("/loop-header.lottie")
-  //     .then((response) => response.json())
-  //     .then((data) => setLottieData(data))
-  //     .catch((error) => {
-  //       console.warn("Failed to load Lottie animation, falling back to static image.", error);
-  //       setLottieData(null);
-  //     });
-  // }, []);
 
   useEffect(() => {
     if (isMobile) return;
@@ -157,7 +144,7 @@ const Hero = () => {
               </div>
 
               {/* Floating Badge */}
-              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 animate-bounce-slow">
+              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-black p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 animate-bounce-slow">
                 <div className="w-12 h-12 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
                   <Microscope className="w-6 h-6" />
                 </div>

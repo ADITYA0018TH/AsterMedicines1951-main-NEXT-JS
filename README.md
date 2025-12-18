@@ -4,7 +4,7 @@
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-96%25-blue? style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![CSS](https://img.shields.io/badge/CSS-3. 7%25-orange?style=flat-square&logo=css3)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![Next.js](https://img.shields.io/badge/Next.js-14+-000000? style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16+-000000? style=flat-square&logo=next.js)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 ---
@@ -41,7 +41,7 @@ Aster Medicines is a comprehensive digital platform designed to revolutionize th
 
 | Technology | Purpose | Version |
 |-----------|---------|---------|
-| **Next.js** | React framework with App Router | 14+ |
+| **Next.js** | React framework with App Router | 16+ |
 | **TypeScript** | Type-safe JavaScript | Latest |
 | **Tailwind CSS** | Utility-first CSS framework | Latest |
 | **Framer Motion** | Animation library | Latest |
@@ -87,7 +87,7 @@ AsterMedicines1951-main-NEXT-JS/
 │   ├── images/ (webp, png format)
 │   ├── favicon files
 │   ├── robots.txt & sitemap.xml
-│   └── SVG assets
+│   └── og-image-update.webp
 │
 ├── 📁 src/
 │   ├── 🚀 app/                         # Next.js App Router
@@ -109,7 +109,7 @@ AsterMedicines1951-main-NEXT-JS/
 │   │   ├── robots.ts
 │   │   └── sitemap.ts
 │   │
-│   ├── 🧩 components/                  # Reusable React components (49 files)
+│   ├── 🧩 components/                  # Reusable React components (32 files)
 │   │   ├── Layout Components
 │   │   │   ├── Navbar.tsx              # Navigation with glass effects
 │   │   │   ├── Footer.tsx              # Site footer
@@ -140,10 +140,7 @@ AsterMedicines1951-main-NEXT-JS/
 │   │   │   ├── Charts, Tables, Progress
 │   │   │   ├── GlassSurface.tsx        # Glassmorphism effects
 │   │   │   └── Toast, Tooltip, Notifications
-│   │   ├── Animation Components
 │   │   │   ├── ScrollReveal.tsx        # Scroll animations
-│   │   │   ├── LottieAnimation.tsx     # Lottie integration
-│   │   │   ├── AnimatedList.tsx        # List animations
 │   │   │   └── container-scroll-animation.tsx
 │   │   ├── Admin Components
 │   │   │   ├── AdminDashboardContent.tsx
@@ -179,8 +176,6 @@ AsterMedicines1951-main-NEXT-JS/
 │   ├── 🔌 services/                    # External services
 │   │   └── api.ts                      # API client
 │   │
-│   ├── 🛡️ middleware.ts                # Next.js middleware
-│   ├── 🛡️ proxy.ts                     # Proxy configuration
 │   └── 🛠️ utils/
 │       ├── schemaGenerators.ts         # Schema generation
 │       └── sitemap.ts                  # Sitemap utility
@@ -415,4 +410,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by Aster Medicines Team**
 
-*Last Updated: December 14, 2025*
+*Last Updated: December 18, 2025*

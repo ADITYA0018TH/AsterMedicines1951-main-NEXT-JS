@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 
 import { toast } from "sonner";
+import { ChevronRight } from "lucide-react";
+import Button3D from "./ui/Button3D";
 const DetailsSection = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -38,7 +40,7 @@ const DetailsSection = () => {
     });
   };
 
-const backgroundContent = (
+  const backgroundContent = (
     <>
       <div
         className="absolute inset-0 z-0 dark:hidden"
@@ -83,7 +85,7 @@ const backgroundContent = (
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex items-end overflow-hidden">
               {backgroundContent}
               <div className="relative z-10">
-                <h2 className="text-2xl sm:text-3xl font-display text-white font-bold">
+                <h2 className="text-2xl sm:text-3xl font-display text-black dark:text-white font-bold">
                   Facility Specifications
                 </h2>
               </div>
@@ -120,15 +122,15 @@ const backgroundContent = (
           </div>
 
           {/* Right Card - Contact Form */}
-          <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-elegant">
+          <div className="rounded-3xl sm:rounded-3xl overflow-hidden shadow-elegant">
             {/* Card Header with background image instead of gradient */}
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex flex-col items-start overflow-hidden">
               {backgroundContent}
               <div className="relative z-10 w-full h-full flex flex-col items-start">
-                <div className="inline-block px-4 sm:px-6 py-2 border border-white text-white rounded-full text-xs mb-4">
+                <div className="inline-block px-4 sm:px-6 py-2 border border-white text-white rounded-full text-xs mb-4 bg backdrop-blur-md">
                   Partner With Us
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-display text-white font-bold mt-auto">
+                <h2 className="text-2xl sm:text-3xl font-display text-black dark:text-white font-bold mt-auto">
                   Contact Aster Medicines
                 </h2>
               </div>
@@ -167,12 +169,14 @@ const backgroundContent = (
                 />
 
                 <div>
-                  <button
+                  <Button3D
                     type="submit"
-                    className="w-full px-6 py-4 bg-slate-900 dark:bg-white text-orange-600 dark:text-neutral-900 font-bold rounded-xl hover:opacity-90 transition-opacity duration-300"
+                    variant="primary"
+                    className="w-full"
                   >
                     Initiate Partnership
-                  </button>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button3D>
                 </div>
               </form>
               <div className="text-xs text-gray-400 mt-6 text-center">

@@ -94,9 +94,9 @@ const PharmaceuticalSection = () => {
           backgroundImage: `repeating-radial-gradient(
               circle at 0 0,
               transparent 0,
-              white 30px
+              #FF6B00 30px
             ),
-            repeating-linear-gradient(#FF6B00, #FF6B00)`
+            repeating-linear-gradient(#FFFFFF, #FFFFFF)`
         }}
       />
       <div
@@ -129,16 +129,16 @@ const PharmaceuticalSection = () => {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         </div>
 
-        <div className="container px-6 lg:px-8 mx-auto h-full flex flex-col relative z-10">
-          <div className="mb-2 md:mb-3">
-            <div className="flex items-center gap-4 mb-2 md:mb-2 pt-8 sm:pt-6 md:pt-4">
-              <div className="pulse-chip opacity-0 animate-fade-in" style={{
-                animationDelay: "0.1s"
-              }}>
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-accent text-white mr-2">02</span>
-                <span className="text-muted-foreground">Manufacturing</span>
-              </div>
+        <div className="container px-4 sm:px-6 lg:px-8 mx-auto mt-10">
+        <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
+          {/* Header with badge and line */}
+          <div className="flex items-center gap-6 mb-2 sm:mb-6">
+            <div className="hidden sm:block h-[1px] w-12 bg-gray-300 dark:bg-slate-700"></div>
+            <div className="pulse-chip-clean">
+              <span className="text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">02 — Manufacturing</span>
             </div>
+            <div className="flex-1 h-[1px] bg-gray-300 dark:bg-slate-700"></div>
+          </div>
 
             <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2 text-foreground">
               Why Aster
@@ -159,15 +159,15 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Vision</span>
                 </div>
               </div>
 
               <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
                 <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
-                    Advancing healthcare through <span className="text-brand-accent">precision medicine</span>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
+                    Advancing healthcare through <span className="text-black dark:text-brand-accent">precision medicine</span>
                   </h3>
                 </div>
               </div>
@@ -187,15 +187,15 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Mission</span>
                 </div>
               </div>
 
               <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
                 <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
-                    Global solutions for <br /> <span className="text-brand-accent">global healthcare</span>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
+                    Global solutions for <br /> <span className="text-black dark:text-brand-accent">global healthcare</span>
                   </h3>
                 </div>
               </div>
@@ -215,15 +215,15 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Promise</span>
                 </div>
               </div>
 
               <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
                 <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-white font-bold leading-tight mb-4">
-                    We're creating <span className="text-brand-accent">life-saving medicines</span>, not just products
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
+                    We're creating <span className="text-black dark:text-brand-accent">life-saving medicines</span>, not just products
                   </h3>
                 </div>
               </div>
