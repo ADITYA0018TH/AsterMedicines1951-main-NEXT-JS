@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import Lenis from "lenis";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +21,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 const ProductsContent = () => {
+    useEffect(() => {
+        const lenis = new Lenis();
+
+        lenis.on("scroll", ScrollTrigger.update);
+
+        // Integrate Lenis with GSAP ticker for performance
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+
+        gsap.ticker.lagSmoothing(0);
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
+
     const router = useRouter();
     const [selectedCategory, setSelectedCategory] = React.useState("All");
     const [searchQuery, setSearchQuery] = React.useState("");
