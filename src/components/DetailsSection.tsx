@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import Image from "next/image";
+
 import { toast } from "sonner";
 const DetailsSection = () => {
   const [formData, setFormData] = useState({
@@ -37,6 +37,42 @@ const DetailsSection = () => {
       company: ""
     });
   };
+
+const backgroundContent = (
+    <>
+      <div
+        className="absolute inset-0 z-0 dark:hidden"
+        style={{
+          backgroundColor: 'orange',
+          opacity: 1,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `repeating-radial-gradient(
+              circle at 0 0,
+              transparent 0,
+              white 30px
+            ),
+            repeating-linear-gradient(#FF6B00, #FF6B00)`
+        }}
+      />
+      <div
+        className="absolute inset-0 z-0 hidden dark:block"
+        style={{
+          backgroundColor: 'black',
+          opacity: 1,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `repeating-radial-gradient(
+              circle at 0 0,
+              transparent 0,
+              black 30px
+            ),
+            repeating-linear-gradient(#333333, #666666)`
+        }}
+      />
+    </>
+  );
+
   return (
     <section id="details" className="w-full bg-transparent py-0 animate-on-scroll opacity-0 dark:text-white">
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
@@ -45,13 +81,7 @@ const DetailsSection = () => {
           <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-elegant">
             {/* Card Header with background image instead of gradient */}
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex items-end overflow-hidden">
-              <Image
-                src="/background-section3.webp"
-                alt="Facility Specifications Background"
-                fill
-                className="object-cover object-center"
-                priority
-              />
+              {backgroundContent}
               <div className="relative z-10">
                 <h2 className="text-2xl sm:text-3xl font-display text-white font-bold">
                   Facility Specifications
@@ -60,7 +90,7 @@ const DetailsSection = () => {
             </div>
 
             {/* Card Content - Specs Grid */}
-            <div className="bg-white dark:bg-black p-6 sm:p-10 border border-[#ECECEC] dark:border-slate-800">
+            <div className="bg-white dark:bg-black p-6 sm:p-10 border border-[#ECECEC] dark:border-neutral-800">
               <h3 className="text-xl sm:text-2xl font-display mb-8 text-slate-900 dark:text-white">
                 Medical Manufacturing Standards
               </h3>
@@ -73,15 +103,15 @@ const DetailsSection = () => {
                   { title: "Traceability", desc: "End-to-End Tracking", icon: "TR" },
                   { title: "Auto QC", desc: "Automated Quality Control", icon: "QC" },
                 ].map((item, i) => (
-                  <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-gray-200 dark:hover:border-slate-700 transition-all duration-300 group">
+                  <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-neutral-900/50 hover:bg-white dark:hover:bg-neutral-800 border border-transparent hover:border-gray-200 dark:hover:border-neutral-700 transition-all duration-300 group">
                     <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-sm mb-3 group-hover:scale-110 transition-transform">
                       {item.icon}
                     </div>
                     <h4 className="font-bold text-slate-900 dark:text-white mb-1">{item.title}</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{item.desc}</p>
+                    <p className="text-xs text-slate-500 dark:text-neutral-400">{item.desc}</p>
                   </div>
                 ))}
-                <div className="p-4 rounded-2xl bg-pulse-500 text-white flex flex-col justify-center items-center text-center">
+                <div className="p-4 rounded-2xl bg-pulse-500 dark:bg-neutral-900 text-white flex flex-col justify-center items-center text-center">
                   <span className="text-2xl font-bold mb-1">100+</span>
                   <span className="text-xs opacity-90">Global Partners</span>
                 </div>
@@ -93,13 +123,7 @@ const DetailsSection = () => {
           <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-elegant">
             {/* Card Header with background image instead of gradient */}
             <div className="relative h-48 sm:h-64 p-6 sm:p-8 flex flex-col items-start overflow-hidden">
-              <Image
-                src="/background-section1.webp"
-                alt="Contact Aster Medicines Background"
-                fill
-                className="object-cover object-center"
-                priority
-              />
+              {backgroundContent}
               <div className="relative z-10 w-full h-full flex flex-col items-start">
                 <div className="inline-block px-4 sm:px-6 py-2 border border-white text-white rounded-full text-xs mb-4">
                   Partner With Us
@@ -111,7 +135,7 @@ const DetailsSection = () => {
             </div>
 
             {/* Card Content - Form */}
-            <div className="bg-white dark:bg-black p-6 sm:p-10 border border-[#ECECEC] dark:border-slate-800">
+            <div className="bg-white dark:bg-black p-6 sm:p-10 border border-[#ECECEC] dark:border-neutral-800">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <input
@@ -120,7 +144,7 @@ const DetailsSection = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="Name"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-pulse-500 text-slate-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                     required
                   />
                   <input
@@ -129,7 +153,7 @@ const DetailsSection = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Email"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-pulse-500 text-slate-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                     required
                   />
                 </div>
@@ -139,13 +163,13 @@ const DetailsSection = () => {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Organization / Hospital"
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-pulse-500 text-slate-900 dark:text-white placeholder:text-gray-400"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                 />
 
                 <div>
                   <button
                     type="submit"
-                    className="w-full px-6 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:opacity-90 transition-opacity duration-300"
+                    className="w-full px-6 py-4 bg-slate-900 dark:bg-white text-orange-600 dark:text-neutral-900 font-bold rounded-xl hover:opacity-90 transition-opacity duration-300"
                   >
                     Initiate Partnership
                   </button>

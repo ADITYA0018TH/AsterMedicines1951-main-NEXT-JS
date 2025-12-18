@@ -82,6 +82,41 @@ const PharmaceuticalSection = () => {
   const isSecondCardVisible = activeCardIndex >= 1;
   const isThirdCardVisible = activeCardIndex >= 2;
 
+  const backgroundContent = (
+    <>
+      <div
+        className="absolute inset-0 z-0 dark:hidden"
+        style={{
+          backgroundColor: 'orange',
+          opacity: 1,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `repeating-radial-gradient(
+              circle at 0 0,
+              transparent 0,
+              white 30px
+            ),
+            repeating-linear-gradient(#FF6B00, #FF6B00)`
+        }}
+      />
+      <div
+        className="absolute inset-0 z-0 hidden dark:block"
+        style={{
+          backgroundColor: 'black',
+          opacity: 1,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `repeating-radial-gradient(
+              circle at 0 0,
+              transparent 0,
+              black 30px
+            ),
+            repeating-linear-gradient(#333333, #666666)`
+        }}
+      />
+    </>
+  );
+
   return (
     <div
       ref={sectionRef}
@@ -121,15 +156,7 @@ const PharmaceuticalSection = () => {
                 opacity: isFirstCardVisible ? 0.9 : 0
               }}
             >
-              <div
-                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
-                style={{
-                  backgroundImage: "url('/background-section1.webp')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "top center",
-                  backgroundBlendMode: "overlay"
-                }}
-              ></div>
+              {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
                 <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
@@ -157,15 +184,7 @@ const PharmaceuticalSection = () => {
                 pointerEvents: isSecondCardVisible ? 'auto' : 'none'
               }}
             >
-              <div
-                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
-                style={{
-                  backgroundImage: "url('/background-section2.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundBlendMode: "overlay"
-                }}
-              ></div>
+              {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
                 <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
@@ -193,15 +212,7 @@ const PharmaceuticalSection = () => {
                 pointerEvents: isThirdCardVisible ? 'auto' : 'none'
               }}
             >
-              <div
-                className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 to-black/90"
-                style={{
-                  backgroundImage: "url('/background-section3.webp')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "bottom center",
-                  backgroundBlendMode: "overlay"
-                }}
-              ></div>
+              {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
                 <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white border border-white/10">
