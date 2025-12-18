@@ -130,15 +130,15 @@ const PharmaceuticalSection = () => {
         </div>
 
         <div className="container px-4 sm:px-6 lg:px-8 mx-auto mt-10">
-        <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
-          {/* Header with badge and line */}
-          <div className="flex items-center gap-6 mb-2 sm:mb-6">
-            <div className="hidden sm:block h-[1px] w-12 bg-gray-300 dark:bg-slate-700"></div>
-            <div className="pulse-chip-clean">
-              <span className="text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">02 — Manufacturing</span>
+          <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
+            {/* Header with badge and line */}
+            <div className="flex items-center gap-6 mb-2 sm:mb-6">
+              <div className="hidden sm:block h-[1px] w-12 bg-gray-300 dark:bg-slate-700"></div>
+              <div className="pulse-chip-clean">
+                <span className="text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">02 — Manufacturing</span>
+              </div>
+              <div className="flex-1 h-[1px] bg-gray-300 dark:bg-slate-700"></div>
             </div>
-            <div className="flex-1 h-[1px] bg-gray-300 dark:bg-slate-700"></div>
-          </div>
 
             <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2 text-foreground">
               Why Aster
