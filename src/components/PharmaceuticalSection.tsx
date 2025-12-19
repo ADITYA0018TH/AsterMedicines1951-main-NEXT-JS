@@ -159,7 +159,7 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Vision</span>
                 </div>
               </div>
@@ -187,7 +187,7 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Mission</span>
                 </div>
               </div>
@@ -215,7 +215,7 @@ const PharmaceuticalSection = () => {
               {backgroundContent}
 
               <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-black/10 dark:text-white dark:border-white/10">
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10">
                   <span className="text-sm font-medium">Our Promise</span>
                 </div>
               </div>
