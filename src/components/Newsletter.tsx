@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ChevronRight } from "lucide-react";
+import ScrollFloat from "@/components/ScrollFloat";
+import GradientBlinds from "@/components/ui/GradientBlind";
+import { useTheme } from "next-themes";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 const Newsletter = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
@@ -25,15 +38,44 @@ const Newsletter = () => {
       setIsSubmitting(false);
     }, 1000);
   };
+
+  const gradientColors = mounted && resolvedTheme === 'dark'
+    ? ['#808080', '#000000']
+    : ['#FE5C02', '#FFD29D'];
+
   return (
     <section className="py-20 relative overflow-hidden bg-white dark:bg-black animate-on-scroll opacity-0" id="newsletter">
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
         <div className="relative rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-[#111111] dark:bg-[length:60px_60px] dark:bg-[position:-5px_-5px] dark:bg-[linear-gradient(32deg,rgba(8,8,8,0.74)_30px,transparent)] border border-gray-100 dark:border-slate-800 p-8 sm:p-16 text-center transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(255,255,255,0.1)] hover:shadow-[0_30px_60px_rgb(0,0,0,0.15)] dark:hover:shadow-[0_30px_60px_rgb(255,255,255,0.1)] hover:-translate-y-2">
+          <div className="absolute inset-0 pointer-events-none hidden dark:block">
+            <GradientBlinds
+              gradientColors={gradientColors}
+              angle={45}
+              noise={0.3}
+              blindCount={isMobile ? 12 : 30}
+              blindMinWidth={isMobile ? 30 : 50}
+              spotlightRadius={1}
+              spotlightSoftness={1}
+              spotlightOpacity={1}
+              mouseDampening={0.15}
+              distortAmount={0}
+              shineDirection="left"
+              mixBlendMode="lighten"
+            />
+          </div>
           <div className="relative z-10 max-w-2xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-6">
+            <ScrollFloat
+              animationDuration={1}
+              ease="back.inOut(2)"
+              scrollStart="center bottom+=50%"
+              scrollEnd="bottom bottom-=40%"
+              stagger={0.03}
+              containerClassName="mb-6"
+              textClassName="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white"
+            >
               Join the Future of Healthcare
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-lg mb-10 leading-relaxed">
+            </ScrollFloat>
+            <p className="text-slate-600 dark:text-white text-lg mb-10 leading-relaxed">
               Subscribe to receive updates on our latest medical breakthroughs and global initiatives.
             </p>
 
@@ -56,7 +98,7 @@ const Newsletter = () => {
                 </span>
               </button>
             </form>
-            <p className="mt-6 text-xs text-slate-500">
+            <p className="mt-6 text-xs text-slate-500 dark:text-white">
               We respect your privacy. Unsubscribe at any time.
             </p>
           </div>

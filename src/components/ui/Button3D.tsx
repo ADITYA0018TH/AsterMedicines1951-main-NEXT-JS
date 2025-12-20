@@ -48,13 +48,8 @@ const Button3D = ({
 
     const styles = variantStyles[variant];
 
-    const buttonContent = (
-        <button
-            type={type}
-            onClick={onClick}
-            disabled={disabled}
-            className={`relative bg-transparent border-none p-0 m-0 outline-none group cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-        >
+    const InnerContent = () => (
+        <>
             {/* Top layer - the visible button */}
             <span className={`
                 relative z-10 ${sizeStyles[size]} flex items-center justify-center gap-2
@@ -64,6 +59,7 @@ const Button3D = ({
                 transition-transform duration-200 ease-out
                 group-hover:translate-y-[6px]
                 overflow-hidden
+                w-full
             `}>
                 {/* Shine effect */}
                 <span className="absolute w-4 h-full bg-white/20 skew-x-[30deg] -left-6 transition-all duration-300 group-hover:left-[calc(100%+24px)]" />
@@ -91,14 +87,29 @@ const Button3D = ({
                 border-2 border-slate-900
                 -z-20
             `} />
-        </button>
+        </>
     );
 
+    const baseClasses = `relative bg-transparent border-none p-0 m-0 outline-none group cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 inline-block ${className}`;
+
     if (href) {
-        return <Link href={href}>{buttonContent}</Link>;
+        return (
+            <Link href={href} className={baseClasses}>
+                <InnerContent />
+            </Link>
+        );
     }
 
-    return buttonContent;
+    return (
+        <button
+            type={type}
+            onClick={onClick}
+            disabled={disabled}
+            className={baseClasses}
+        >
+            <InnerContent />
+        </button>
+    );
 };
 
 export default Button3D;

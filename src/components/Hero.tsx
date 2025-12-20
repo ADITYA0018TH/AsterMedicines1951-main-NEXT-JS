@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Microscope, ChevronRight } from "lucide-react";
+
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -93,7 +96,7 @@ const Hero = () => {
 
   return (
     <section
-      className="relative w-full min-h-screen flex items-center bg-white dark:bg-black overflow-hidden animate-on-scroll opacity-0"
+      className="relative w-full min-h-screen flex items-center bg-white dark:bg-black overflow-hidden"
       id="hero"
     >
       {/* 1. Technical Data Grid Overlay - Very subtle */}
@@ -102,16 +105,18 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white dark:via-black/50 dark:to-black"></div>
 
         {/* Animated Flowing Lines - Heartbeat / ECG Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-40" viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Line 1: Top - User requested FAST and LIGHT */}
-          <path d="M0 200 L100 200 L115 170 L130 230 L145 200 L250 200 L265 150 L280 250 L295 200 L400 200 L415 170 L430 230 L445 200 L550 200 L565 150 L580 250 L595 200 L700 200 L715 170 L730 230 L745 200 L850 200 L865 150 L880 250 L895 200 L1000 200 L1015 170 L1030 230 L1045 200 L1150 200 L1165 150 L1180 250 L1195 200 L1300 200 L1315 170 L1330 230 L1345 200 L1440 200" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 20" style={{ animationDuration: "5s" }} />
+        {!isMobile && (
+          <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-40" viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Line 1: Top - User requested FAST and LIGHT */}
+            <path d="M0 200 L100 200 L115 170 L130 230 L145 200 L250 200 L265 150 L280 250 L295 200 L400 200 L415 170 L430 230 L445 200 L550 200 L565 150 L580 250 L595 200 L700 200 L715 170 L730 230 L745 200 L850 200 L865 150 L880 250 L895 200 L1000 200 L1015 170 L1030 230 L1045 200 L1150 200 L1165 150 L1180 250 L1195 200 L1300 200 L1315 170 L1330 230 L1345 200 L1440 200" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 20" style={{ animationDuration: "5s" }} />
 
-          {/* Line 2: Middle - Very Fast */}
-          <path d="M0 400 L150 400 L170 380 L190 400 L205 400 L215 320 L225 480 L235 400 L250 400 L270 370 L290 400 L440 400 L460 380 L480 400 L495 400 L505 320 L515 480 L525 400 L540 400 L560 370 L580 400 L730 400 L750 380 L770 400 L785 400 L795 320 L805 480 L815 400 L830 400 L850 370 L870 400 L1020 400 L1040 380 L1060 400 L1075 400 L1085 320 L1095 480 L1105 400 L1120 400 L1140 370 L1160 400 L1310 400 L1330 380 L1350 400 L1365 400 L1375 320 L1385 480 L1395 400 L1410 400 L1440 400" stroke="currentColor" strokeWidth="2" className="text-slate-300 dark:text-white/60 animate-dash" strokeDasharray="500 50" style={{ animationDuration: "3s" }} />
+            {/* Line 2: Middle - Very Fast */}
+            <path d="M0 400 L150 400 L170 380 L190 400 L205 400 L215 320 L225 480 L235 400 L250 400 L270 370 L290 400 L440 400 L460 380 L480 400 L495 400 L505 320 L515 480 L525 400 L540 400 L560 370 L580 400 L730 400 L750 380 L770 400 L785 400 L795 320 L805 480 L815 400 L830 400 L850 370 L870 400 L1020 400 L1040 380 L1060 400 L1075 400 L1085 320 L1095 480 L1105 400 L1120 400 L1140 370 L1160 400 L1310 400 L1330 380 L1350 400 L1365 400 L1375 320 L1385 480 L1395 400 L1410 400 L1440 400" stroke="currentColor" strokeWidth="2" className="text-slate-300 dark:text-white/60 animate-dash" strokeDasharray="500 50" style={{ animationDuration: "3s" }} />
 
-          {/* Line 3: Bottom - Varying speed */}
-          <path d="M0 600 L200 600 L215 630 L230 570 L245 600 L450 600 L465 630 L480 570 L495 600 L700 600 L715 630 L730 570 L745 600 L950 600 L965 630 L980 570 L995 600 L1200 600 L1215 630 L1230 570 L1245 600 L1440 600" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 30" style={{ animationDuration: "7s", animationDirection: "reverse" }} />
-        </svg>
+            {/* Line 3: Bottom - Varying speed */}
+            <path d="M0 600 L200 600 L215 630 L230 570 L245 600 L450 600 L465 630 L480 570 L495 600 L700 600 L715 630 L730 570 L745 600 L950 600 L965 630 L980 570 L995 600 L1200 600 L1215 630 L1230 570 L1245 600 L1440 600" stroke="currentColor" strokeWidth="1.5" className="text-slate-300 dark:text-white/40 animate-dash" strokeDasharray="300 30" style={{ animationDuration: "7s", animationDirection: "reverse" }} />
+          </svg>
+        )}
       </div>
 
       <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto h-full flex flex-col justify-center py-20 lg:py-0">
@@ -134,7 +139,7 @@ const Hero = () => {
               <span className="block text-3xl sm:text-4xl lg:text-5xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
                 Precision
               </span>
-              <span className="block text-3xl sm:text-4xl lg:text-5xl font-light text-slate-400 dark:text-slate-500 mt-1">
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-light mt-1 normal-case leading-tight font-sans tracking-normal text-slate-400 dark:text-slate-500">
                 in every dose.
               </span>
             </h1>
@@ -177,13 +182,13 @@ const Hero = () => {
               </div>
 
               {/* Floating Badge */}
-              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-black p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 animate-bounce-slow">
-                <div className="w-12 h-12 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
-                  <Microscope className="w-6 h-6" />
+              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white dark:bg-black p-4 md:p-6 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3 md:gap-4 animate-bounce-slow transform transition-all z-20">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
+                  <Microscope className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-slate-900 dark:text-white">99.9%</div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Purity Grade</div>
+                  <div className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">99.9%</div>
+                  <div className="text-[10px] md:text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Purity Grade</div>
                 </div>
               </div>
             </div>

@@ -176,6 +176,13 @@ const Navbar = () => {
                   </Link>
                 );
               })}
+
+              <div className="mt-2 pt-2 border-t border-gray-200/50 px-4 flex items-center justify-between">
+                <span className="text-gray-600 text-sm font-medium">Appearance</span>
+                <div className="scale-90 origin-right">
+                  <ThemeToggle />
+                </div>
+              </div>
             </nav>
           </div>
         </>

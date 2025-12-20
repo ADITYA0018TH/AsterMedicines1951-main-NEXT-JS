@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { MagicBentoGrid, MagicBentoCard } from "@/components/ui/MagicBento";
+import ScrollFloat from "@/components/ScrollFloat";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -112,9 +113,30 @@ const Features = () => {
           <div className="pulse-chip-clean mb-6 mx-auto w-fit">
             <span className="text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">Our Capabilities</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-6">
-            Engineered for <span className="text-pulse-500">Excellence.</span>
-          </h2>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-x-4 mb-6 text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white">
+            <ScrollFloat
+              animationDuration={1}
+              ease="back.inOut(2)"
+              scrollStart="center bottom+=50%"
+              scrollEnd="bottom bottom-=40%"
+              stagger={0.03}
+              containerClassName="my-0"
+              textClassName="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white"
+            >
+              Engineered for
+            </ScrollFloat>
+            <ScrollFloat
+              animationDuration={1}
+              ease="back.inOut(2)"
+              scrollStart="center bottom+=50%"
+              scrollEnd="bottom bottom-=40%"
+              stagger={0.03}
+              containerClassName="my-0"
+              textClassName="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-pulse-500"
+            >
+              Excellence.
+            </ScrollFloat>
+          </div>
           <p className="text-lg text-slate-600 dark:text-gray-400">
             Innovative solutions for complex healthcare challenges.
           </p>
