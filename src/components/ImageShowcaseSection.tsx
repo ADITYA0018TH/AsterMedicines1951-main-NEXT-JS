@@ -1,56 +1,16 @@
 "use client";
 import React, { useRef } from "react";
+import Image from "next/image";
 import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
 import { ContainerScroll } from "@/components/container-scroll-animation";
 
-// --- ContainerScroll, Header, Card components ---
-export const Header = ({ translate, titleComponent }: any) => {
-  return (
-    <motion.div
-      style={{
-        translateY: translate,
-      }}
-      className="max-w-5xl mx-auto text-center rounded-3xl"
-    >
-      {titleComponent}
-    </motion.div>
-  );
-};
-
-export const Card = ({
-  rotate,
-  scale,
-  children,
-}: {
-  rotate: MotionValue<number>;
-  scale: MotionValue<number>;
-  translate: MotionValue<number>;
-  children: React.ReactNode;
-}) => {
-  return (
-    <motion.div
-      style={{
-        rotateX: rotate,
-        scale,
-        boxShadow:
-          "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
-      }}
-      className="max-w-5xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full p-2 md:p-6 bg-white dark:bg-slate-900 rounded-[30px] shadow-2xl relative"
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-pulse-500 to-orange-500 rounded-[30px] blur opacity-20 dark:opacity-40 -z-10"></div>
-      <div className="h-full w-full overflow-hidden rounded-[24px] bg-gray-100 dark:bg-zinc-900 md:rounded-[24px] md:p-4">
-        {children}
-      </div>
-    </motion.div>
-  );
-};
-// --- End ContainerScroll, Header, Card ---
+// --- ContainerScroll, Header, Card components imported from @/components/container-scroll-animation ---
 
 const ImageShowcaseSection = () => {
   return (
-    <section className="h-screen w-full pt-0 pb-8 sm:pb-12 bg-white dark:bg-black rounded-3xl animate-on-scroll opacity-0" id="showcase">
-      <div className="container px-4 sm:px-6 lg:px-8 mx-auto rounded-3xl">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-8">
+    <section className="h-screen w-full pt-0 pb-8 sm:pb-12 bg-white dark:bg-black rounded-3xl animate-on-scroll opacity-0 relative" id="showcase">
+      <div className="container px-4 sm:px-6 lg:px-8 mx-auto rounded-3xl relative">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-8 relative">
           {/* Left Side: Text Content */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center space-y-12 sticky top-32">
             <div className="max-w-xl animate-on-scroll rounded-3xl">
@@ -77,17 +37,20 @@ const ImageShowcaseSection = () => {
           </div>
 
           {/* Right Side: Container Scroll Animation */}
-          <div className="w- lg:w-1/2 h-[60rem] relative">
+          <div className="w-full lg:w-1/2 h-[60rem] relative">
             <ContainerScroll
               titleComponent={
                 <div className="sr-only">Image Showcase</div> // Hidden title for accessibility as visual title is now on the left
               }
             >
-              <div className="h-full flex flex-col rounded-3xl">
-                <img
+              <div className="h-full w-full relative flex flex-col rounded-3xl">
+                <Image
                   src="/My-uploads/AD_OIL_170.png"
                   alt="Advanced pharmaceutical manufacturing facility with modern equipment"
-                  className="w-full h-full object-cover rounded-[30px]"
+                  fill
+                  className="object-cover rounded-[30px]"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
             </ContainerScroll>

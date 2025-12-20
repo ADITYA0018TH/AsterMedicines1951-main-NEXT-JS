@@ -142,29 +142,35 @@ const DetailsSection = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <input
                     type="text"
+                    id="fullName"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="Name"
+                    aria-label="Full name"
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                     required
                   />
                   <input
                     type="email"
+                    id="contact-email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Email"
+                    aria-label="Email address"
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                     required
                   />
                 </div>
                 <input
                   type="text"
+                  id="company"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Organization / Hospital"
+                  aria-label="Organization or hospital name"
                   className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none focus:ring-2 focus:ring-pulse-500 dark:focus:ring-neutral-500 text-slate-900 dark:text-white placeholder:text-gray-400"
                 />
 

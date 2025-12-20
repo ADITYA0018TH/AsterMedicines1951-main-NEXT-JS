@@ -357,11 +357,16 @@ const GlobalSpotlight: React.FC<{
       );
       z-index: 200;
       opacity: 0;
-      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
       mix-blend-mode: screen;
+      will-change: transform, opacity;
     `;
             document.body.appendChild(spotlight);
             spotlightRef.current = spotlight;
+
+            // Initialize position off-screen or at 0,0 hidden
+            gsap.set(spotlight, { xPercent: -50, yPercent: -50, x: 0, y: 0 });
 
             const handleMouseMove = (e: MouseEvent) => {
                 if (!spotlightRef.current || !gridRef.current) return;
@@ -423,9 +428,10 @@ const GlobalSpotlight: React.FC<{
                     );
                 });
 
+                // Optimize: Use transforms (x/y) instead of top/left to avoid layout thrashing
                 gsap.to(spotlightRef.current, {
-                    left: e.clientX,
-                    top: e.clientY,
+                    x: e.clientX,
+                    y: e.clientY,
                     duration: 0.1,
                     ease: "power2.out",
                 });

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -160,7 +161,7 @@ const AdminProductsContent = () => {
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+            <main id="main-content" className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-7xl">
                     <div className="glass-card p-4 sm:p-6 md:p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
@@ -303,7 +304,13 @@ const AdminProductsContent = () => {
                                         {products.map((product) => (
                                             <TableRow key={product._id} className="border-b border-gray-200/30 dark:border-gray-700/30 hover:bg-white/10 dark:hover:bg-white/5 transition-colors">
                                                 <TableCell>
-                                                    <img src={product.images?.[0] || '/placeholder.svg'} alt={product.name} className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded" />
+                                                    <Image
+                                                        src={product.images?.[0] || '/placeholder.svg'}
+                                                        alt={product.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded"
+                                                    />
                                                 </TableCell>
                                                 <TableCell className="text-gray-800 dark:text-gray-200 font-medium">
                                                     <div className="min-w-[100px] max-w-[150px] sm:max-w-none">
@@ -329,7 +336,8 @@ const AdminProductsContent = () => {
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
-                                                            onClick={() => {
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
                                                                 if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
                                                                     deleteMutation.mutate(product._id);
                                                                 }

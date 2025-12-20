@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Contact from '@/models/Contact';
+import { z } from 'zod';
+
+const contactSchema = z.object({
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().optional(),
+  email: z.string().email("Invalid email address"),
+  mobileNumber: z.string().regex(/^\d+$/, "Mobile number must contain only digits").min(10, "Mobile number must be at least 10 digits"),
+  subject: z.string().optional(),
+  message: z.string().min(1, "Message is required"),
+});
 
 export async function GET() {
   try {
@@ -15,9 +25,26 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    await connectDB();
+    // 1. Connection check
+    try {
+      await connectDB();
+    } catch (dbError) {
+      console.error('Database connection failed:', dbError);
+      return NextResponse.json({ message: 'Database Service Unavailable' }, { status: 503 });
+    }
+
     const body = await request.json();
-    const { firstName, lastName, email, mobileNumber, subject, message } = body;
+
+    // 2. Validation
+    const validationResult = contactSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { message: 'Validation Error', errors: validationResult.error.format() }, 
+        { status: 400 }
+      );
+    }
+    
+    const { firstName, lastName, email, mobileNumber, subject, message } = validationResult.data;
 
     const newContact = await Contact.create({
       firstName,
@@ -32,6 +59,7 @@ export async function POST(request: Request) {
       message: 'Message sent successfully', 
       contact: newContact 
     }, { status: 201 });
+
   } catch (error) {
     console.error('Contact error:', error);
     return NextResponse.json({ message: 'Error sending message' }, { status: 500 });

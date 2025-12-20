@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
@@ -127,7 +128,9 @@ const ProductsContent = () => {
                         </div>
                         <input
                             type="text"
+                            id="product-search"
                             placeholder="Search products..."
+                            aria-label="Search products"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-12 pr-4 py-4 bg-secondary border border-border rounded-full text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all"
@@ -180,8 +183,8 @@ const ProductsContent = () => {
                                             />
                                         </div>
 
-                                        <div
-                                            onClick={() => router.push(`/products/${product.id}`)}
+                                        <Link
+                                            href={`/products/${product.id}`}
                                             className="h-full bg-card border border-border rounded-2xl overflow-hidden hover:border-brand-accent/50 hover:shadow-[0_0_20px_rgba(0,210,255,0.1)] transition-all duration-300 cursor-pointer flex flex-col"
                                         >
                                             <div className="aspect-square bg-secondary/50 p-6 flex items-center justify-center relative overflow-hidden">
@@ -204,9 +207,9 @@ const ProductsContent = () => {
                                             </div>
 
                                             <div className="p-6 flex flex-col flex-grow">
-                                                <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-1 group-hover:text-brand-accent transition-colors">
+                                                <h2 className="text-xl font-bold text-foreground mb-2 line-clamp-1 group-hover:text-brand-accent transition-colors">
                                                     {product.name}
-                                                </h3>
+                                                </h2>
                                                 <p className="text-muted-foreground text-sm mb-4 line-clamp-2 flex-grow">
                                                     {product.description}
                                                 </p>
@@ -225,7 +228,7 @@ const ProductsContent = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </div>
                                 );
                             })}
@@ -235,43 +238,45 @@ const ProductsContent = () => {
             </section>
 
             {/* Floating Action Bar */}
-            {selectedProducts.length > 0 && (
-                <div className="floating-bar fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-3xl px-6">
-                    <div className="bg-background/90 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center text-white font-bold">
-                                {selectedProducts.length}
+            {
+                selectedProducts.length > 0 && (
+                    <div className="floating-bar fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-3xl px-6">
+                        <div className="bg-background/90 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center text-white font-bold">
+                                    {selectedProducts.length}
+                                </div>
+                                <span className="text-foreground font-medium hidden sm:inline">Selected</span>
                             </div>
-                            <span className="text-foreground font-medium hidden sm:inline">Selected</span>
-                        </div>
-                        <div className="flex gap-3">
-                            <Button
-                                onClick={handleCompare}
-                                disabled={selectedProducts.length < 2 || selectedProducts.length > 3}
-                                variant="outline"
-                                className="border-border text-foreground hover:bg-secondary hover:text-foreground"
-                            >
-                                <GitCompare className="w-4 h-4 mr-2" />
-                                Compare
-                            </Button>
-                            <Button
-                                onClick={() => setShowInquiryForm(true)}
-                                className="bg-brand-accent text-white hover:bg-foreground hover:text-background"
-                            >
-                                <Send className="w-4 h-4 mr-2" />
-                                Inquiry
-                            </Button>
-                            <Button
-                                onClick={() => setSelectedProducts([])}
-                                variant="ghost"
-                                className="text-muted-foreground hover:text-foreground hover:bg-secondary"
-                            >
-                                Clear
-                            </Button>
+                            <div className="flex gap-3">
+                                <Button
+                                    onClick={handleCompare}
+                                    disabled={selectedProducts.length < 2 || selectedProducts.length > 3}
+                                    variant="outline"
+                                    className="border-border text-foreground hover:bg-secondary hover:text-foreground"
+                                >
+                                    <GitCompare className="w-4 h-4 mr-2" />
+                                    Compare
+                                </Button>
+                                <Button
+                                    onClick={() => setShowInquiryForm(true)}
+                                    className="bg-brand-accent text-white hover:bg-foreground hover:text-background"
+                                >
+                                    <Send className="w-4 h-4 mr-2" />
+                                    Inquiry
+                                </Button>
+                                <Button
+                                    onClick={() => setSelectedProducts([])}
+                                    variant="ghost"
+                                    className="text-muted-foreground hover:text-foreground hover:bg-secondary"
+                                >
+                                    Clear
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             <ProductComparison
                 products={selectedProducts.slice(0, 3)}
@@ -287,7 +292,7 @@ const ProductsContent = () => {
             />
 
             <Footer />
-        </div>
+        </div >
     );
 };
 

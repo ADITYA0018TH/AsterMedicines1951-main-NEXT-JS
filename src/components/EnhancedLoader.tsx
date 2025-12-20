@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EnhancedLoaderProps {
@@ -127,9 +128,11 @@ const EnhancedLoader: React.FC<EnhancedLoaderProps> = ({
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "backOut" }}
               >
-                <img
+                <Image
                   src="/My-uploads/logo.png"
                   alt="Aster Logo"
+                  width={100}
+                  height={100}
                   className="w-12 h-12 object-contain"
                 />
               </motion.div>

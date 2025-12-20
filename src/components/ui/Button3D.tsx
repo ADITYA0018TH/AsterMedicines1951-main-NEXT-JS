@@ -30,9 +30,9 @@ const Button3D = ({
     };
     const variantStyles = {
         primary: {
-            top: "bg-orange-500 text-white",
-            bottom: "bg-orange-700",
-            shadow: "bg-orange-900"
+            top: "bg-orange-700 text-white",
+            bottom: "bg-orange-800",
+            shadow: "bg-orange-950"
         },
         secondary: {
             top: "bg-slate-100 text-slate-900",

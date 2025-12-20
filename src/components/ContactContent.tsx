@@ -33,6 +33,17 @@ const ContactContent = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
+
+        // For mobileNumber, allow only numeric characters
+        if (name === 'mobileNumber') {
+            const numericValue = value.replace(/\D/g, ''); // Remove non-digits
+            setFormData(prev => ({
+                ...prev,
+                [name]: numericValue
+            }));
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: value

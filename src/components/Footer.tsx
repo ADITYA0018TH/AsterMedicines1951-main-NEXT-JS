@@ -221,6 +221,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative"
+                    aria-label={social.label}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -229,7 +230,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                     onMouseLeave={handleMouseLeave}
                   >
                     <div className="relative p-3 border border-border rounded-xl bg-secondary/50 backdrop-blur-sm transition-all duration-300 group-hover:border-brand-accent/50 group-hover:bg-brand-accent/10">
-                      <social.icon className="w-5 h-5 text-muted-foreground transition-colors group-hover:text-brand-accent" />
+                      <social.icon className="w-5 h-5 text-muted-foreground transition-colors group-hover:text-brand-accent" aria-hidden="true" />
                       {/* Glow effect */}
                       <motion.div className="absolute inset-0 rounded-xl bg-brand-accent/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -245,9 +246,10 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               whileHover={{ x: 5 }}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              aria-label="Back to top"
             >
               <div className="p-3 border border-border rounded-lg bg-secondary/50 transition-all group-hover:border-brand-accent/50 group-hover:bg-brand-accent/10">
-                <ArrowUp className="w-4 h-4 text-muted-foreground group-hover:text-brand-accent transition-colors" />
+                <ArrowUp className="w-4 h-4 text-muted-foreground group-hover:text-brand-accent transition-colors" aria-hidden="true" />
               </div>
               <span className="text-xs font-mono text-muted-foreground uppercase tracking-[0.2em] group-hover:text-brand-accent transition-colors">
                 Back to top

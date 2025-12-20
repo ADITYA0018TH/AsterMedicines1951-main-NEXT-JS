@@ -26,7 +26,7 @@ const AdminDashboardContent = () => {
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+            <main id="main-content" className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-6xl">
                     <div className="glass-card p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex items-center justify-between mb-8">

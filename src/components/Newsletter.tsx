@@ -40,7 +40,9 @@ const Newsletter = () => {
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
+                id="newsletter-email"
                 placeholder="Your email address"
+                aria-label="Email address for newsletter subscription"
                 className="flex-1 px-6 py-4 rounded-full bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-pulse-500 backdrop-blur-sm"
                 required
               />

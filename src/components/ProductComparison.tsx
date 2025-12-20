@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { X, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,11 +50,13 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({
 
               <CardHeader>
                 {product.images?.[0] && (
-                  <div className="aspect-square bg-white flex items-center justify-center p-4 rounded-lg mb-4">
-                    <img
+                  <div className="aspect-square bg-white flex items-center justify-center p-4 rounded-lg mb-4 relative">
+                    <Image
                       src={product.images[0]}
                       alt={product.name}
-                      className="max-w-full max-h-full object-contain"
+                      fill
+                      className="object-contain p-2"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 )}

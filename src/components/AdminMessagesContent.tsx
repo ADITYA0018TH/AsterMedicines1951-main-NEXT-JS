@@ -91,7 +91,8 @@ const AdminMessagesContent = () => {
         toast.success("Messages exported successfully");
     };
 
-    const handleDelete = async (id: string, name: string) => {
+    const handleDelete = async (e: React.MouseEvent, id: string, name: string) => {
+        e.stopPropagation();
         if (!window.confirm(`Are you sure you want to delete the message from "${name}"?`)) {
             return;
         }
@@ -154,7 +155,7 @@ const AdminMessagesContent = () => {
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+            <main id="main-content" className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto max-w-7xl">
                     <div className="glass-card p-4 sm:p-6 md:p-8 hover:scale-[1.001] transition-all duration-500">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
@@ -226,7 +227,7 @@ const AdminMessagesContent = () => {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        onClick={() => handleDelete(msg._id, `${msg.firstName} ${msg.lastName}`)}
+                                                        onClick={(e) => handleDelete(e, msg._id, `${msg.firstName} ${msg.lastName}`)}
                                                         className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 min-w-[44px] min-h-[44px]"
                                                     >
                                                         <Trash2 className="h-4 w-4" />

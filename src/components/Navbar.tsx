@@ -15,12 +15,26 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+
+    const checkDesktop = () => {
+      setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+    };
+
+    // Initial checks
+    checkDesktop();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", checkDesktop);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkDesktop);
+    };
   }, []);
 
   const navLinks = [
@@ -58,9 +72,9 @@ const Navbar = () => {
                 <Image
                   src="/My-uploads/logo.png"
                   alt="Aster Medicines Logo"
-                  fill
-                  sizes="(max-width: 768px) 120px, 160px"
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  width={96}
+                  height={64}
+                  className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
                   priority
                 />
               </div>
@@ -79,23 +93,26 @@ const Navbar = () => {
             id="navbar-content-surface"
           >
             {/* Desktop Links */}
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-8 relative">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`relative inline-block px-4 py-2 text-sm font-medium transition-colors hover:text-brand-accent ${pathname === link.href ? "text-brand-accent" : "text-muted-foreground"
-                    }`}
-                  style={{ position: 'relative' }}
+                  className="group"
                 >
-                  {pathname === link.href && (
-                    <motion.span
-                      layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-brand-accent/10 rounded-full -z-10"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                  {link.name}
+                  <div
+                    className={`relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:text-brand-accent ${pathname === link.href ? "text-brand-accent" : "text-muted-foreground"
+                      }`}
+                  >
+                    {pathname === link.href && isDesktop && (
+                      <motion.span
+                        layoutId="active-nav-pill"
+                        className="absolute inset-0 bg-brand-accent/10 rounded-full -z-10"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                    {link.name}
+                  </div>
                 </Link>
               ))}
               <ThemeToggle />

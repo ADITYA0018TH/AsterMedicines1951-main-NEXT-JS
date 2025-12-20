@@ -62,7 +62,7 @@ const HomeContent = () => {
         <div className="h-screen cursor-none">
             <CustomCursor />
             <Navbar />
-            <main className="space-y-4 sm:space-y-8">
+            <main id="main-content" className="space-y-4 sm:space-y-8">
                 <Hero />
                 <PharmaceuticalSection />
                 <SpecsSection />

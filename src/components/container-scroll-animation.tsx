@@ -12,6 +12,7 @@ export const ContainerScroll = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
+    offset: ["start start", "end end"],
   });
   const [isMobile, setIsMobile] = React.useState(false);
 
@@ -59,8 +60,9 @@ export const Header = ({ translate, titleComponent }: any) => {
     <motion.div
       style={{
         translateY: translate,
+        position: "relative",
       }}
-      className="div max-w-5xl mx-auto text-center"
+      className="max-w-5xl mx-auto text-center"
     >
       {titleComponent}
     </motion.div>
@@ -87,6 +89,7 @@ export const Card = ({
         display: "inline-block",
         padding: 0,
         margin: 0,
+        position: "relative",
       }}
       className="bg-white dark:bg-zinc-900 rounded-[30px] p-0 align-top inline-block"
     >

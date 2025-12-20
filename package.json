@@ -49,6 +49,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "critters": "^0.0.23",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
@@ -79,7 +80,7 @@
     "use-liquid-glass-ui": "^1.0.9",
     "vaul": "^1.1.2",
     "xlsx-js-style": "^1.2.0",
-    "zod": "^4.1.13"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -95,5 +96,13 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
     "typescript": "^5"
-  }
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions",
+    "not dead",
+    "not op_mini all"
+  ]
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -58,18 +60,21 @@ const LoginContent = () => {
             <CustomCursor />
             <Navbar />
 
-            <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-40 pb-24">
+            <main id="main-content" className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-40 pb-24">
                 <div className="container mx-auto max-w-6xl">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
 
                         {/* Left Column: Logo and Welcome Text */}
                         <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
                             <div className="flex justify-center lg:justify-start">
-                                <img
+                                <Image
                                     src="/My-uploads/logo.png"
                                     alt="Aster Medicines Logo"
+                                    width={200}
+                                    height={134}
                                     className="h-32 w-auto drop-shadow-2xl"
                                     style={{ filter: "drop-shadow(0 0 15px rgba(254,92,2,0.3))" }}
+                                    priority
                                 />
                             </div>
                             <div>

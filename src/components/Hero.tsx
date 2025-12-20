@@ -19,26 +19,59 @@ const Hero = () => {
 
   useEffect(() => {
     if (isMobile) return;
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current || !imageRef.current) return;
-      const { left, top, width, height } =
-        containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - left) / width - 0.5;
-      const y = (e.clientY - top) / height - 0.5;
-      imageRef.current.style.transform = `perspective(1000px) rotateY(${x * 2.5
-        }deg) rotateX(${-y * 2.5}deg) scale3d(1.02, 1.02, 1.02)`;
+
+    // Cache bounds to avoid layout thrashing
+    let bounds = { left: 0, top: 0, width: 0, height: 0 };
+    const updateBounds = () => {
+      if (containerRef.current) {
+        bounds = containerRef.current.getBoundingClientRect();
+      }
     };
+
+    // Initial measure
+    updateBounds();
+    window.addEventListener("resize", updateBounds);
+    window.addEventListener("scroll", updateBounds); // Update on scroll as position changes
+
+    let animationFrameId: number;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!imageRef.current || bounds.width === 0) return;
+
+      // Use cached bounds - no reflow!
+      const x = (e.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (e.clientY - bounds.top) / bounds.height - 0.5;
+
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      animationFrameId = requestAnimationFrame(() => {
+        if (imageRef.current) {
+          imageRef.current.style.transform = `perspective(1000px) rotateY(${x * 2.5}deg) rotateX(${-y * 2.5}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+      });
+    };
+
     const handleMouseLeave = () => {
       if (!imageRef.current) return;
-      imageRef.current.style.transform =
-        "perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      animationFrameId = requestAnimationFrame(() => {
+        if (imageRef.current) {
+          imageRef.current.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+        }
+      });
     };
+
     const container = containerRef.current;
     container?.addEventListener("mousemove", handleMouseMove);
     container?.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
+      window.removeEventListener("resize", updateBounds);
+      window.removeEventListener("scroll", updateBounds);
       container?.removeEventListener("mousemove", handleMouseMove);
       container?.removeEventListener("mouseleave", handleMouseLeave);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [isMobile]);
 
@@ -136,7 +169,7 @@ const Hero = () => {
                   src="/My-uploads/Ondansetron.png"
                   alt="Precision Pharmaceutical Manufacturing"
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover transform transition-transform duration-700 group-hover:scale-105"
                   priority
                 />
