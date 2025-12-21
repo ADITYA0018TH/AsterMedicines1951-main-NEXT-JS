@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import "./ThemeToggle.css";
+import { useThemeAnimation } from "../hooks/use-theme-animation";
 
 const ThemeToggle = () => {
-  const { theme, setTheme } = useTheme();
+  const { toggleTheme, resolvedTheme, ref } = useThemeAnimation();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
@@ -15,19 +15,16 @@ const ThemeToggle = () => {
 
   if (!mounted) return null;
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   return (
     <div className="theme-switch-wrapper">
       <label className="theme-switch">
         <input
+          ref={ref as React.RefObject<HTMLInputElement>}
           type="checkbox"
           className="theme-switch__checkbox"
-          checked={theme === "dark"}
+          checked={resolvedTheme === "dark"}
           onChange={toggleTheme}
-          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          aria-label={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         />
         <div className="theme-switch__container">
           <div className="theme-switch__clouds"></div>

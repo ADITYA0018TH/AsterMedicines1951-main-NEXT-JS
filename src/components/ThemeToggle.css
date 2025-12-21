@@ -1,6 +1,7 @@
 /* ThemeToggle.css */
 .theme-switch-wrapper {
     /* From Uiverse.io by Galahhad */
+    view-transition-name: theme-toggle;
 }
 
 .theme-switch {
