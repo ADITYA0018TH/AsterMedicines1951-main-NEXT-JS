@@ -137,8 +137,8 @@ const ProductDetailContent = () => {
                                 </CarouselContent>
                                 {product.images.length > 1 && (
                                     <>
-                                        <CarouselPrevious className="left-4" />
-                                        <CarouselNext className="right-4" />
+                                        <CarouselPrevious className="left-4 opacity-100 disabled:opacity-50 z-10 bg-white/80 hover:bg-white text-gray-900 border-gray-200" />
+                                        <CarouselNext className="right-4 opacity-100 disabled:opacity-50 z-10 bg-white/80 hover:bg-white text-gray-900 border-gray-200" />
                                     </>
                                 )}
                             </Carousel>
