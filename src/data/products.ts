@@ -26,9 +26,9 @@ export const products: Product[] = [
     dosage: "170ml bottle",
     features: ["Vitamin Enriched", "Baby Safe Formula", "Natural Ingredients"],
     images: [
-      "/My-uploads/6c8fc721-09c5-4729-b52e-438a90171536.webp",
-      "/My-uploads/e5f004e0-46b7-4c84-a60a-0a115b457701.webp",
-      "/My-uploads/d7141b66-e644-4488-ae7c-056d083f305f.webp"
+      "/My-uploads/ASTER_AD_170_ML_1.webp",
+      "/My-uploads/ASTER_AD_170_ML_2.webp",
+      "/My-uploads/ASTER_AD_170_ML_3.webp"
     ],
     detailedDescription: "Aster AD Vitamin is a specially formulated baby massage oil enriched with essential vitamins A, D, E and natural olive oil. This nourishing blend supports healthy growth and development in infants and young children.",
     composition: "Vitamin A, Vitamin D3, Vitamin E, Olive Oil, Light Liquid Paraffin",
@@ -44,9 +44,9 @@ export const products: Product[] = [
     dosage: "25ml x 25 Ampoules",
     features: ["Emergency Use", "Sterile Solution", "Hospital Grade"],
     images: [
-      "/My-uploads/c8606164-0df7-45d9-b3a6-54930c5c505b.webp",
-      "/My-uploads/351e960a-4e2a-4021-93f4-d16d9f95372c.webp",
-      "/My-uploads/ec56b358-c59e-4ff6-a5b8-af4afefec3d5.webp"
+      "/My-uploads/Sodium_Bicarbonate_Injection_IP_7.5_1.webp",
+      "/My-uploads/Sodium_Bicarbonate_Injection_IP_7.5_2.webp",
+      "/My-uploads/Sodium_Bicarbonate_Injection_IP_7.5_3.webp"
     ],
     detailedDescription: "Sodium Bicarbonate Injection is used in emergency medicine for the treatment of metabolic acidosis and as an alkalinizing agent.",
     composition: "Sodium Bicarbonate 7.5% W/V in sterile water for injection",
@@ -63,8 +63,8 @@ export const products: Product[] = [
     dosage: "25ml x 25 Ampoules",
     features: ["IV Administration", "Energy Source", "Sterile Preparation"],
     images: [
-      "/My-uploads/aa78d7ed-9bc4-49e9-9da6-76f4a8babef4.webp",
-      "/My-uploads/89c7d133-df9c-4e1e-922c-edfbbf50db24.webp"
+      "/My-uploads/DEXTROSE_INJECTION_IP_25pct_1.webp",
+      "/My-uploads/DEXTROSE_INJECTION_IP_25pct_2.webp"
     ],
     detailedDescription: "Dextrose Injection provides a source of calories and fluid for patients requiring parenteral nutrition or fluid replacement.",
     composition: "Dextrose Monohydrate 25% W/V in sterile water for injection",
@@ -81,8 +81,8 @@ export const products: Product[] = [
     dosage: "2ml x 50 Ampoules",
     features: ["Diuretic Action", "Prescription Only", "Hospital Use"],
     images: [
-      "/My-uploads/70431e03-47c8-45ed-bc72-a1dcf7c8da03.webp",
-      "/My-uploads/FRUSEMIDE INJECTION IP (2).webp"
+      "/My-uploads/FRUSEMIDE_INJECTION_IP_1.webp",
+      "/My-uploads/FRUSEMIDE_INJECTION_IP_2.webp"
     ],
     detailedDescription: "Frusemide is a potent loop diuretic used in the treatment of edema and hypertension.",
     composition: "Frusemide 20mg in 2ml sterile aqueous solution",
@@ -98,7 +98,7 @@ export const products: Product[] = [
     description: "Vitamin B-Complex with Vitamin B12 & L-Lysine Syrup for prophylactic use",
     dosage: "200ml bottle",
     features: ["Vitamin B Complex", "L-Lysine Added", "Prophylactic Use"],
-    images: ["/My-uploads/add85555-5395-4fd3-9d06-46a8a8e85fa9.webp"],
+    images: ["/My-uploads/B-CODEX_SYRUP.webp"],
     detailedDescription: "B-Codex Syrup is a comprehensive vitamin B complex supplement with added L-Lysine to support overall health and wellness.",
     composition: "Vitamin B1, B2, B6, B12, Nicotinamide, L-Lysine HCl",
     indications: "Vitamin B deficiency, nutritional supplementation, loss of appetite, convalescence",
@@ -112,7 +112,7 @@ export const products: Product[] = [
     description: "Fungal Diastase & Pepsin Syrup - Mixed fruit flavoured digestive enzyme",
     dosage: "200ml bottle",
     features: ["Digestive Enzymes", "Mixed Fruit Flavor", "Digestive Aid"],
-    images: ["/My-uploads/d3c46770-0cdf-4bcc-8452-79f79a6dba85.webp"],
+    images: ["/My-uploads/LU-ZYME_SYRUP.webp"],
     detailedDescription: "Lu-Zyme Syrup is a digestive enzyme supplement that aids in the breakdown of proteins and carbohydrates for better digestion.",
     composition: "Fungal Diastase 50mg, Pepsin 10mg per 5ml",
     indications: "Indigestion, flatulence, loss of appetite, digestive disturbances",
@@ -127,9 +127,9 @@ export const products: Product[] = [
     dosage: "2ml x 50 Ampoules",
     features: ["Antiemetic", "Hospital Grade", "Sterile Solution"],
     images: [
-      "/My-uploads/75b0a2a8-1af1-4248-9224-abf2fb6f72a4.webp",
-      "/My-uploads/00fe53a9-3c88-4eb7-a193-224b444a2659.webp",
-      "/My-uploads/c519c225-9708-49ce-a5f3-e8be9931f160.webp"
+      "/My-uploads/ONDANSETRON_INJECTION_IP_1.webp",
+      "/My-uploads/ONDANSETRON_INJECTION_IP_2.webp",
+      "/My-uploads/ONDANSETRON_INJECTION_IP_3.webp"
     ],
     detailedDescription: "Ondansetron is a selective 5-HT3 receptor antagonist used to prevent nausea and vomiting caused by chemotherapy, radiation therapy, and surgery.",
     composition: "Ondansetron 4mg in 2ml sterile solution",
@@ -146,8 +146,8 @@ export const products: Product[] = [
     dosage: "25ml x 25 Ampoules",
     features: ["IV Administration", "Concentrated Energy Source", "Sterile Preparation"],
     images: [
-      "/My-uploads/be7c2883-95f5-4321-9fef-0c07add45046.webp",
-      "/My-uploads/7fbd9cd5-8012-4537-8b04-80f92c766424.webp"
+      "/My-uploads/DEXTROSE_INJECTION_IP_50pct_1.webp",
+      "/My-uploads/DEXTROSE_INJECTION_IP_50pct_2.webp"
     ],
     detailedDescription: "High concentration Dextrose Injection provides rapid glucose supplementation for severe hypoglycemia and concentrated caloric support.",
     composition: "Dextrose Monohydrate 50% W/V in sterile water for injection",

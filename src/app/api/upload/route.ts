@@ -23,9 +23,20 @@ export async function POST(request: Request) {
 
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.name);
-      const filename = `product-${uniqueSuffix}${ext}`;
+      const originalName = file.name;
+      const ext = path.extname(originalName);
+      const baseName = path.basename(originalName, ext);
+      
+      // Sanitize filename: replace spaces with underscores, remove non-alphanumeric chars (except - and _)
+      const sanitizedBase = baseName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_\-]/g, '');
+      
+      let filename = `${sanitizedBase}${ext}`;
+      let counter = 1;
+      
+      while (existsSync(path.join(uploadDir, filename))) {
+        filename = `${sanitizedBase}-${counter}${ext}`;
+        counter++;
+      }
       const filepath = path.join(uploadDir, filename);
 
       await writeFile(filepath, buffer);
