@@ -13,7 +13,6 @@ import ImageShowcaseSection from "@/components/ImageShowcaseSection";
 import Features from "@/components/Features";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 
 const HomeContent = () => {
 
@@ -59,8 +58,7 @@ const HomeContent = () => {
     }, []);
 
     return (
-        <div className="h-screen cursor-none">
-            <CustomCursor />
+        <div className="h-screen">
             <Navbar />
             <main id="main-content" className="space-y-4 sm:space-y-8">
                 <Hero />

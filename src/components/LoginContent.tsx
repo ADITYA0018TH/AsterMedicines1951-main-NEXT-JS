@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
+
 import { Eye, EyeOff } from "lucide-react";
 import Button3D from "@/components/ui/Button3D";
 
@@ -57,7 +57,7 @@ const LoginContent = () => {
         <div
             className="min-h-screen flex flex-col bg-background"
         >
-            <CustomCursor />
+
             <Navbar />
 
             <main id="main-content" className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-40 pb-24">
@@ -68,7 +68,7 @@ const LoginContent = () => {
                         <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
                             <div className="flex justify-center lg:justify-start">
                                 <Image
-                                    src="/My-uploads/logo.png"
+                                    src="/My-uploads/logo.webp"
                                     alt="Aster Medicines Logo"
                                     width={200}
                                     height={134}

@@ -116,7 +116,7 @@ const ImageShowcaseSection = () => {
             <div className="w-full lg:w-1/2">
               <ContainerScroll scrollYProgress={scrollYProgress}>
                 <Image
-                  src="/My-uploads/AD_OIL_170.png"
+                  src="/My-uploads/AD_OIL_170.webp"
                   alt="Advanced pharmaceutical manufacturing interface"
                   fill
                   className="object-cover object-center"

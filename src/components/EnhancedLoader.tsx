@@ -129,7 +129,7 @@ const EnhancedLoader: React.FC<EnhancedLoaderProps> = ({
                 transition={{ duration: 0.5, ease: "backOut" }}
               >
                 <Image
-                  src="/My-uploads/logo.png"
+                  src="/My-uploads/logo.webp"
                   alt="Aster Logo"
                   width={100}
                   height={100}

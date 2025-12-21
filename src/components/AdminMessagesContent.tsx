@@ -18,7 +18,7 @@ import XLSX from "xlsx-js-style";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
+
 
 interface ContactMessage {
     _id: string;
@@ -119,7 +119,7 @@ const AdminMessagesContent = () => {
             <div
                 className="min-h-screen flex flex-col bg-background"
             >
-                <CustomCursor />
+
                 <Navbar />
                 <main className="flex-grow flex items-center justify-center">
                     <div className="glass-card p-8">
@@ -136,7 +136,7 @@ const AdminMessagesContent = () => {
             <div
                 className="min-h-screen flex flex-col bg-background"
             >
-                <CustomCursor />
+
                 <Navbar />
                 <main className="flex-grow flex items-center justify-center">
                     <div className="glass-card p-8">
@@ -152,7 +152,7 @@ const AdminMessagesContent = () => {
         <div
             className="min-h-screen flex flex-col bg-background"
         >
-            <CustomCursor />
+
             <Navbar />
 
             <main id="main-content" className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">

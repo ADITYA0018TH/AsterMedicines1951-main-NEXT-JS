@@ -70,7 +70,7 @@ const Navbar = () => {
             <Link href="/" className="flex items-center gap-2 group">
               <div className="relative h-16 w-24">
                 <Image
-                  src="/My-uploads/logo.png"
+                  src="/My-uploads/logo.webp"
                   alt="Aster Medicines Logo"
                   width={96}
                   height={64}

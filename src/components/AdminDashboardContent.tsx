@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
+
 
 const AdminDashboardContent = () => {
     const router = useRouter();
@@ -23,7 +23,7 @@ const AdminDashboardContent = () => {
         <div
             className="min-h-screen flex flex-col bg-background"
         >
-            <CustomCursor />
+
             <Navbar />
 
             <main id="main-content" className="flex-grow pt-32 pb-12 px-4 sm:px-6 lg:px-8">

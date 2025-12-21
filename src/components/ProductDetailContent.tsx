@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -70,8 +70,7 @@ const ProductDetailContent = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen cursor-none bg-cover bg-center bg-no-repeat">
-                <CustomCursor />
+            <div className="min-h-screen bg-cover bg-center bg-no-repeat">
                 <Navbar />
                 <div className="container mx-auto px-4 py-24 text-center flex flex-col items-center justify-center">
                     <Loader2 className="w-12 h-12 text-brand-accent animate-spin mb-4" />
@@ -84,8 +83,7 @@ const ProductDetailContent = () => {
 
     if (isError || !product) {
         return (
-            <div className="min-h-screen cursor-none bg-cover bg-center bg-no-repeat">
-                <CustomCursor />
+            <div className="min-h-screen bg-cover bg-center bg-no-repeat">
                 <Navbar />
                 <div className="container mx-auto px-4 py-24 text-center">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Product Not Found</h1>
@@ -101,8 +99,7 @@ const ProductDetailContent = () => {
     }
 
     return (
-        <div className="min-h-screen cursor-none bg-cover bg-center bg-no-repeat bg-background text-foreground">
-            <CustomCursor />
+        <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-background text-foreground">
             <Navbar />
 
             {/* Breadcrumb */}
