@@ -9,13 +9,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pill, Shield, Award, CheckCircle, GitCompare, Send, Loader2, Search } from "lucide-react";
 import { Product } from "@/data/products";
 import { fetchProducts, fetchCategories } from "@/services/api";
 import ProductComparison from "@/components/ProductComparison";
 import BulkInquiryForm from "@/components/BulkInquiryForm";
+import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -27,7 +28,6 @@ const ProductsContent = () => {
     const [searchQuery, setSearchQuery] = React.useState("");
     const [selectedProducts, setSelectedProducts] = React.useState<Product[]>([]);
     const [showComparison, setShowComparison] = React.useState(false);
-    const [showInquiryForm, setShowInquiryForm] = React.useState(false);
 
     const { data: products = [], isLoading: isLoadingProducts } = useQuery({
         queryKey: ['products'],
@@ -57,10 +57,7 @@ const ProductsContent = () => {
         }
     };
 
-    const handleCompare = () => {
-        if (selectedProducts.length < 2) return;
-        setShowComparison(true);
-    };
+
 
     const handleRemoveFromComparison = (productId: number) => {
         setSelectedProducts(prev => prev.filter(p => p.id !== productId));
@@ -249,22 +246,28 @@ const ProductsContent = () => {
                                 <span className="text-foreground font-medium hidden sm:inline">Selected</span>
                             </div>
                             <div className="flex gap-3">
-                                <Button
-                                    onClick={handleCompare}
+                                <ProductComparison
+                                    products={selectedProducts.slice(0, 3)}
+                                    onRemove={handleRemoveFromComparison}
                                     disabled={selectedProducts.length < 2 || selectedProducts.length > 3}
-                                    variant="outline"
-                                    className="border-border text-foreground hover:bg-secondary hover:text-foreground"
-                                >
-                                    <GitCompare className="w-4 h-4 mr-2" />
-                                    Compare
-                                </Button>
-                                <Button
-                                    onClick={() => setShowInquiryForm(true)}
-                                    className="bg-brand-accent text-white hover:bg-foreground hover:text-background"
-                                >
-                                    <Send className="w-4 h-4 mr-2" />
-                                    Inquiry
-                                </Button>
+                                    triggerClassName={cn(buttonVariants({ variant: "outline" }), "border-border text-foreground hover:bg-secondary hover:text-foreground")}
+                                    trigger={
+                                        <>
+                                            <GitCompare className="w-4 h-4 mr-2" />
+                                            Compare
+                                        </>
+                                    }
+                                />
+                                <BulkInquiryForm
+                                    selectedProducts={selectedProducts}
+                                    triggerClassName={cn(buttonVariants(), "bg-brand-accent text-white hover:bg-foreground hover:text-background")}
+                                    trigger={
+                                        <>
+                                            <Send className="w-4 h-4 mr-2" />
+                                            Inquiry
+                                        </>
+                                    }
+                                />
                                 <Button
                                     onClick={() => setSelectedProducts([])}
                                     variant="ghost"
@@ -278,18 +281,9 @@ const ProductsContent = () => {
                 )
             }
 
-            <ProductComparison
-                products={selectedProducts.slice(0, 3)}
-                onRemove={handleRemoveFromComparison}
-                onClose={() => setShowComparison(false)}
-                open={showComparison}
-            />
 
-            <BulkInquiryForm
-                selectedProducts={selectedProducts}
-                onClose={() => setShowInquiryForm(false)}
-                open={showInquiryForm}
-            />
+
+
 
             <Footer />
         </div >

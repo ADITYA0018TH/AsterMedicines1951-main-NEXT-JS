@@ -1,22 +1,19 @@
 "use client";
 
-import { useState } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 import { Plus, Pencil, Trash2, MessageSquare, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-import ImageDropzone from "@/components/ImageDropzone";
+import AdminProductForm from "@/components/AdminProductForm";
 
 interface Product {
     _id: string;
@@ -32,17 +29,6 @@ interface Product {
 const AdminProductsContent = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-    const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        price: "",
-        category: "",
-        images: [] as string[],
-        stock: "",
-        featured: false,
-    });
 
     const { data: products, isLoading } = useQuery({
         queryKey: ["admin-products"],
@@ -53,47 +39,7 @@ const AdminProductsContent = () => {
         },
     });
 
-    const createMutation = useMutation({
-        mutationFn: async (data: any) => {
-            const response = await fetch("/api/products", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to create product");
-            }
-            return response.json();
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-products"] });
-            toast.success("Product created successfully");
-            handleCloseDialog();
-        },
-        onError: (error: Error) => toast.error(error.message),
-    });
 
-    const updateMutation = useMutation({
-        mutationFn: async ({ id, data }: { id: string; data: any }) => {
-            const response = await fetch(`/api/products/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to update product");
-            }
-            return response.json();
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-products"] });
-            toast.success("Product updated successfully");
-            handleCloseDialog();
-        },
-        onError: (error: Error) => toast.error(error.message),
-    });
 
     const deleteMutation = useMutation({
         mutationFn: async (id: string) => {
@@ -110,49 +56,7 @@ const AdminProductsContent = () => {
         onError: () => toast.error("Failed to delete product"),
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const data = {
-            ...formData,
-            price: parseFloat(formData.price),
-            stock: parseInt(formData.stock),
-        };
 
-        console.log('Submitting product data:', data);
-        if (editingProduct) {
-            updateMutation.mutate({ id: editingProduct._id, data });
-        } else {
-            createMutation.mutate(data);
-        }
-    };
-
-    const handleEdit = (product: Product) => {
-        setEditingProduct(product);
-        setFormData({
-            name: product.name,
-            description: product.description,
-            price: product.price.toString(),
-            category: product.category,
-            images: product.images || [],
-            stock: product.stock.toString(),
-            featured: product.featured,
-        });
-        setIsDialogOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-        setIsDialogOpen(false);
-        setEditingProduct(null);
-        setFormData({
-            name: "",
-            description: "",
-            price: "",
-            category: "",
-            images: [],
-            stock: "",
-            featured: false,
-        });
-    };
 
     return (
         <div
@@ -185,103 +89,16 @@ const AdminProductsContent = () => {
                                         <span className="sm:hidden">Messages</span>
                                     </Button>
                                 </Link>
-                                <Dialog open={isDialogOpen} onOpenChange={(open) => open ? setIsDialogOpen(true) : handleCloseDialog()}>
-                                    <DialogTrigger asChild>
-                                        <Button className="button-primary flex items-center justify-center gap-2 w-full sm:w-auto">
+                                <AdminProductForm
+                                    triggerClassName={cn(buttonVariants(), "button-primary flex items-center justify-center gap-2 w-full sm:w-auto")}
+                                    trigger={
+                                        <>
                                             <Plus className="h-4 w-4" />
                                             <span className="hidden sm:inline">Add Product</span>
                                             <span className="sm:hidden">Add</span>
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden w-[95vw] sm:w-full rounded-2xl backdrop-blur-xl bg-background/95 border-brand-accent/20 shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-4 [&::-webkit-scrollbar-thumb]:bg-orange-500 [&::-webkit-scrollbar-thumb]:rounded-full">
-                                        <DialogHeader>
-                                            <DialogTitle className="text-2xl font-display font-bold text-brand-accent">{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
-                                        </DialogHeader>
-                                        <form onSubmit={handleSubmit} className="space-y-4">
-                                            <div>
-                                                <Label htmlFor="name" className="text-sm font-medium text-muted-foreground mb-2 block">Product Name</Label>
-                                                <Input
-                                                    id="name"
-                                                    value={formData.name}
-                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                    required
-                                                    className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
-                                                />
-                                            </div>
-                                            <div>
-                                                <Label htmlFor="description" className="text-sm font-medium text-muted-foreground mb-2 block">Description</Label>
-                                                <Textarea
-                                                    id="description"
-                                                    value={formData.description}
-                                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                                    required
-                                                    className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
-                                                />
-                                            </div>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                                <div>
-                                                    <Label htmlFor="price" className="text-sm font-medium text-muted-foreground mb-2 block">Price</Label>
-                                                    <Input
-                                                        id="price"
-                                                        type="number"
-                                                        step="0.01"
-                                                        value={formData.price}
-                                                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                                        required
-                                                        className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label htmlFor="stock" className="text-sm font-medium text-muted-foreground mb-2 block">Stock</Label>
-                                                    <Input
-                                                        id="stock"
-                                                        type="number"
-                                                        value={formData.stock}
-                                                        onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                                                        required
-                                                        className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <Label htmlFor="category" className="text-sm font-medium text-muted-foreground mb-2 block">Category</Label>
-                                                <Input
-                                                    id="category"
-                                                    value={formData.category}
-                                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                                    required
-                                                    className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
-                                                />
-                                            </div>
-                                            <div>
-                                                <Label className="text-sm font-medium text-muted-foreground mb-2 block">Product Images</Label>
-                                                <ImageDropzone
-                                                    onImagesUploaded={(urls) => setFormData({ ...formData, images: urls })}
-                                                    existingImages={formData.images}
-                                                    maxFiles={10}
-                                                />
-                                            </div>
-                                            <div className="flex items-center space-x-2 bg-secondary/30 p-4 rounded-lg border border-border/50">
-                                                <input
-                                                    type="checkbox"
-                                                    id="featured"
-                                                    checked={formData.featured}
-                                                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                                    className="rounded border-border text-brand-accent focus:ring-brand-accent"
-                                                />
-                                                <Label htmlFor="featured" className="text-sm font-medium text-foreground cursor-pointer">Featured Product</Label>
-                                            </div>
-                                            <div className="flex gap-4 justify-end pt-4">
-                                                <Button type="button" variant="outline" onClick={handleCloseDialog} className="px-6 h-12 border-border hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-                                                    Cancel
-                                                </Button>
-                                                <Button type="submit" className="px-6 h-12 bg-brand-accent hover:bg-brand-accent/90 text-white font-medium rounded-lg shadow-lg hover:shadow-brand-accent/25 transition-all duration-300">
-                                                    {editingProduct ? "Update" : "Create"} Product
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
+                                        </>
+                                    }
+                                />
                             </div>
                         </div>
 
@@ -325,14 +142,11 @@ const AdminProductsContent = () => {
                                                 <TableCell className="text-gray-800 dark:text-gray-200 hidden lg:table-cell">{product.stock}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-1 sm:gap-2">
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            onClick={() => handleEdit(product)}
-                                                            className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 min-w-[44px] min-h-[44px]"
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                        </Button>
+                                                        <AdminProductForm
+                                                            product={product}
+                                                            triggerClassName="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 min-w-[44px] min-h-[44px] h-10 w-10"
+                                                            trigger={<Pencil className="h-4 w-4" />}
+                                                        />
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"

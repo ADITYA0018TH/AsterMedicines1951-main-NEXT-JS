@@ -5,35 +5,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Product } from "@/data/products";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  MorphingDialog,
+  MorphingDialogTrigger,
+  MorphingDialogContent,
+  MorphingDialogTitle,
+  MorphingDialogDescription,
+  MorphingDialogClose,
+  MorphingDialogContainer,
+  useMorphingDialog
+} from "@/components/ui/morphing-dialog";
 import { CheckCircle, Mail, User, Phone, Building, MessageSquare, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
 interface BulkInquiryFormProps {
   selectedProducts: Product[];
-  onClose: () => void;
-  open: boolean;
+  trigger: React.ReactNode;
+  triggerClassName?: string;
+  triggerStyle?: React.CSSProperties;
 }
 
 const inquirySchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(15, "Phone number must be less than 15 digits"),
+  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(15, "Phone number must be less than 15 digits").regex(/^\d+$/, "Phone number must contain only digits"),
   company: z.string().trim().max(200, "Company name must be less than 200 characters").optional(),
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
 });
 
-const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
-  selectedProducts,
-  onClose,
-  open,
-}) => {
+const BulkInquiryContentInner: React.FC<{ selectedProducts: Product[] }> = ({ selectedProducts }) => {
+  const { setIsOpen } = useMorphingDialog();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -82,7 +83,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
       });
 
       setTimeout(() => {
-        onClose();
+        setIsOpen(false);
       }, 1000);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -112,19 +113,16 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
     }
   };
 
-  if (selectedProducts.length === 0) return null;
-
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl backdrop-blur-xl bg-background/95 border-brand-accent/20 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-display font-bold text-brand-accent">
-            Bulk Product Inquiry
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Request information or quotes for {selectedProducts.length} selected products
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <div className="relative"> {/* Content Wrapper */}
+        <MorphingDialogClose />
+        <MorphingDialogTitle className="text-2xl font-display font-bold text-brand-accent">
+          Bulk Product Inquiry
+        </MorphingDialogTitle>
+        <MorphingDialogDescription className="text-muted-foreground mb-4">
+          Request information or quotes for {selectedProducts.length} selected products
+        </MorphingDialogDescription>
 
         <div className="mb-6 p-4 bg-secondary/50 rounded-xl border border-border">
           <h4 className="font-semibold mb-3 text-foreground">Selected Products:</h4>
@@ -148,6 +146,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
               <Input
                 id="name"
                 name="name"
+                required
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Full name"
@@ -167,6 +166,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
                 id="email"
                 name="email"
                 type="email"
+                required
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="astermedicines@example.com"
@@ -188,6 +188,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
                 id="phone"
                 name="phone"
                 type="tel"
+                required
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+91 **********"
@@ -222,6 +223,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
             <Textarea
               id="message"
               name="message"
+              required
               value={formData.message}
               onChange={handleChange}
               placeholder="Please provide details about your inquiry, required quantities, delivery location, etc."
@@ -237,7 +239,7 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={() => setIsOpen(false)}
               className="px-6 py-6 h-auto border-border hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
             >
               Cancel
@@ -261,8 +263,30 @@ const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>
+  );
+};
+
+const BulkInquiryForm: React.FC<BulkInquiryFormProps> = ({
+  selectedProducts,
+  trigger,
+  triggerClassName,
+  triggerStyle
+}) => {
+  if (selectedProducts.length === 0 && !trigger) return null;
+
+  return (
+    <MorphingDialog transition={{ type: 'spring', bounce: 0.05, duration: 0.25 }}>
+      <MorphingDialogTrigger className={triggerClassName} style={triggerStyle}>
+        {trigger}
+      </MorphingDialogTrigger>
+      <MorphingDialogContainer>
+        <MorphingDialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden w-[95vw] sm:w-full rounded-2xl backdrop-blur-xl bg-background/95 border-brand-accent/20 shadow-2xl p-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-4 [&::-webkit-scrollbar-thumb]:bg-orange-500 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <BulkInquiryContentInner selectedProducts={selectedProducts} />
+        </MorphingDialogContent>
+      </MorphingDialogContainer>
+    </MorphingDialog>
   );
 };
 
