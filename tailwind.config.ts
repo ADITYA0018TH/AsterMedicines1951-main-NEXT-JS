@@ -102,6 +102,10 @@ export default {
         shimmer: "shimmer 2s linear infinite",
         move: "move 5s linear infinite",
       },
+      transitionTimingFunction: {
+        "elastic-toggle": "cubic-bezier(0, -0.02, 0.4, 1.25)",
+        "elastic-circle": "cubic-bezier(0, -0.02, 0.35, 1.17)",
+      },
     },
   },
   plugins: [

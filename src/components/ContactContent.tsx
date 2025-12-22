@@ -194,7 +194,9 @@ const ContactContent = () => {
                                     style={{
                                         border: 0,
                                         filter: mounted && resolvedTheme === 'dark' ? 'invert(90%) hue-rotate(180deg)' : 'none',
-                                        transition: 'filter 0.3s ease'
+                                        willChange: 'filter',
+                                        transform: 'translateZ(0)',
+                                        backfaceVisibility: 'hidden'
                                     }}
                                     allowFullScreen={true}
                                     loading="lazy"
