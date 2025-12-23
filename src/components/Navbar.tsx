@@ -14,6 +14,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -93,23 +94,53 @@ const Navbar = () => {
             id="navbar-content-surface"
           >
             {/* Desktop Links */}
-            <div className="flex items-center space-x-8 relative">
+            <div className="flex items-center space-x-8 relative" onMouseLeave={() => setHoveredLink(null)}>
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
                   className="group"
+                  onMouseEnter={() => setHoveredLink(link.href)}
                 >
                   <div
-                    className={`relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:text-brand-accent ${pathname === link.href ? "text-brand-accent" : "text-muted-foreground"
+                    className={`relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:text-brand-accent dark:hover:text-brand-accent ${pathname === link.href ? "text-brand-accent" : "text-black dark:text-white"
                       }`}
                   >
                     {pathname === link.href && isDesktop && (
-                      <motion.span
+                      <motion.div
                         layoutId="active-nav-pill"
-                        className="absolute inset-0 bg-brand-accent/10 rounded-full -z-10"
+                        className="absolute inset-0 -z-10"
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
+                      >
+                        <GlassSurface
+                          width="100%"
+                          height="100%"
+                          borderRadius={50}
+                          borderWidth={0}
+                          backgroundOpacity={0}
+                          opacity={0.2}
+                          blur={5}
+                          className="w-full h-full"
+                        />
+                      </motion.div>
+                    )}
+                    {hoveredLink === link.href && (
+                      <motion.div
+                        layoutId="hover-nav-pill"
+                        className="absolute inset-0 -z-10"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      >
+                        <GlassSurface
+                          width="100%"
+                          height="100%"
+                          borderRadius={50}
+                          borderWidth={0}
+                          backgroundOpacity={0}
+                          opacity={0.15}
+                          blur={5}
+                          className="w-full h-full"
+                        />
+                      </motion.div>
                     )}
                     {link.name}
                   </div>
@@ -122,21 +153,6 @@ const Navbar = () => {
               </Button3D>
             </div>
           </GlassSurface>
-
-          {/* Mobile Menu Button - Moved outside Desktop container */}
-          <button
-            className="fixed top-6 right-6 z-50 md:hidden text-gray-700 p-2 rounded-full transition hover:bg-white/30"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            style={{
-              backgroundColor: "rgba(255,255,255,0.15)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              boxShadow: "0 4px 15px rgba(0,0,0,0.1), inset 0 0 10px rgba(255,255,255,0.2)",
-            }}
-          >
-            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
         </div>
       </motion.nav>
 
