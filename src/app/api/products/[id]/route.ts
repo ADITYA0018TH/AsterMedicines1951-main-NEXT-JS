@@ -1,45 +1,21 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Product from '@/models/Product';
+import { getProduct } from '@/lib/products';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectDB();
     const { id } = await params;
-    const product = await Product.findById(id);
+    const product = await getProduct(id);
 
     if (!product) {
       return NextResponse.json({ message: 'Product not found' }, { status: 404 });
     }
 
-    const transformedProduct = {
-      id: product._id,
-      name: product.name,
-      description: product.description,
-      category: product.category,
-      dosage: product.stock ? `${product.stock} units available` : 'Contact for availability',
-      features: [
-        `Price: ₹${product.price}`,
-        `Category: ${product.category}`,
-        product.featured ? 'Featured Product' : 'Quality Assured',
-        'GMP Certified',
-        'WHO Approved'
-      ],
-      images: product.images.map((img: string) => img.replace(/lovable-uploads/gi, 'My-uploads')),
-      price: product.price,
-      availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
-      detailedDescription: product.description,
-      composition: 'Available on request - Please contact for detailed composition information',
-      indications: 'Please consult healthcare professional for indications and usage',
-      dosageInstructions: 'As prescribed by physician',
-      sideEffects: 'Consult your healthcare provider for potential side effects',
-      precautions: 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.'
-    };
-
-    return NextResponse.json(transformedProduct);
+    return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json({ message: 'Error fetching product' }, { status: 500 });

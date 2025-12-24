@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ProductDetailContent from "@/components/ProductDetailContent";
-import { fetchProductById } from "@/services/api";
+import { getProduct } from "@/lib/products";
 
 type Props = {
     params: Promise<{ id: string }>;
@@ -8,7 +8,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
-    const product = await fetchProductById(id);
+    const product = await getProduct(id);
 
     if (!product) {
         return {
