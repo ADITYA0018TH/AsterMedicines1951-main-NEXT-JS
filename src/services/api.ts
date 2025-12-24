@@ -3,6 +3,7 @@ import { Product } from "@/data/products";
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') return ''; // Browser should use relative path
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL; // Use env var if set
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR on Vercel
   return 'http://localhost:3000'; // Default to localhost for SSR
 };
 
