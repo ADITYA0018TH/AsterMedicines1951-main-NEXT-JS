@@ -5,7 +5,7 @@ import { organizationStructuredData, websiteStructuredData } from "@/data/struct
 export const metadata: Metadata = {
   title: "Aster Medicines PVT LTD - Leading Pharmaceutical Company",
   description: "Aster Medicines PVT LTD - Advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",
-  keywords: "pharmaceutical, medicines, healthcare, drugs, medical, pharmacy, health solutions, pharmaceutical company, medical products, aster medicines",
+  keywords: "Aster Medicines Pvt Ltd, Aster Medicines, Aster Medicines Private Limited, pharmaceutical company, medicines, healthcare, drugs, medical, pharmacy, health solutions, medical products, Hajipur pharma, Bihar medicines",
   openGraph: {
     title: "Aster Medicines PVT LTD - Leading Pharmaceutical Company",
     description: "Aster Medicines PVT LTD - Advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",

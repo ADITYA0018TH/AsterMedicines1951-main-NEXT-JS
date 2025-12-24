@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s | Aster Medicines",
   },
   description: "Pioneering pharmaceutical manufacturing since 1951. Aster Medicines bridges the gap between scientific breakthrough and human compassion with state-of-the-art facilities.",
-  keywords: ["Pharmaceuticals", "Medicine Manufacturing", "Pharma Company", "Global Health", "Healthcare Innovation", "Aster Medicines", "GMP Certified"],
+  keywords: ["Aster Medicines", "Aster Medicines Pvt Ltd", "Aster Medicines Private Limited", "Pharmaceutical Manufacturing", "Pharma Company India", "Global Health", "Healthcare Innovation", "GMP Certified", "Hajipur Pharma", "Bihar Pharmaceutical"],
   authors: [{ name: "Aster Medicines" }],
   creator: "Aster Medicines",
   openGraph: {

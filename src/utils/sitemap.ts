@@ -1,7 +1,7 @@
 import { products } from '../data/products';
 
 export const generateSitemap = (): string => {
-  const baseUrl = 'https://astermedicines.com';
+  const baseUrl = 'https://aster-medicines.vercel.app';
   const currentDate = new Date().toISOString();
 
   const staticPages = [
