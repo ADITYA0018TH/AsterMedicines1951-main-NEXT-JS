@@ -32,7 +32,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
     offset: ["start end", "end end"],
   })
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, 0])
+  // Removed y transform to fix CLS
   const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
 
   const scrollToTop = () => {
@@ -45,7 +45,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   return (
     <motion.footer
       ref={containerRef}
-      style={{ y, opacity }}
+      style={{ opacity, transform: 'none' }}
       className="relative border-t border-brand-accent/20 bg-background/95 backdrop-blur-xl overflow-hidden pt-24 pb-12"
     >
       {/* Animated grid background */}

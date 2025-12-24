@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
         title: `${product.name} - Aster Medicines PVT LTD`,
-        description: product.description,
+        description: product.description || "Leading pharmaceutical products by Aster Medicines PVT LTD.",
         keywords: `${product.name}, ${product.category}, pharmaceutical product, medicine`,
     };
 }
