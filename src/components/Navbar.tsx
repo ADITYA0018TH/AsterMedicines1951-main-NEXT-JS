@@ -53,7 +53,7 @@ const Navbar = () => {
           isScrolled ? "py-2" : "py-4"
         )}
       >
-        <div className="w-fit mx-auto px-6 flex items-stretch justify-between gap-4">
+        <div className="w-full md:w-fit mx-auto px-6 flex items-stretch justify-between gap-4">
           {/* Logo Section */}
           <GlassSurface
             width="auto"
@@ -79,6 +79,30 @@ const Navbar = () => {
             </Link>
           </GlassSurface>
 
+          {/* Mobile Menu Button - Visible only on mobile */}
+          <GlassSurface
+            width="auto"
+            height="auto"
+            borderRadius={50}
+            borderWidth={isScrolled ? 0.07 : 0}
+            backgroundOpacity={0}
+            opacity={isScrolled ? 0.93 : 0}
+            className="md:hidden flex px-3 py-2 items-center justify-center transition-all duration-300"
+            id="mobile-menu-toggle-surface"
+          >
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-black dark:text-white hover:text-brand-accent transition-colors"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </GlassSurface>
+
           {/* Navigation Section */}
           <GlassSurface
             width="auto"
@@ -87,7 +111,7 @@ const Navbar = () => {
             borderWidth={isScrolled ? 0.07 : 0}
             backgroundOpacity={0}
             opacity={isScrolled ? 0.93 : 0}
-            className="hidden md:flex flex-1 px-6 py-2 items-center justify-end gap-8 transition-all duration-300"
+            className="hidden md:flex flex-1 px-6 py-2 items-center justify-center gap-8 transition-all duration-300"
             id="navbar-content-surface"
           >
             {/* Desktop Links */}
