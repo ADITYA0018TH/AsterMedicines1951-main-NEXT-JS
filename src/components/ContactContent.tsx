@@ -256,6 +256,7 @@ const ContactContent = () => {
                                             value={formData.email}
                                             onChange={handleChange}
                                             required
+                                            autoComplete="email"
                                             className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                                             placeholder="aster@example.com"
                                         />
