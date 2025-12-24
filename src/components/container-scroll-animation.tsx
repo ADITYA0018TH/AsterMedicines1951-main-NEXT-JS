@@ -45,7 +45,7 @@ export const ContainerScroll = ({
           style={{
             rotateX: rotate,
             scale,
-            translateY,
+            translateY: isMobile ? 0 : translateY,
             opacity,
             boxShadow:
               "0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05)",
