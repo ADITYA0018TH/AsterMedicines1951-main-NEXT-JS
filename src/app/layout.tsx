@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 
@@ -76,7 +75,6 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
-        <SpeedInsights />
       </body>
     </html>
   );
