@@ -14,9 +14,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Pill, Shield, Award, CheckCircle, GitCompare, Send, Loader2, Search } from "lucide-react";
 import { Product } from "@/data/products";
 import { fetchProducts, fetchCategories } from "@/services/api";
-import ProductComparison from "@/components/ProductComparison";
-import BulkInquiryForm from "@/components/BulkInquiryForm";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const ProductComparison = dynamic(() => import("@/components/ProductComparison"), { ssr: false });
+const BulkInquiryForm = dynamic(() => import("@/components/BulkInquiryForm"), { ssr: false });
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
