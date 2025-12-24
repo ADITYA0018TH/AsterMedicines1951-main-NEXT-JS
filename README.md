@@ -85,108 +85,101 @@ AsterMedicines1951-main-NEXT-JS/
 ├── 📁 public/                          # Static assets
 │   ├── videos/ & animations/
 │   ├── images/ (webp, png format)
-│   ├── favicon files
 │   ├── robots.txt & sitemap.xml
 │   └── og-image-update.webp
 │
 ├── 📁 src/
 │   ├── 🚀 app/                         # Next.js App Router
-│   │   ├── page.tsx                    # Home page
-│   │   ├── layout.tsx                  # Root layout
 │   │   ├── (routes)/
 │   │   │   ├── about/                  # About page
+│   │   │   ├── admin/                  # Admin dashboard & auth
+│   │   │   ├── api/                    # API routes
 │   │   │   ├── contact/                # Contact form
-│   │   │   ├── products/               # Product catalog
-│   │   │   ├── products/[id]/          # Product details
 │   │   │   ├── login/                  # Admin login
-│   │   │   └── admin/                  # Admin dashboard
-│   │   ├── api/                        # API routes
-│   │   │   ├── auth/                   # Authentication endpoints
-│   │   │   ├── products/               # Product CRUD
-│   │   │   ├── categories/             # Category management
-│   │   │   ├── contact/                # Contact form submission
-│   │   │   └── upload/                 # File upload
-│   │   ├── robots.ts
-│   │   └── sitemap.ts
+│   │   │   └── products/               # Product catalog
+│   │   ├── globals.css                 # Global styles
+│   │   ├── layout.tsx                  # Root layout
+│   │   ├── page.tsx                    # Home page
+│   │   ├── not-found.tsx               # 404 page
+│   │   ├── robots.ts                   # Robots.txt generation
+│   │   └── sitemap.ts                  # Sitemap generation
 │   │
-│   ├── 🧩 components/                  # Reusable React components (32 files)
-│   │   ├── Layout Components
-│   │   │   ├── Navbar.tsx              # Navigation with glass effects
+│   ├── 🧩 components/                  # React Components
+│   │   ├── ui/                         # Shadcn & UI Library (23 files)
+│   │   │   ├── Button3D.tsx, GlassSurface.tsx, MagicBento.tsx
+│   │   │   └── [Standard UI components like Button, Card, Dialog...]
+│   │   │
+│   │   ├── Layout/
+│   │   │   ├── Navbar.tsx              # Main navigation
 │   │   │   ├── Footer.tsx              # Site footer
-│   │   │   └── Breadcrumb.tsx          # Navigation trail
-│   │   ├── Page Components
-│   │   │   ├── HomeContent.tsx         # Home page content
-│   │   │   ├── ProductsContent.tsx     # Product catalog
-│   │   │   ├── ProductDetailContent.tsx
-│   │   │   ├── AboutContent.tsx        # About page
-│   │   │   ├── ContactContent.tsx      # Contact form
-│   │   │   └── LoginContent.tsx        # Admin login
-│   │   ├── Feature Components
-│   │   │   ├── Hero.tsx                # Landing hero section
-│   │   │   ├── Features.tsx            # Product features
-│   │   │   ├── FeaturedProducts.tsx    # Showcase products
-│   │   │   ├── Testimonials.tsx        # Customer reviews
-│   │   │   ├── HowItWorks.tsx          # Process steps
-│   │   │   ├── CallToAction.tsx        # CTA sections
-│   │   │   ├── HumanoidSection.tsx     # Pharmaceutical showcase
-│   │   │   ├── ImageShowcaseSection.tsx
-│   │   │   ├── SpecsSection.tsx        # Product specifications
-│   │   │   └── TrustSection.tsx        # Trust badges
-│   │   ├── UI Components (src/components/ui/) - 55 files
-│   │   │   ├── Button, Input, Dialog
-│   │   │   ├── Card, Badge, Avatar
-│   │   │   ├── Accordion, Tabs, Drawer
-│   │   │   ├── Form, Modal, Popover
-│   │   │   ├── Charts, Tables, Progress
-│   │   │   ├── GlassSurface.tsx        # Glassmorphism effects
-│   │   │   └── Toast, Tooltip, Notifications
-│   │   │   ├── ScrollReveal.tsx        # Scroll animations
-│   │   │   └── container-scroll-animation.tsx
-│   │   ├── Admin Components
+│   │   │   └── ThemeToggle.tsx         # Dark/Light mode toggle
+│   │   │
+│   │   ├── Pages & Content/
+│   │   │   ├── HomeContent.tsx         # Home page logic
+│   │   │   ├── AboutContent.tsx        # About page logic
+│   │   │   ├── ContactContent.tsx      # Contact page logic
+│   │   │   ├── LoginContent.tsx        # Login page logic
+│   │   │   ├── ProductsContent.tsx     # Product catalog logic
+│   │   │   └── ProductDetailContent.tsx# Product details logic
+│   │   │
+│   │   ├── Features & Sections/
+│   │   │   ├── Hero.tsx                # Hero section
+│   │   │   ├── Features.tsx            # Features showcase
+│   │   │   ├── PharmaceuticalSection.tsx # 3D/Visual section
+│   │   │   ├── ImageShowcaseSection.tsx# Image gallery
+│   │   │   ├── DetailsSection.tsx      # Product details
+│   │   │   ├── SpecsSection.tsx        # Technical specs
+│   │   │   ├── ProductComparison.tsx   # Comparison tool
+│   │   │   ├── Newsletter.tsx          # Subscription form
+│   │   │   └── BulkInquiryForm.tsx     # Bulk order form
+│   │   │
+│   │   ├── Admin/
 │   │   │   ├── AdminDashboardContent.tsx
 │   │   │   ├── AdminProductsContent.tsx
-│   │   │   └── AdminMessagesContent.tsx
-│   │   ├── Loading Components
-│   │   │   ├── EnhancedLoader.tsx      # Premium preloader
-│   │   │   └── LoadingProvider.tsx     # Loading state context
-│   │   └── Utility Components
-│   │       ├── ProtectedRoute.tsx      # Auth protection
-│   │       ├── CustomCursor.tsx        # Custom cursor
+│   │   │   ├── AdminMessagesContent.tsx
+│   │   │   └── AdminProductForm.tsx
+│   │   │
+│   │   └── Utility/
+│   │       ├── EnhancedLoader.tsx      # Custom loader
+│   │       ├── LoadingProvider.tsx     # Loading context
 │   │       ├── Providers.tsx           # App providers
-│   │       └── SEO.tsx                 # SEO management
+│   │       ├── ScrollReveal.tsx        # Scroll animations
+│   │       ├── ScrollFloat.tsx         # Floating effect
+│   │       └── SuccessNotification.tsx
 │   │
-│   ├── 📊 data/                        # Static data & utilities
-│   │   ├── products.ts                 # Product seed data
-│   │   └── structuredData.ts           # JSON-LD schemas
+│   ├── 📊 data/                        # Static Data
 │   │
-│   ├── 🪝 hooks/                       # Custom React hooks
+│   ├── 🪝 hooks/                       # Custom Hooks
 │   │   ├── use-mobile.tsx              # Mobile detection
+│   │   ├── use-theme-animation.ts      # Theme transitions
 │   │   ├── use-toast.ts                # Toast notifications
+│   │   ├── useClickOutside.ts          # Click handler
 │   │   └── useRecentlyViewed.ts        # Product history
 │   │
-│   ├── 📚 lib/                         # Utilities & helpers
+│   ├── 📚 lib/                         # Libraries
 │   │   ├── db.ts                       # Database connection
-│   │   └── utils.ts                    # General utilities
+│   │   └── utils.ts                    # Class merging helper
 │   │
-│   ├── 🗃️ models/                      # Database schemas
-│   │   ├── Product.ts
+│   ├── 🗃️ models/                      # Database Schemas
 │   │   ├── Contact.ts
+│   │   ├── Product.ts
 │   │   └── User.ts
 │   │
-│   ├── 🔌 services/                    # External services
-│   │   └── api.ts                      # API client
+│   ├── 🔌 services/                    # Services
+│   │   └── api.ts                      # API fetcher
 │   │
-│   └── 🛠️ utils/
-│       ├── schemaGenerators.ts         # Schema generation
-│       └── sitemap.ts                  # Sitemap utility
+│   └── 🛠️ utils/                       # Utilities
+│       ├── animations.ts               # Animation constants
+│       ├── schemaGenerators.ts         # SEO schema helpers
+│       └── sitemap.ts                  # Sitemap helpers
 │
-├── ⚙️ Configuration Files
-│   ├── next.config.ts                  # Next.js configuration
-│   ├── tsconfig.json                   # TypeScript configuration
-│   ├── tailwind.config.ts              # Tailwind configuration
-│   ├── postcss.config.mjs              # PostCSS configuration
-│   ├── eslint.config.mjs               # ESLint rules
-│   └── package.json                    # Dependencies
+├── ⚙️ Configuration
+│   ├── next.config.ts
+│   ├── tailwind.config.ts
+│   ├── tsconfig.json
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   └── eslint.config.mjs
 │
 └── 📖 Documentation
     ├── README.md                       # This file
