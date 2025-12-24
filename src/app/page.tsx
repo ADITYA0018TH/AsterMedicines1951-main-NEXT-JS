@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Aster Medicines PVT LTD - Leading Pharmaceutical Company",
     description: "Aster Medicines PVT LTD - Advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",
-    url: "https://astermedicines.com", // Replace with actual URL if known, or leave generic
+    url: "https://aster-medicines.vercel.app",
     siteName: "Aster Medicines PVT LTD",
     images: [
       {
