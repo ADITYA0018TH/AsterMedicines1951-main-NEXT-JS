@@ -3,6 +3,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 
+const isProduction = process.env.NODE_ENV === "production";
+const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || "your_jwt_secret_key_here_please_change_in_prod";
+
+if (isProduction && !process.env.NEXTAUTH_SECRET) {
+  console.warn("⚠️ WARNING: NEXTAUTH_SECRET is not set in production. NextAuth may fail with a Configuration error.");
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -80,7 +87,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || "your_jwt_secret_key_here_please_change_in_prod",
+  secret: secret,
 };
 
 const handler = NextAuth(authOptions);
