@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -22,23 +23,18 @@ const LoginContent = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
+            const result = await signIn("credentials", {
+                redirect: false,
+                email,
+                password,
             });
 
-            if (response.ok) {
-                // Set cookie for middleware
-                document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Strict";
-                localStorage.setItem("isAuthenticated", "true");
+            if (result?.error) {
+                toast.error("Invalid email or password");
+            } else if (result?.ok) {
                 toast.success("Logged in successfully");
                 router.push("/admin/dashboard");
-            } else {
-                const data = await response.json();
-                toast.error(data.message || "Invalid email or password");
+                router.refresh();
             }
         } catch (error) {
             console.error("Login error:", error);
