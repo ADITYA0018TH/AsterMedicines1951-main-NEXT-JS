@@ -10,6 +10,7 @@ import PharmaceuticalSection from "@/components/PharmaceuticalSection";
 import SpecsSection from "@/components/SpecsSection";
 import DetailsSection from "@/components/DetailsSection";
 import ImageShowcaseSection from "@/components/ImageShowcaseSection";
+import VideoShowcase from "@/components/VideoShowcase";
 import Features from "@/components/Features";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
@@ -66,6 +67,7 @@ const HomeContent = () => {
                 <SpecsSection />
                 <DetailsSection />
                 <ImageShowcaseSection />
+                <VideoShowcase />
                 <Features />
                 <Newsletter />
             </main>
