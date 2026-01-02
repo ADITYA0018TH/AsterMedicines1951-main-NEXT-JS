@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
-import { Facebook, Instagram, Linkedin, Twitter, ArrowUp, Heart, MapPin, Phone, Mail } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowUp, Heart, MapPin, Phone, Mail } from "lucide-react"
 import { useRef, useState } from "react"
 import Link from "next/link"
 
@@ -10,6 +10,7 @@ const socialLinks = [
   { icon: Twitter, href: "#", label: "Twitter" },
   { icon: Instagram, href: "https://www.instagram.com/aster_medicines?igsh=MTRwODV4bXJwM3BtMg==", label: "Instagram" },
   { icon: Linkedin, href: "#", label: "LinkedIn" },
+  { icon: Youtube, href: "https://www.youtube.com/@astermedicines13", label: "Youtube" },
 ]
 
 const navLinks = [
@@ -260,9 +261,9 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
 
         {/* Divider with animation */}
         <div className="relative h-px mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-accent/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-accent/20 to-transparent" />
           <motion.div
-            className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-transparent via-brand-accent/50 to-transparent"
+            className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-transparent via-brand-accent to-transparent"
             animate={{ x: ["-100%", "400%"] }}
             transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
           />
