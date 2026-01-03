@@ -30,13 +30,13 @@ export const metadata: Metadata = {
     default: "Aster Medicines - Precision Pharmaceutical Manufacturing",
     template: "%s | Aster Medicines",
   },
-  description: "Pioneering pharmaceutical manufacturing since 1951. Aster Medicines bridges the gap between scientific breakthrough and human compassion with state-of-the-art facilities.",
+  description: "Pioneering pharmaceutical manufacturing since 1991. Aster Medicines bridges the gap between scientific breakthrough and human compassion with state-of-the-art facilities.",
   keywords: ["Aster Medicines", "Aster Medicines Pvt Ltd", "Aster Medicines Private Limited", "Pharmaceutical Manufacturing", "Pharma Company India", "Global Health", "Healthcare Innovation", "GMP Certified", "Hajipur Pharma", "Bihar Pharmaceutical"],
   authors: [{ name: "Aster Medicines" }],
   creator: "Aster Medicines",
   openGraph: {
     title: "Aster Medicines - Precision Pharmaceutical Manufacturing",
-    description: "Pioneering pharmaceutical manufacturing since 1951. Bridging science and compassion.",
+    description: "Pioneering pharmaceutical manufacturing since 1991. Bridging science and compassion.",
     url: "https://aster-medicines.vercel.app",
     siteName: "Aster Medicines",
     locale: "en_US",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Aster Medicines",
-    description: "Pioneering pharmaceutical manufacturing since 1951.",
+    description: "Pioneering pharmaceutical manufacturing since 1991.",
     images: ["/og-image-update.webp"],
   },
   icons: {

@@ -103,7 +103,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
 
             <p className="text-muted-foreground text-sm leading-relaxed font-mono">
               Advancing global health with high-quality pharmaceutical solutions.
-              <span className="text-brand-accent block mt-2 font-bold">Trusted since 1951.</span>
+              <span className="text-brand-accent block mt-2 font-bold">Trusted since 1991.</span>
             </p>
 
             {/* Status indicator */}
