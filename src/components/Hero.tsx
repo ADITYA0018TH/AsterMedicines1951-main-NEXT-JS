@@ -171,7 +171,7 @@ const Hero = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3] 3xl:aspect-[5/4]">
                 <Image
                   ref={imageRef as any}
-                  src="/My-uploads/AD_OIL_NEW_BOX.png"
+                  src="/My-uploads/AD_OIL_NEW_BOX.webp"
                   alt="Precision Pharmaceutical Manufacturing"
                   fill
                   sizes="(max-width: 1024px) 100vw, (min-width: 1800px) 50vw, 42vw"
