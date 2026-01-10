@@ -52,7 +52,7 @@ const VideoShowcase = () => {
                             viewport={{ once: true }}
                             className="text-4xl md:text-6xl font-bold font-display tracking-tighter text-slate-900 dark:text-white mb-4"
                         >
-                            Visual Stories.
+                            Visual <span className="text-orange-500">Stories.</span>
                         </motion.h2>
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}

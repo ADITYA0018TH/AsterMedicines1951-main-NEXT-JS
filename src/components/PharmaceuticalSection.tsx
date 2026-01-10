@@ -141,7 +141,7 @@ const PharmaceuticalSection = () => {
             </div>
 
             <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2 text-foreground">
-              Why Aster
+              Why <span className="text-orange-500">Aster</span>
             </h2>
           </div>
 
