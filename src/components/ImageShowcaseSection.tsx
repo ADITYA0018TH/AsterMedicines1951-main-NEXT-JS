@@ -71,7 +71,7 @@ const ImageShowcaseSection = () => {
               <div className="space-y-3 lg:space-y-4">
                 <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
                   The Future of{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-amber-500">
+                  <span className="text-transparent bg-clip-text bg-brand-accent">
                     Pharma Production
                   </span>
                 </h2>
@@ -87,7 +87,7 @@ const ImageShowcaseSection = () => {
                     key={idx}
                     className="flex items-start gap-3 lg:gap-4 p-3 lg:p-4 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-300 group cursor-default"
                   >
-                    <div className="flex-shrink-0 w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+                    <div className="flex-shrink-0 w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-brand-accent flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
                       <feature.icon className="w-4 h-4 lg:w-5 lg:h-5" />
                     </div>
                     <div>
