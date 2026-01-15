@@ -15,6 +15,9 @@ export interface Product {
   dosageInstructions?: string;
   sideEffects?: string;
   precautions?: string;
+  isQualityAssured?: boolean;
+  isGmpCertified?: boolean;
+  isWhoApproved?: boolean;
 }
 
 export const products: Product[] = [

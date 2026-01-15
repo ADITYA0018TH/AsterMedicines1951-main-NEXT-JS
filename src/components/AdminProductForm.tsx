@@ -28,6 +28,14 @@ interface Product {
     images: string[];
     stock: number;
     featured: boolean;
+    composition?: string;
+    dosageInstructions?: string;
+    indications?: string;
+    sideEffects?: string;
+    precautions?: string;
+    isQualityAssured?: boolean;
+    isGmpCertified?: boolean;
+    isWhoApproved?: boolean;
 }
 
 interface AdminProductFormProps {
@@ -50,6 +58,14 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
         images: product?.images || [] as string[],
         stock: product?.stock.toString() || "",
         featured: product?.featured || false,
+        composition: product?.composition || "",
+        dosageInstructions: product?.dosageInstructions || "",
+        indications: product?.indications || "",
+        sideEffects: product?.sideEffects || "",
+        precautions: product?.precautions || "",
+        isQualityAssured: product?.isQualityAssured || false,
+        isGmpCertified: product?.isGmpCertified || false,
+        isWhoApproved: product?.isWhoApproved || false,
     });
 
     const createMutation = useMutation({
@@ -67,6 +83,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            queryClient.invalidateQueries({ queryKey: ["products"] });
             toast.success("Product created successfully");
             setIsOpen(false);
         },
@@ -86,8 +103,10 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
             }
             return response.json();
         },
-        onSuccess: () => {
+        onSuccess: (data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            queryClient.invalidateQueries({ queryKey: ["product", variables.id] });
             toast.success("Product updated successfully");
             setIsOpen(false);
         },
@@ -160,6 +179,75 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                         className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
                     />
                 </div>
+
+                {/* New Fields Section */}
+                <div className="space-y-6 border-t border-border pt-6">
+                    <div>
+                        <Label htmlFor="composition" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                            <FileText className="w-4 h-4" />
+                            Composition
+                        </Label>
+                        <Textarea
+                            id="composition"
+                            value={formData.composition}
+                            onChange={(e) => setFormData({ ...formData, composition: e.target.value })}
+                            className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
+                            placeholder="Enter product composition..."
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="dosageInstructions" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                            <FileText className="w-4 h-4" />
+                            Dosage Instructions
+                        </Label>
+                        <Textarea
+                            id="dosageInstructions"
+                            value={formData.dosageInstructions}
+                            onChange={(e) => setFormData({ ...formData, dosageInstructions: e.target.value })}
+                            className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
+                            placeholder="Enter dosage instructions..."
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="indications" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                            <FileText className="w-4 h-4" />
+                            Indications
+                        </Label>
+                        <Textarea
+                            id="indications"
+                            value={formData.indications}
+                            onChange={(e) => setFormData({ ...formData, indications: e.target.value })}
+                            className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
+                            placeholder="Enter indications..."
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="sideEffects" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                            <FileText className="w-4 h-4" />
+                            Side Effects
+                        </Label>
+                        <Textarea
+                            id="sideEffects"
+                            value={formData.sideEffects}
+                            onChange={(e) => setFormData({ ...formData, sideEffects: e.target.value })}
+                            className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
+                            placeholder="Enter side effects..."
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="precautions" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                            <FileText className="w-4 h-4" />
+                            Precautions
+                        </Label>
+                        <Textarea
+                            id="precautions"
+                            value={formData.precautions}
+                            onChange={(e) => setFormData({ ...formData, precautions: e.target.value })}
+                            className="w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground resize-none"
+                            placeholder="Enter precautions..."
+                        />
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="price" className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
@@ -203,6 +291,45 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                         maxFiles={10}
                     />
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                    <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
+                        <input
+                            type="checkbox"
+                            id="isQualityAssured"
+                            checked={formData.isQualityAssured}
+                            onChange={(e) => setFormData({ ...formData, isQualityAssured: e.target.checked })}
+                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                        />
+                        <Label htmlFor="isQualityAssured" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
+                            Quality Assured
+                        </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
+                        <input
+                            type="checkbox"
+                            id="isGmpCertified"
+                            checked={formData.isGmpCertified}
+                            onChange={(e) => setFormData({ ...formData, isGmpCertified: e.target.checked })}
+                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                        />
+                        <Label htmlFor="isGmpCertified" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
+                            GMP Certified
+                        </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
+                        <input
+                            type="checkbox"
+                            id="isWhoApproved"
+                            checked={formData.isWhoApproved}
+                            onChange={(e) => setFormData({ ...formData, isWhoApproved: e.target.checked })}
+                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                        />
+                        <Label htmlFor="isWhoApproved" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
+                            WHO Approved
+                        </Label>
+                    </div>
+                </div>
+
                 <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
                     <input
                         type="checkbox"

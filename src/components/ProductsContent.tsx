@@ -223,7 +223,7 @@ const ProductsContent = () => {
                                                             <span className="text-foreground font-medium">{product.dosage}</span>
                                                         </div>
                                                         <div className="flex flex-wrap gap-2">
-                                                            {product.features.slice(0, 2).map((feature, i) => (
+                                                            {product.features.slice(0, 4).map((feature, i) => (
                                                                 <span key={i} className="text-xs px-2 py-1 rounded-md bg-secondary text-muted-foreground border border-border">
                                                                     {feature}
                                                                 </span>

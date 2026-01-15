@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ArrowLeft, CheckCircle, Shield, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, CheckCircle, Shield, AlertCircle, Loader2, Award } from "lucide-react";
 import { fetchProductById } from "@/services/api";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -158,9 +158,25 @@ const ProductDetailContent = () => {
                                     </Badge>
                                     <h1 className="text-4xl font-bold text-foreground mb-4">{product.name}</h1>
                                     <p className="text-xl text-muted-foreground mb-6">{product.description}</p>
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <Shield className="w-5 h-5 text-green-500" />
-                                        <span className="text-sm text-muted-foreground">Quality Assured Product</span>
+                                    <div className="flex flex-wrap gap-4 mb-6">
+                                        {product.isQualityAssured && (
+                                            <div className="flex items-center gap-2">
+                                                <Shield className="w-5 h-5 text-green-500" />
+                                                <span className="text-sm text-muted-foreground">Quality Assured</span>
+                                            </div>
+                                        )}
+                                        {product.isGmpCertified && (
+                                            <div className="flex items-center gap-2">
+                                                <Award className="w-5 h-5 text-blue-500" />
+                                                <span className="text-sm text-muted-foreground">GMP Certified</span>
+                                            </div>
+                                        )}
+                                        {product.isWhoApproved && (
+                                            <div className="flex items-center gap-2">
+                                                <CheckCircle className="w-5 h-5 text-purple-500" />
+                                                <span className="text-sm text-muted-foreground">WHO Approved</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

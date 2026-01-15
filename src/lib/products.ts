@@ -19,19 +19,23 @@ export async function getProduct(id: string) {
       features: [
         `Price: ₹${product.price}`,
         `Category: ${product.category}`,
-        product.featured ? 'Featured Product' : 'Quality Assured',
-        'GMP Certified',
-        'WHO Approved'
+        ...(product.featured ? ['Featured Product'] : []),
+        ...(product.isQualityAssured ? ['Quality Assured'] : []),
+        ...(product.isGmpCertified ? ['GMP Certified'] : []),
+        ...(product.isWhoApproved ? ['WHO Approved'] : [])
       ],
       images: product.images.map((img: string) => img.replace(/lovable-uploads/gi, 'My-uploads')),
       price: product.price,
       availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
       detailedDescription: product.description,
-      composition: 'Available on request - Please contact for detailed composition information',
-      indications: 'Please consult healthcare professional for indications and usage',
-      dosageInstructions: 'As prescribed by physician',
-      sideEffects: 'Consult your healthcare provider for potential side effects',
-      precautions: 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.'
+      composition: product.composition || 'Available on request - Please contact for detailed composition information',
+      indications: product.indications || 'Please consult healthcare professional for indications and usage',
+      dosageInstructions: product.dosageInstructions || 'As prescribed by physician',
+      sideEffects: product.sideEffects || 'Consult your healthcare provider for potential side effects',
+      precautions: product.precautions || 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.',
+      isQualityAssured: product.isQualityAssured,
+      isGmpCertified: product.isGmpCertified,
+      isWhoApproved: product.isWhoApproved
     };
 
     return transformedProduct;
