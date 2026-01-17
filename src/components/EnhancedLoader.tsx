@@ -43,7 +43,20 @@ const EnhancedLoader: React.FC<EnhancedLoaderProps> = ({
       });
     }, interval);
 
-    return () => clearInterval(timer);
+    // Failsafe: Ensure loader always completes
+    const failsafeTimer = setTimeout(() => {
+      setProgress(100);
+      setStage('completing');
+      setTimeout(() => {
+        setStage('complete');
+        onComplete?.();
+      }, 600);
+    }, 3500);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(failsafeTimer);
+    };
   }, [isVisible, type, onComplete]);
 
   if (!isVisible && stage === 'complete') return null;

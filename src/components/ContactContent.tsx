@@ -92,7 +92,6 @@ const ContactContent = () => {
                 start: "top 80%",
                 toggleActions: "play none none reverse"
             },
-            opacity: 0,
             x: -50,
             duration: 0.6,
             ease: "power3.out"
@@ -105,7 +104,6 @@ const ContactContent = () => {
                 start: "top 80%",
                 toggleActions: "play none none reverse"
             },
-            opacity: 0,
             x: 50,
             duration: 0.6,
             ease: "power3.out"

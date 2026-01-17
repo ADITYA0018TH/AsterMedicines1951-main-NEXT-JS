@@ -25,16 +25,76 @@ import { useGSAP } from "@gsap/react";
 
 const ProductsContent = () => {
 
+    // Temporary dummy data to populate the page
+    const dummyProducts: Product[] = [
+        {
+            id: 1,
+            name: "Paracetamol 500mg",
+            description: "Effective pain relief and fever reducer. Suitable for headaches, muscle aches, arthritis, backache, toothaches, colds, and fevers.",
+            category: "Analgesics",
+            dosage: "500mg",
+            images: ["/images/paracetamol.webp"], // Ensure you have placeholders or use generic
+            features: ["Fast Action", "Safety Sealed", "Easy to Swallow"]
+        },
+        {
+            id: 2,
+            name: "Amoxicillin Capsules",
+            description: "Broad-spectrum antibiotic used to treat a wide variety of bacterial infections.",
+            category: "Antibiotics",
+            dosage: "250mg",
+            images: [],
+            features: ["Broad Spectrum", "High Efficacy"]
+        },
+        {
+            id: 3,
+            name: "Vitamin C Syrup",
+            description: "Immunity boosting syrup for children and adults. Rich in antioxidants.",
+            category: "Supplements",
+            dosage: "100ml",
+            images: [],
+            features: ["Sugar Free", "Orange Flavor"]
+        },
+        {
+            id: 4,
+            name: "Cetirizine Tablets",
+            description: "Relief from allergy symptoms such as watery eyes, runny nose, itching eyes/nose, and sneezing.",
+            category: "Antihistamines",
+            dosage: "10mg",
+            images: [],
+            features: ["Non-drowsy", "24hr Relief"]
+        },
+        {
+            id: 5,
+            name: "Ibuprofen 400mg",
+            description: "Non-steroidal anti-inflammatory drug (NSAID). Relieves pain, inflammation, and fever.",
+            category: "Analgesics",
+            dosage: "400mg",
+            images: [],
+            features: ["Anti-inflammatory", "Pain Relief"]
+        },
+        {
+            id: 6,
+            name: "Cough Syrup",
+            description: "Effective relief from dry and chesty coughs. Soothes the throat.",
+            category: "Respiratory",
+            dosage: "100ml",
+            images: [],
+            features: ["Alcohol Free", "Honey & Lemon"]
+        }
+    ];
+
     const router = useRouter();
     const [selectedCategory, setSelectedCategory] = React.useState("All");
     const [searchQuery, setSearchQuery] = React.useState("");
     const [selectedProducts, setSelectedProducts] = React.useState<Product[]>([]);
     const [showComparison, setShowComparison] = React.useState(false);
 
-    const { data: products = [], isLoading: isLoadingProducts } = useQuery({
+    const { data: fetchedProducts = [], isLoading: isLoadingProducts } = useQuery({
         queryKey: ['products'],
         queryFn: fetchProducts,
     });
+
+    const products = fetchedProducts.length > 0 ? fetchedProducts : dummyProducts;
 
     const { data: categories = ["All"], isLoading: isLoadingCategories } = useQuery({
         queryKey: ['categories'],
