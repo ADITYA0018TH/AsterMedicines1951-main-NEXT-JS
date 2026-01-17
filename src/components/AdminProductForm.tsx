@@ -16,6 +16,7 @@ import {
     useMorphingDialog
 } from "@/components/ui/morphing-dialog";
 import { Loader2, Package, FileText, IndianRupee, Layers, LayoutGrid, Image as ImageIcon, Star, Save } from "lucide-react";
+import NeonCheckbox from "@/components/ui/NeonCheckbox";
 import { toast } from "sonner";
 import ImageDropzone from "@/components/ImageDropzone";
 
@@ -293,36 +294,30 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                     <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
-                        <input
-                            type="checkbox"
+                        <NeonCheckbox
                             id="isQualityAssured"
-                            checked={formData.isQualityAssured}
-                            onChange={(e) => setFormData({ ...formData, isQualityAssured: e.target.checked })}
-                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                            checked={formData.isQualityAssured || false}
+                            onChange={(checked) => setFormData({ ...formData, isQualityAssured: checked })}
                         />
                         <Label htmlFor="isQualityAssured" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
                             Quality Assured
                         </Label>
                     </div>
                     <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
-                        <input
-                            type="checkbox"
+                        <NeonCheckbox
                             id="isGmpCertified"
-                            checked={formData.isGmpCertified}
-                            onChange={(e) => setFormData({ ...formData, isGmpCertified: e.target.checked })}
-                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                            checked={formData.isGmpCertified || false}
+                            onChange={(checked) => setFormData({ ...formData, isGmpCertified: checked })}
                         />
                         <Label htmlFor="isGmpCertified" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
                             GMP Certified
                         </Label>
                     </div>
                     <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
-                        <input
-                            type="checkbox"
+                        <NeonCheckbox
                             id="isWhoApproved"
-                            checked={formData.isWhoApproved}
-                            onChange={(e) => setFormData({ ...formData, isWhoApproved: e.target.checked })}
-                            className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                            checked={formData.isWhoApproved || false}
+                            onChange={(checked) => setFormData({ ...formData, isWhoApproved: checked })}
                         />
                         <Label htmlFor="isWhoApproved" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
                             WHO Approved
@@ -331,12 +326,10 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                 </div>
 
                 <div className="flex items-center space-x-2 bg-secondary/50 p-4 rounded-xl border border-border">
-                    <input
-                        type="checkbox"
+                    <NeonCheckbox
                         id="featured"
                         checked={formData.featured}
-                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                        className="rounded border-border text-brand-accent focus:ring-brand-accent"
+                        onChange={(checked) => setFormData({ ...formData, featured: checked })}
                     />
                     <Label htmlFor="featured" className="flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
                         <Star className={`w-4 h-4 ${formData.featured ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`} />

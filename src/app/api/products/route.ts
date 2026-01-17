@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       category: product.category,
       stock: product.stock,
       featured: product.featured,
-      dosage: product.stock ? `${product.stock} units available` : 'Contact for availability',
+      dosage: product.stock ? `${product.stock} ${product.stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
       features: [
         `Price: ₹${product.price}`,
         `Category: ${product.category}`,

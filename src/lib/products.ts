@@ -15,7 +15,7 @@ export async function getProduct(id: string) {
       name: product.name,
       description: product.description,
       category: product.category,
-      dosage: product.stock ? `${product.stock} units available` : 'Contact for availability',
+      dosage: product.stock ? `${product.stock} ${product.stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
       features: [
         `Price: ₹${product.price}`,
         `Category: ${product.category}`,

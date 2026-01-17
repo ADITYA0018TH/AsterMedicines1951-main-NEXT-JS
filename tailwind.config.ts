@@ -97,12 +97,48 @@ export default {
           "0%": { transform: "translateX(-200px)" },
           "100%": { transform: "translateX(200px)" },
         },
+        "border-flow-1": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(200%)" },
+        },
+        "border-flow-2": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(200%)" },
+        },
+        "border-flow-3": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-200%)" },
+        },
+        "border-flow-4": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-200%)" },
+        },
+        "particle-explosion": {
+          "0%": { transform: "translate(-50%, -50%) scale(1)", opacity: "0" },
+          "20%": { opacity: "1" },
+          "100%": { transform: "translate(calc(-50% + var(--x, 20px)), calc(-50% + var(--y, 20px))) scale(0)", opacity: "0" },
+        },
+        "ring-pulse": {
+          "0%": { transform: "scale(0)", opacity: "1" },
+          "100%": { transform: "scale(2)", opacity: "0" },
+        },
+        "spark-flash": {
+          "0%": { transform: "rotate(var(--r, 0deg)) translateX(0) scale(1)", opacity: "1" },
+          "100%": { transform: "rotate(var(--r, 0deg)) translateX(30px) scale(0)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         shimmer: "shimmer 2s linear infinite",
         move: "move 5s linear infinite",
+        "border-flow-1": "border-flow-1 2s linear infinite",
+        "border-flow-2": "border-flow-2 2s linear infinite",
+        "border-flow-3": "border-flow-3 2s linear infinite",
+        "border-flow-4": "border-flow-4 2s linear infinite",
+        "particle-explosion": "particle-explosion 0.6s ease-out forwards",
+        "ring-pulse": "ring-pulse 0.6s ease-out forwards",
+        "spark-flash": "spark-flash 0.6s ease-out forwards",
       },
       transitionTimingFunction: {
         "elastic-toggle": "cubic-bezier(0, -0.02, 0.4, 1.25)",
