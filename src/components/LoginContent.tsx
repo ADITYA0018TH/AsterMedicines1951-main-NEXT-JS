@@ -98,7 +98,7 @@ const LoginContent = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-3 rounded-lg glass-card focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                                        placeholder="astermedicinespvtltd@gmail.com"
+                                        placeholder="sales@astermedicines.com"
                                         required
                                     />
                                 </div>

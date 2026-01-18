@@ -196,7 +196,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               </motion.a>
 
               <motion.a
-                href="mailto:astermedicinespvtltd@gmail.com"
+                href="mailto:sales@astermedicines.com"
                 className="flex items-center gap-3 group"
                 whileHover={{ x: 5 }}
                 onMouseEnter={handleMouseEnter}
@@ -204,7 +204,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               >
                 <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
                 <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  astermedicinespvtltd@gmail.com
+                  sales@astermedicines.com
                 </span>
               </motion.a>
             </div>
