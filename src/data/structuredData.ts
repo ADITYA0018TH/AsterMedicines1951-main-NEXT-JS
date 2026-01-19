@@ -4,14 +4,14 @@ export const organizationStructuredData = {
   "name": "Aster Medicines PVT LTD",
   "alternateName": "Aster Medicines",
   "description": "Leading pharmaceutical company advancing global health with high-quality pharmaceutical solutions, innovative research, and trusted healthcare products.",
-  "url": "https://aster-medicines.vercel.app",
+  "url": "https://astermedicines.com",
   "logo": {
     "@type": "ImageObject",
-    "url": "https://aster-medicines.vercel.app/logo.svg",
+    "url": "https://astermedicines.com/logo.svg",
     "width": "250",
     "height": "60"
   },
-  "image": "https://aster-medicines.vercel.app/og-image-update.webp",
+  "image": "https://astermedicines.com/og-image-update.webp",
   "foundingDate": "2015",
   "industry": "Pharmaceutical Manufacturing",
   "numberOfEmployees": {
@@ -59,9 +59,9 @@ export const localBusinessStructuredData = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Aster Medicines PVT LTD",
-  "image": "https://aster-medicines.vercel.app/og-image-update.webp",
-  "@id": "https://aster-medicines.vercel.app",
-  "url": "https://aster-medicines.vercel.app",
+  "image": "https://astermedicines.com/og-image-update.webp",
+  "@id": "https://astermedicines.com",
+  "url": "https://astermedicines.com",
   "telephone": "+91-7061452180",
   "email": "contact@astermedicines.com",
   "priceRange": "$$",
@@ -108,7 +108,7 @@ export const websiteStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Aster Medicines PVT LTD",
-  "url": "https://aster-medicines.vercel.app",
+  "url": "https://astermedicines.com",
   "description": "Official website of Aster Medicines PVT LTD - Leading pharmaceutical company",
   "publisher": {
     "@type": "Organization",
@@ -116,7 +116,7 @@ export const websiteStructuredData = {
   },
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://aster-medicines.vercel.app/search?q={search_term_string}",
+    "target": "https://astermedicines.com/search?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 };

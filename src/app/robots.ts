@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://aster-medicines.vercel.app";
+  const baseUrl = "https://astermedicines.com";
 
   return {
     rules: {

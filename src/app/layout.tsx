@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aster-medicines.vercel.app"),
+  metadataBase: new URL("https://astermedicines.com"),
   title: {
     default: "Aster Medicines - Precision Pharmaceutical Manufacturing",
     template: "%s | Aster Medicines",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Aster Medicines - Precision Pharmaceutical Manufacturing",
     description: "Pioneering pharmaceutical manufacturing since 1991. Bridging science and compassion.",
-    url: "https://aster-medicines.vercel.app",
+    url: "https://astermedicines.com",
     siteName: "Aster Medicines",
     locale: "en_US",
     type: "website",

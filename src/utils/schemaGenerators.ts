@@ -6,7 +6,7 @@ export const generateProductSchema = (product: Product) => ({
   "@type": "Product",
   "name": product.name,
   "description": product.detailedDescription || product.description,
-  "image": product.images.map(img => `https://aster-medicines.vercel.app${img}`),
+  "image": product.images.map(img => `https://astermedicines.com${img}`),
   "brand": {
     "@type": "Brand",
     "name": "Aster Medicines PVT LTD"
@@ -14,7 +14,7 @@ export const generateProductSchema = (product: Product) => ({
   "manufacturer": {
     "@type": "Organization",
     "name": "Aster Medicines PVT LTD",
-    "url": "https://aster-medicines.vercel.app"
+    "url": "https://astermedicines.com"
   },
   "category": product.category,
   "offers": product.price ? {
@@ -49,6 +49,6 @@ export const generateBreadcrumbSchema = (items: Array<{ name: string; url: strin
     "@type": "ListItem",
     "position": index + 1,
     "name": item.name,
-    "item": `https://aster-medicines.vercel.app${item.url}`
+    "item": `https://astermedicines.com${item.url}`
   }))
 });
