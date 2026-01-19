@@ -1,17 +1,18 @@
 import connectDB from '@/lib/db';
-import Product from '@/models/Product';
+import ProductModel from '@/models/Product';
+import { Product } from '@/types/product';
 
-export async function getProduct(id: string) {
+export async function getProduct(id: string): Promise<Product | null> {
   try {
     await connectDB();
-    const product = await Product.findById(id);
+    const product = await ProductModel.findById(id);
 
     if (!product) {
       return null;
     }
 
-    const transformedProduct = {
-      id: product._id,
+    const transformedProduct: Product = {
+      id: product._id.toString(),
       name: product.name,
       description: product.description,
       category: product.category,
@@ -35,7 +36,9 @@ export async function getProduct(id: string) {
       precautions: product.precautions || 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.',
       isQualityAssured: product.isQualityAssured,
       isGmpCertified: product.isGmpCertified,
-      isWhoApproved: product.isWhoApproved
+      isWhoApproved: product.isWhoApproved,
+      stock: product.stock,
+      featured: product.featured
     };
 
     return transformedProduct;

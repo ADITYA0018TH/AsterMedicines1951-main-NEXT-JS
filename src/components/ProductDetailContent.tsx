@@ -2,31 +2,25 @@
 
 import React from "react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ArrowLeft, CheckCircle, Shield, AlertCircle, Loader2, Award } from "lucide-react";
-import { fetchProductById } from "@/services/api";
+import { ArrowLeft, CheckCircle, Shield, AlertCircle, Award } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Product } from "@/types/product";
 
-const ProductDetailContent = () => {
-    const params = useParams();
-    const id = params.id as string;
+interface ProductDetailContentProps {
+    product: Product;
+}
 
-    const { data: product, isLoading, isError } = useQuery({
-        queryKey: ['product', id],
-        queryFn: () => fetchProductById(id!),
-        enabled: !!id,
-    });
+const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
 
     // GSAP Animations
     useGSAP(() => {
@@ -67,40 +61,6 @@ const ProductDetailContent = () => {
         });
 
     }, [product]);
-
-    if (isLoading) {
-        return (
-            <div className="min-h-screen bg-cover bg-center bg-no-repeat">
-                <Navbar />
-                <main>
-                    <div className="container mx-auto px-4 py-24 text-center flex flex-col items-center justify-center">
-                        <Loader2 className="w-12 h-12 text-brand-accent animate-spin mb-4" />
-                        <h1 className="text-2xl font-bold text-gray-900">Loading product details...</h1>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
-
-    if (isError || !product) {
-        return (
-            <div className="min-h-screen bg-cover bg-center bg-no-repeat">
-                <Navbar />
-                <main>
-                    <div className="container mx-auto px-4 py-24 text-center">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-                        <Link href="/products">
-                            <Button variant="default" className="mt-4">
-                                <ArrowLeft className="mr-2" /> Back to Products
-                            </Button>
-                        </Link>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-background text-foreground">
