@@ -1,10 +1,10 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Video data
+// YOUR ORIGINAL VIDEO DATA PRESERVED
 const videos = [
     {
         id: "1",
@@ -38,12 +38,12 @@ const VideoShowcase = () => {
     return (
         <section className="relative py-24 lg:py-32 bg-white dark:bg-black overflow-hidden" id="media">
 
-            {/* Minimalist Background - Just a faint spotlight */}
+            {/* Minimalist Background */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-slate-100/50 dark:bg-zinc-900/50 blur-[120px] rounded-full pointer-events-none -z-10" />
 
             <div className="container px-4 md:px-6 mx-auto">
 
-                {/* Header - Left Aligned, Bold, Modern */}
+                {/* Header */}
                 <div className="mb-12 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="max-w-2xl">
                         <motion.h2
@@ -84,7 +84,7 @@ const VideoShowcase = () => {
 
                 {/* Bento Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 auto-rows-[300px] lg:auto-rows-[250px] gap-4">
-                    {videos.map((video, index) => (
+                    {videos.map((video) => (
                         <SpotlightCard
                             key={video.id}
                             className={video.className}
@@ -120,6 +120,7 @@ const VideoShowcase = () => {
                     ))}
                 </div>
 
+                {/* Mobile Button */}
                 <div className="mt-8 md:hidden flex justify-center">
                     <a
                         href="https://www.youtube.com/@astermedicines13"
@@ -182,10 +183,8 @@ const VideoShowcase = () => {
     );
 };
 
-// Spotlight Effect Card Component
 const SpotlightCard = ({ children, className = "", onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
     const divRef = useRef<HTMLDivElement>(null);
-    const [isFocused, setIsFocused] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [opacity, setOpacity] = useState(0);
 
@@ -196,32 +195,12 @@ const SpotlightCard = ({ children, className = "", onClick }: { children: React.
         setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     };
 
-    const handleFocus = () => {
-        setIsFocused(true);
-        setOpacity(1);
-    };
-
-    const handleBlur = () => {
-        setIsFocused(false);
-        setOpacity(0);
-    };
-
-    const handleMouseEnter = () => {
-        setOpacity(1);
-    };
-
-    const handleMouseLeave = () => {
-        setOpacity(0);
-    };
-
     return (
         <motion.div
             ref={divRef}
             onMouseMove={handleMouseMove}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setOpacity(1)}
+            onMouseLeave={() => setOpacity(0)}
             onClick={onClick}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -238,14 +217,12 @@ const SpotlightCard = ({ children, className = "", onClick }: { children: React.
                     background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,
                 }}
             />
-            {/* Border Gradient Spotlight */}
             <div
                 className="absolute inset-0 rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
                 style={{
                     background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,107,0,0.15), transparent 40%)`,
                 }}
             />
-
             {children}
         </motion.div>
     );

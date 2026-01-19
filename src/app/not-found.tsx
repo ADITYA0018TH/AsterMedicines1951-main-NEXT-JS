@@ -3,74 +3,67 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { ArrowLeft, Home, Search, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
     const pathname = usePathname();
 
     useEffect(() => {
-        console.error(
-            "404 Error: User attempted to access non-existent route:",
-            pathname
-        );
+        // Optional: Log 404 errors to your analytics service here
+        console.log(`404 Error: User attempted to access ${pathname}`);
     }, [pathname]);
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-orange-50/50 via-white/50 to-orange-100/50">
-            {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-400/10 rounded-full blur-3xl animate-pulse-slow" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background text-foreground selection:bg-orange-500 selection:text-white">
+            
+            {/* Background Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            
+            {/* Ambient Glows */}
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-                {/* Floating Medical Elements */}
-                <div className="absolute top-20 right-20 animate-medicine-float opacity-20">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-orange-500">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M8 12h8" />
-                        <path d="M12 8v8" />
-                    </svg>
-                </div>
-                <div className="absolute bottom-20 left-20 animate-pill-float opacity-20">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-blue-500">
-                        <rect x="2" y="6" width="20" height="12" rx="6" />
-                    </svg>
-                </div>
-            </div>
-
-            <div className="relative z-10 glass-card p-12 md:p-16 max-w-2xl w-full mx-4 text-center border border-white/40 shadow-2xl">
-                <div className="mb-8 relative inline-block">
-                    <h1 className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600 animate-fade-in">
+            <div className="relative z-10 max-w-2xl w-full mx-4 text-center">
+                
+                {/* 404 Glitch Effect */}
+                <div className="mb-8 relative inline-block group cursor-default">
+                    <h1 className="text-9xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/20 leading-none select-none">
                         404
                     </h1>
-                    <div className="absolute -top-4 -right-4 animate-bounce">
-                        <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center border border-orange-200">
-                            <span className="text-orange-500 text-xl">?</span>
-                        </div>
+                    <div className="absolute top-0 left-0 w-full h-full text-9xl md:text-[12rem] font-black text-orange-500 opacity-0 group-hover:opacity-10 group-hover:translate-x-1 transition-all duration-200 pointer-events-none leading-none">
+                        404
                     </div>
                 </div>
 
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-display animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                    Page Not Found
+                <h2 className="text-2xl md:text-4xl font-bold mb-4 font-display">
+                    Out of Stock?
                 </h2>
 
-                <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+                <p className="text-lg text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
+                    The page you are looking for seems to have been discontinued or moved.
                 </p>
 
-                <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                    <Link
-                        href="/"
-                        className="button-primary inline-flex items-center gap-2 group"
-                    >
-                        <svg
-                            className="w-5 h-5 transition-transform group-hover:-translate-x-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Return to Home
+                {/* Smart Recovery Links */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+                    <Link href="/">
+                        <Button size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 font-semibold gap-2 px-8">
+                            <Home className="w-4 h-4" />
+                            Return Home
+                        </Button>
                     </Link>
+                    
+                    <Link href="/products">
+                        <Button size="lg" variant="outline" className="rounded-full border-border hover:bg-secondary gap-2 px-8">
+                            <Search className="w-4 h-4" />
+                            Browse Products
+                        </Button>
+                    </Link>
+                </div>
+
+                {/* Footer Help Link */}
+                <div className="mt-12 text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+                    Need urgent assistance? <Link href="/contact" className="text-orange-500 hover:underline font-medium inline-flex items-center gap-1">Contact Support <Mail className="w-3 h-3"/></Link>
                 </div>
             </div>
         </div>

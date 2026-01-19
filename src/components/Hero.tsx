@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Microscope, ChevronRight } from "lucide-react";
-
+import { Microscope, ChevronRight, MapPin } from "lucide-react";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,53 +20,40 @@ const Hero = () => {
 
   useEffect(() => {
     if (isMobile) return;
-
-    // Cache bounds to avoid layout thrashing
     let bounds = { left: 0, top: 0, width: 0, height: 0 };
     const updateBounds = () => {
       if (containerRef.current) {
         bounds = containerRef.current.getBoundingClientRect();
       }
     };
-
-    // Initial measure
     updateBounds();
     window.addEventListener("resize", updateBounds);
-    window.addEventListener("scroll", updateBounds); // Update on scroll as position changes
+    window.addEventListener("scroll", updateBounds);
 
     let animationFrameId: number;
-
     const handleMouseMove = (e: MouseEvent) => {
       if (!imageRef.current || bounds.width === 0) return;
-
-      // Use cached bounds - no reflow!
       const x = (e.clientX - bounds.left) / bounds.width - 0.5;
       const y = (e.clientY - bounds.top) / bounds.height - 0.5;
-
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-
       animationFrameId = requestAnimationFrame(() => {
         if (imageRef.current) {
           imageRef.current.style.transform = `perspective(1000px) rotateY(${x * 2.5}deg) rotateX(${-y * 2.5}deg) scale3d(1.02, 1.02, 1.02)`;
         }
       });
     };
-
     const handleMouseLeave = () => {
       if (!imageRef.current) return;
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-
       animationFrameId = requestAnimationFrame(() => {
         if (imageRef.current) {
           imageRef.current.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
         }
       });
     };
-
     const container = containerRef.current;
     container?.addEventListener("mousemove", handleMouseMove);
     container?.addEventListener("mouseleave", handleMouseLeave);
-
     return () => {
       window.removeEventListener("resize", updateBounds);
       window.removeEventListener("scroll", updateBounds);
@@ -78,33 +63,17 @@ const Hero = () => {
     };
   }, [isMobile]);
 
-  useEffect(() => {
-    if (isMobile) return;
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const elements = document.querySelectorAll(".parallax");
-      elements.forEach((el) => {
-        const element = el as HTMLElement;
-        const speed = parseFloat(element.dataset.speed || "0.1");
-        const yPos = -scrollY * speed;
-        element.style.setProperty("--parallax-y", `${yPos}px`);
-      });
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMobile]);
-
   return (
     <section
       className="relative w-full min-h-screen flex items-center bg-white dark:bg-black overflow-hidden"
       id="hero"
     >
-      {/* 1. Technical Data Grid Overlay - Very subtle */}
+      {/* 1. Technical Data Grid Overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white dark:via-black/50 dark:to-black"></div>
 
-        {/* Animated Flowing Lines - Heartbeat / ECG Pattern */}
+        {/* --- RESTORED ANIMATION LINES HERE --- */}
         {!isMobile && (
           <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-40" viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             {/* Line 1: Top - User requested FAST and LIGHT */}
@@ -124,28 +93,30 @@ const Hero = () => {
 
           {/* Left Column: Typography (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center text-left">
-            {/* Clinical Label */}
+            {/* Clinical Label with Location */}
             <div className="flex items-center gap-3 mb-8 3xl:mb-12">
               <div className="h-[1px] w-12 3xl:w-20 bg-pulse-500"></div>
+              <MapPin className="w-4 h-4 text-slate-500" />
               <span className="text-xs 3xl:text-sm font-mono tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
-                Est. 1991
+                Hajipur, Bihar • Est. 1991
               </span>
             </div>
 
+            {/* OPTIMIZED H1 TAG */}
             <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
               <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold text-slate-900 dark:text-white leading-none mb-2 -ml-1">
                 Aster Medicines
               </span>
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
-                Precision
+                Pharmaceutical
               </span>
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-light mt-1 normal-case leading-tight font-sans tracking-normal text-slate-400 dark:text-slate-500">
-                in every dose.
+                Manufacturing Unit.
               </span>
             </h1>
 
             <p className="mt-8 sm:mt-12 3xl:mt-16 text-lg sm:text-xl 3xl:text-2xl 4xl:text-3xl text-slate-600 dark:text-slate-400 max-w-xl 3xl:max-w-2xl 4xl:max-w-3xl leading-relaxed font-light border-l border-slate-200 dark:border-slate-800 pl-6 3xl:pl-10">
-              Pioneering pharmaceutical manufacturing with state-of-the-art automation and unyielding quality control standards.
+              ISO & GMP Certified Manufacturer of <strong className="font-semibold text-slate-800 dark:text-slate-200">Critical Care Injections</strong>, Syrups, and Dry Injections. Premier destination for <strong className="font-semibold text-slate-800 dark:text-slate-200">Third Party Manufacturing</strong> in East India.
             </p>
 
             <div className="mt-10 sm:mt-16 3xl:mt-20 flex flex-wrap gap-5">
@@ -153,7 +124,7 @@ const Hero = () => {
                 href="/contact"
                 className="group inline-flex items-center justify-between gap-4 px-6 py-4 3xl:px-8 3xl:py-6 text-white bg-gradient-to-r from-[#FE5C02] to-[#FE5C02] rounded-full shadow-[inset_2px_2px_6px_rgba(255,255,255,0.2),_inset_-2px_-2px_6px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 active:scale-95 active:shadow-[inset_1px_1px_4px_rgba(0,0,0,0.2)] animate-bounce hover:animate-none"
               >
-                <span className="text-lg 3xl:text-xl 4xl:text-2xl font-medium">Contact Us</span>
+                <span className="text-lg 3xl:text-xl 4xl:text-2xl font-medium">Get Quote</span>
                 <span className="flex items-center justify-center w-10 h-10 3xl:w-12 3xl:h-12 bg-white rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.6)] group-hover:animate-pulse shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4),_inset_-2px_-2px_5px_rgba(0,0,0,0.1)] active:shadow-inner active:scale-90">
                   <ChevronRight className="text-[#FE5C02] w-5 h-5 3xl:w-6 3xl:h-6" />
                 </span>
@@ -161,18 +132,16 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Column: Visual Anchor (5 cols) */}
-          <div className="lg:col-span-5 relative">
+          {/* Right Column (Visual Anchor) - SAME AS BEFORE */}
+          <div className="lg:col-span-5 relative" ref={containerRef}>
             <div className="relative z-10 p-8 3xl:p-12">
-              {/* Decorative Glass Backdrop */}
               <div className="absolute inset-0 bg-gradient-to-br from-slate-100/50 to-white/20 dark:from-slate-800/50 dark:to-black/20 backdrop-blur-3xl rounded-[3rem] -z-10 border border-white/20 dark:border-white/10"></div>
-
-              {/* Image */}
+              
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3] 3xl:aspect-[5/4]">
                 <Image
                   ref={imageRef as any}
                   src="/My-uploads/AD_OIL_NEW_BOX.webp"
-                  alt="Precision Pharmaceutical Manufacturing"
+                  alt="Aster Medicines Injection Manufacturing Plant Hajipur"
                   fill
                   sizes="(max-width: 1024px) 100vw, (min-width: 1800px) 50vw, 42vw"
                   className="object-cover transform transition-transform duration-700 group-hover:scale-105"
@@ -187,8 +156,8 @@ const Hero = () => {
                   <Microscope className="w-5 h-5 md:w-6 md:h-6 3xl:w-8 3xl:h-8" />
                 </div>
                 <div>
-                  <div className="text-xl md:text-2xl 3xl:text-4xl font-bold text-slate-900 dark:text-white">99.9%</div>
-                  <div className="text-[10px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">Purity Grade</div>
+                  <div className="text-xl md:text-2xl 3xl:text-4xl font-bold text-slate-900 dark:text-white">GMP</div>
+                  <div className="text-[10px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">Certified Unit</div>
                 </div>
               </div>
             </div>

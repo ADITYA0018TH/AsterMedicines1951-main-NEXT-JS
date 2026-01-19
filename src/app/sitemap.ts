@@ -1,73 +1,54 @@
 import { MetadataRoute } from "next";
-import { products } from "@/data/products";
+// Make sure this path is correct based on your folder structure
+import { products } from "@/data/products"; 
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://astermedicines.com";
 
-  // Strategy: If your product data has an 'updatedAt' field, use it. 
-  // If not, hardcode a recent deployment date to avoid "fake" daily updates.
+  // Dynamic Product Routes
   const productUrls = products.map((product) => ({
     url: `${baseUrl}/products/${product.id}`,
-    // If you have product.updatedAt in your DB, use that: new Date(product.updatedAt)
-    lastModified: new Date(), 
+    lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: 0.9, // High priority: These are your specific drug pages (e.g., Meropenem)
+    priority: 0.8,
   }));
 
   return [
-    // --- TIER 1: The Homepage ---
+    // --- 1. Core Pages (From your old utils file) ---
     {
-      url: baseUrl,
+      url: baseUrl, // Home
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: "weekly",
       priority: 1,
     },
-
-    // --- TIER 2: Revenue Generators (The "Money" Pages) ---
-    // You MUST have a dedicated page for Third Party Manufacturing to rank for B2B queries
-    {
-      url: `${baseUrl}/third-party-manufacturing`, 
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    // Showcasing the factory helps with trust/conversions
-    {
-      url: `${baseUrl}/infrastructure`, 
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    
-    // --- TIER 3: Product Directory ---
-    {
-      url: `${baseUrl}/products`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-
-    // --- TIER 4: Trust & Utility ---
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
-      url: `${baseUrl}/certificates`, // GMP/ISO certs are huge for Pharma SEO
+      url: `${baseUrl}/products`,
       lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.7,
+      changeFrequency: "daily",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date(), // Contact info rarely changes
-      changeFrequency: "yearly",
-      priority: 0.6,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
 
-    // --- TIER 5: Dynamic Products ---
+    // --- 2. High-Value B2B Pages (Added for SEO) ---
+    {
+      url: `${baseUrl}/infrastructure`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+
+    // --- 3. Dynamic Products ---
     ...productUrls,
   ];
 }

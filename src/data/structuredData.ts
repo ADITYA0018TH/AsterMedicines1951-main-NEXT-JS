@@ -33,7 +33,7 @@ export const organizationStructuredData = {
       "contactType": "Customer Service",
       "areaServed": "IN",
       "availableLanguage": ["English", "Hindi"],
-      "email": "contact@astermedicines.com"
+      "email": "sales@astermedicines.com"
     },
     {
       "@type": "ContactPoint",
@@ -63,7 +63,7 @@ export const localBusinessStructuredData = {
   "@id": "https://astermedicines.com",
   "url": "https://astermedicines.com",
   "telephone": "+91-7061452180",
-  "email": "contact@astermedicines.com",
+  "email": "sales@astermedicines.com",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",

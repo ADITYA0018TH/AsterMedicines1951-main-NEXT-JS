@@ -151,7 +151,7 @@ const ContactContent = () => {
                                             {
                                                 icon: <Mail className="w-6 h-6 text-brand-accent" />,
                                                 title: "Email",
-                                                content: ["contact@astermedicines.com", "sales@astermedicines.com"]
+                                                content: ["sales@astermedicines.com", "sales@astermedicines.com"]
                                             },
                                             {
                                                 icon: <Phone className="w-6 h-6 text-brand-orange" />,

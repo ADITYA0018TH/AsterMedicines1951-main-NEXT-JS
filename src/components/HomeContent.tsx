@@ -35,7 +35,7 @@ const HomeContent = () => {
                     scrollTrigger: {
                         trigger: el,
                         start: "top 85%",
-                        toggleActions: "play none none reverse", // Animates in when scrolling down, out when scrolling up
+                        toggleActions: "play none none reverse",
                     },
                 }
             );
@@ -59,9 +59,12 @@ const HomeContent = () => {
     }, []);
 
     return (
-        <div className="h-screen">
+        // FIX: Changed 'h-screen' to 'min-h-screen' so the page can scroll
+        <div className="min-h-screen flex flex-col bg-white dark:bg-black">
             <Navbar />
-            <main id="main-content" className="space-y-4 sm:space-y-8">
+            
+            {/* FIX: Removed 'space-y' to let components handle their own layout flow */}
+            <main id="main-content" className="flex-grow">
                 <Hero />
                 <PharmaceuticalSection />
                 <SpecsSection />
@@ -71,6 +74,7 @@ const HomeContent = () => {
                 <Features />
                 <Newsletter />
             </main>
+            
             <Footer />
         </div>
     );
