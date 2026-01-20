@@ -3,8 +3,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion"; // Removed AnimatePresence as it was used for the old menu
+import { 
+  ChevronRight, 
+  Home, 
+  Package, 
+  Info, 
+  Mail 
+} from "lucide-react"; // Added icons for the bottom bar
 import ThemeToggle from "./ThemeToggle";
 import Button3D from "@/components/ui/Button3D";
 import GlassSurface from "@/components/ui/GlassSurface";
@@ -12,10 +18,9 @@ import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Removed isMobileMenuOpen state as it is no longer needed
   const pathname = usePathname();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
@@ -27,7 +32,6 @@ const Navbar = () => {
       setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
     };
 
-    // Initial checks
     checkDesktop();
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", checkDesktop);
@@ -38,23 +42,27 @@ const Navbar = () => {
     };
   }, []);
 
+  // Added 'icon' property to navLinks for the bottom bar
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Products", href: "/products" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Products", href: "/products", icon: Package },
+    { name: "About", href: "/about", icon: Info },
+    { name: "Contact", href: "/contact", icon: Mail },
   ];
 
   return (
     <>
+      {/* --- MAIN NAVBAR (Desktop Links + Mobile Logo) --- */}
       <motion.nav
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
           isScrolled ? "py-2" : "py-4"
         )}
       >
-        <div className="w-full md:w-fit mx-auto px-6 flex items-stretch justify-between gap-4">
-          {/* Logo Section */}
+        {/* Changed w-full to w-fit on mobile to keep logo compact, matches desktop style */}
+        <div className="w-fit md:w-fit mx-auto px-6 flex items-stretch justify-between gap-4">
+          
+          {/* 1. Logo Section (UNCHANGED) */}
           <GlassSurface
             width="auto"
             height="auto"
@@ -79,31 +87,9 @@ const Navbar = () => {
             </Link>
           </GlassSurface>
 
-          {/* Mobile Menu Button - Visible only on mobile */}
-          <GlassSurface
-            width="auto"
-            height="auto"
-            borderRadius={50}
-            borderWidth={isScrolled ? 0.07 : 0}
-            backgroundOpacity={0}
-            opacity={isScrolled ? 0.93 : 0}
-            className="md:hidden flex px-3 py-2 items-center justify-center transition-all duration-300"
-            id="mobile-menu-toggle-surface"
-          >
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-black dark:text-white hover:text-brand-accent transition-colors"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-          </GlassSurface>
+          {/* REMOVED: Mobile Menu Button (Hamburger) */}
 
-          {/* Navigation Section */}
+          {/* 2. Desktop Navigation Section (UNCHANGED - STRICTLY PRESERVED) */}
           <GlassSurface
             width="auto"
             height="auto"
@@ -114,7 +100,6 @@ const Navbar = () => {
             className="hidden md:flex flex-1 px-6 py-2 items-center justify-center gap-8 transition-all duration-300"
             id="navbar-content-surface"
           >
-            {/* Desktop Links */}
             <div className="flex items-center space-x-8 relative" onMouseLeave={() => setHoveredLink(null)}>
               {navLinks.map((link) => (
                 <Link
@@ -177,53 +162,64 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Nav Overlay - User requested styling */}
-      {isMobileMenuOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-          <div
-            className="fixed top-20 right-6 z-50 w-64 md:hidden rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(25px)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.15), inset 0 0 30px rgba(255,255,255,0.2)",
-            }}
-          >
-            <nav className="flex flex-col p-2">
-              {navLinks.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "block text-base py-3 px-4 rounded-xl transition-all duration-200",
-                      isActive
-                        ? "text-[#FE5C02] bg-white/50 font-medium shadow-sm"
-                        : "text-gray-700 hover:text-[#FE5C02] hover:bg-white/30"
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
+      {/* --- NEW: MOBILE BOTTOM NAVIGATION (Transparent) --- */}
+      <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 px-4">
+        <GlassSurface
+          width="100%"
+          height="auto"
+          borderRadius={24}
+          borderWidth={0.05}        // Thin border
+          backgroundOpacity={0}     // Transparent
+          blur={15}                 // Frosted effect
+          className="flex items-center justify-between px-2 py-3 shadow-lg"
+        >
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            const Icon = link.icon;
 
-              <div className="mt-2 pt-2 border-t border-gray-200/50 px-4 flex items-center justify-between">
-                <span className="text-gray-600 text-sm font-medium">Appearance</span>
-                <div className="scale-90 origin-right">
-                  <ThemeToggle />
-                </div>
-              </div>
-            </nav>
+            return (
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="relative flex-1 flex flex-col items-center gap-1 group"
+              >
+                <motion.div
+                  initial={false}
+                  animate={{
+                    scale: isActive ? 1.1 : 1,
+                    y: isActive ? -4 : 0
+                  }}
+                  className={cn(
+                    "flex flex-col items-center transition-colors duration-300",
+                    isActive ? "text-[#FE5C02]" : "text-gray-500 dark:text-gray-400"
+                  )}
+                >
+                  <Icon className="w-6 h-6 stroke-[1.5]" />
+                  <span className="text-[10px] font-bold uppercase tracking-tighter opacity-80">
+                    {link.name}
+                  </span>
+                </motion.div>
+                
+                {isActive && (
+                  <motion.div
+                    layoutId="active-indicator"
+                    className="absolute -bottom-1 w-1 h-1 bg-[#FE5C02] rounded-full"
+                    transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+          
+          {/* Vertical Divider */}
+          <div className="h-8 w-[1px] bg-black/10 dark:bg-white/10 mx-1" />
+          
+          {/* Theme Toggle in Bottom Bar */}
+          <div className="flex-1 flex justify-center">
+             <ThemeToggle />
           </div>
-        </>
-      )}
+        </GlassSurface>
+      </div>
     </>
   );
 };
