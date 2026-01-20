@@ -7,9 +7,13 @@ export default function JsonLd() {
         "@id": "https://astermedicines.com/#organization",
         "name": "Aster Medicines Pvt Ltd",
         "url": "https://astermedicines.com",
-        "logo": "https://astermedicines.com/og-image-update.webp", // Ensure this logo URL is correct
-        "slogan": "Precision Pharmaceutical Manufacturing",
-        "foundingDate": "1991", // Consistent with your text
+        
+        // --- UPDATED THIS LINE ---
+        // Now pointing to your new square, high-quality logo file
+        "logo": "https://astermedicines.com/icon.png", 
+        
+        "slogan": "Care For Life",
+        "foundingDate": "1991",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Plot No E/4, Industrial Area",
@@ -21,6 +25,7 @@ export default function JsonLd() {
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "sales",
+          "telephone": "+91-9934006655", // Make sure to use your real number here
           "areaServed": "IN",
           "availableLanguage": ["en", "hi"]
         },
@@ -33,12 +38,12 @@ export default function JsonLd() {
         "@type": "ManufacturingBusiness",
         "parentOrganization": { "@id": "https://astermedicines.com/#organization" },
         "name": "Aster Medicines Manufacturing Unit",
-        "image": "https://astermedicines.com/factory-image.jpg", // Replace with real factory image
-        "telephone": "+91-0000000000", // Add your official number
+        "image": "https://astermedicines.com/og-image-update.webp", // Good to keep a banner image here for the factory
+        "telephone": "+91-9934006655", // Add your real number here
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": 25.6888, // Approximate Hajipur Industrial Area lat
-          "longitude": 85.2166   // Approximate Hajipur Industrial Area long
+          "latitude": 25.6888,
+          "longitude": 85.2166
         },
         "priceRange": "$$"
       }
