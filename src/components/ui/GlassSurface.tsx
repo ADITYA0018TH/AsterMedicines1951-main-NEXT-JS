@@ -202,6 +202,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
     const supportsSVGFilters = () => {
         if (typeof window === 'undefined') return false;
+
+        // Disable SVG filters on mobile (width < 768px) for performance
+        if (window.innerWidth < 768) return false;
+
         const isWebkit = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
         const isFirefox = /Firefox/.test(navigator.userAgent);
 
