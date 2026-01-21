@@ -14,6 +14,7 @@ import VideoShowcase from "@/components/VideoShowcase";
 import Features from "@/components/Features";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import FAQSection from "@/components/FAQSection";
 
 const HomeContent = () => {
 
@@ -62,7 +63,7 @@ const HomeContent = () => {
         // FIX: Changed 'h-screen' to 'min-h-screen' so the page can scroll
         <div className="min-h-screen flex flex-col bg-white dark:bg-black">
             <Navbar />
-            
+
             {/* FIX: Removed 'space-y' to let components handle their own layout flow */}
             <main id="main-content" className="flex-grow">
                 <Hero />
@@ -72,9 +73,10 @@ const HomeContent = () => {
                 <ImageShowcaseSection />
                 <VideoShowcase />
                 <Features />
+                <FAQSection />
                 <Newsletter />
             </main>
-            
+
             <Footer />
         </div>
     );

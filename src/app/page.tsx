@@ -1,26 +1,29 @@
 import type { Metadata } from "next";
 import HomeContent from "@/components/HomeContent";
-import { organizationStructuredData, websiteStructuredData } from "@/data/structuredData";
+import { organizationStructuredData, websiteStructuredData, faqStructuredData } from "@/data/structuredData";
 
 export const metadata: Metadata = {
   // 1. TITLE: Targets "Manufacturer" (B2B) + "Location" (Local SEO)
-  title: "Pharmaceutical Manufacturer in Bihar | Third Party Pharma - Aster Medicines",
-  
+  title: "Aster Medicines Pvt Ltd | Top Pharmaceutical Manufacturer in Bihar",
+
   // 2. DESCRIPTION: Proof of Authority (ISO/GMP) + Specific Products (Injections)
-  description: "ISO & GMP Certified Manufacturer of Pharmaceutical Injections, Syrups, and Dry Syrups. Premier Third Party Manufacturing partner in Hajipur Industrial Area, Bihar since 1991.",
-  
+  // 2. DESCRIPTION: Proof of Authority (ISO/GMP) + Specific Products
+  description: "Aster Medicines Pvt Ltd (Est. 1982) is a leading manufacturer and wholesaler of Pharmaceutical Injections, Syrups, and Baby Massage Oil. ISO & GMP Certified.",
+
   // 3. KEYWORDS: Swapped generic words for high-value B2B terms
   keywords: [
     "Aster Medicines Pvt Ltd",
+    "Aster Medicines Private Limited",
+    "Aster Medicines",
     "Pharma Manufacturer Bihar",
     "Injection Manufacturing India",
-    "Third Party Pharma Manufacturing", 
-    "Meropenem Injection Manufacturer", 
+    "Third Party Pharma Manufacturing",
+    "Meropenem Injection Manufacturer",
     "PCD Pharma Franchise Bihar",
     "Hajipur Industrial Area Pharma",
     "Contract Manufacturing"
   ],
-  
+
   // 4. CANONICAL: Tells Google this is the main homepage
   alternates: {
     canonical: "https://astermedicines.com",
@@ -42,7 +45,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN", // Specifically targeting India
   },
-  
+
   twitter: {
     card: "summary_large_image",
     title: "Aster Medicines - Pharmaceutical Manufacturer",
@@ -54,7 +57,7 @@ export const metadata: Metadata = {
 export default function Home() {
   const combinedStructuredData = {
     "@context": "https://schema.org",
-    "@graph": [organizationStructuredData, websiteStructuredData]
+    "@graph": [organizationStructuredData, websiteStructuredData, faqStructuredData]
   };
 
   return (
