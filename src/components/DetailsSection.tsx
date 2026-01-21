@@ -79,7 +79,7 @@ const DetailsSection = () => {
               <p className="text-sm font-semibold text-slate-900 dark:text-white mb-2">Corporate Office:</p>
               <p className="text-slate-600 dark:text-slate-400 mb-1">Plot No E/4, Industrial Area, Hajipur, Bihar - 844101</p>
               <p className="text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-orange-500">Email:</span> sales@astermedicines.com
+                <span className="font-semibold text-orange-700 dark:text-orange-400">Email:</span> sales@astermedicines.com
               </p>
             </div>
           </div>
@@ -101,8 +101,9 @@ const DetailsSection = () => {
 
                 {/* Service Selection Dropdown (Critical for B2B) */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">I am interested in</label>
+                  <label htmlFor="service" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">I am interested in</label>
                   <select
+                    id="service"
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
@@ -117,11 +118,12 @@ const DetailsSection = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Name</label>
+                    <label htmlFor="name" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Name</label>
                     <input
+                      id="name"
                       type="text"
                       name="name"
-                      placeholder="John Doe"
+                      placeholder="Aster Medicines"
                       required
                       value={formData.name}
                       onChange={handleChange}
@@ -129,11 +131,12 @@ const DetailsSection = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Mobile Number</label>
+                    <label htmlFor="mobile" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Mobile Number</label>
                     <input
+                      id="mobile"
                       type="tel"
                       name="mobile"
-                      placeholder="+91 98765 43210"
+                      placeholder="+91**********"
                       required
                       value={formData.mobile}
                       onChange={handleChange}
@@ -143,11 +146,12 @@ const DetailsSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Address</label>
+                  <label htmlFor="email" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Address</label>
                   <input
+                    id="email"
                     type="email"
                     name="email"
-                    placeholder="you@company.com"
+                    placeholder="yourEmail@company.com"
                     required
                     value={formData.email}
                     onChange={handleChange}

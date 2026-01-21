@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Play, X, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -92,10 +93,12 @@ const VideoShowcase = () => {
                         >
                             <div className="relative w-full h-full group overflow-hidden">
                                 {/* Thumbnail Image */}
-                                <img
+                                <Image
                                     src={video.thumbnail}
                                     alt={video.title}
-                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
 
@@ -103,6 +106,7 @@ const VideoShowcase = () => {
                                 <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end items-start h-full">
                                     <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                         <button
+                                            aria-label={`Play video: ${video.title}`}
                                             className="mb-4 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 group-hover:bg-white group-hover:text-black transition-all duration-300"
                                         >
                                             <Play className="w-5 h-5 ml-1 fill-current" />
@@ -145,6 +149,7 @@ const VideoShowcase = () => {
                         onClick={() => setActiveVideo(null)}
                     >
                         <motion.button
+                            aria-label="Close video modal"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}

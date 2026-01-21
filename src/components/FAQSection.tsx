@@ -21,7 +21,7 @@ const FAQSection = () => {
 
                 {/* Section Header */}
                 <div className="flex flex-col items-center text-center mb-16">
-                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-600 dark:text-orange-500 mb-4">
+                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-700 dark:text-orange-500 mb-4">
                         <HelpCircle className="w-6 h-6" />
                     </div>
                     <h2 className="text-3xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">
@@ -46,7 +46,7 @@ const FAQSection = () => {
                                     className="w-full flex items-center justify-between p-6 text-left"
                                     aria-expanded={isOpen}
                                 >
-                                    <span className={`text-lg font-semibold pr-8 transition-colors ${isOpen ? 'text-orange-600 dark:text-orange-500' : 'text-slate-900 dark:text-white'}`}>
+                                    <span className={`text-lg font-semibold pr-8 transition-colors ${isOpen ? 'text-orange-700 dark:text-orange-400' : 'text-slate-900 dark:text-white'}`}>
                                         {faq.name}
                                     </span>
                                     <ChevronDown className={`w-5 h-5 text-slate-400 dark:text-slate-500 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />

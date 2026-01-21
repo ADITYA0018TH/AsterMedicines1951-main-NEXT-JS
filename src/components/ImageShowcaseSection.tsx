@@ -18,13 +18,13 @@ const ImageShowcaseSection = () => {
     {
       icon: Shield,
       // "Class 100" is the specific keyword for sterile manufacturing zones
-      title: "Class 100 Clean Rooms", 
+      title: "Class 100 Clean Rooms",
       desc: "HEPA-filtered sterile zones ensuring zero-contamination for liquid vials.",
     },
     {
       icon: Droplets,
       // Buyers judge a factory by its Water System (WFI)
-      title: "WFI Generation Plant", 
+      title: "WFI Generation Plant",
       desc: "Double Pass RO + EDI systems producing IP/BP grade Water For Injection.",
     },
     {
@@ -41,7 +41,7 @@ const ImageShowcaseSection = () => {
     <section
       ref={containerRef}
       className="relative h-auto lg:h-[200vh] bg-gradient-to-b from-white via-slate-50 to-white dark:from-black dark:via-zinc-950 dark:to-black py-8 lg:py-0"
-      id="technology-showcase" 
+      id="technology-showcase"
     >
       <div className="relative lg:sticky top-0 h-auto lg:h-screen w-full overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
@@ -51,7 +51,7 @@ const ImageShowcaseSection = () => {
 
         <div className="container relative h-full px-4 sm:px-6 lg:px-8 mx-auto flex items-center">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16 w-full pt-20 lg:pt-0">
-            
+
             {/* Left Side: Text Content */}
             <motion.div
               style={{ opacity: textOpacity, y: textY }}
@@ -70,7 +70,7 @@ const ImageShowcaseSection = () => {
               <div className="space-y-3 lg:space-y-4">
                 <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
                   Advanced <br />
-                  <span className="text-transparent bg-clip-text bg-brand-accent">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-orange-600">
                     Sterile Manufacturing
                   </span>
                 </h2>
@@ -105,7 +105,7 @@ const ImageShowcaseSection = () => {
               {/* CTA */}
               <a
                 href="/infrastructure"
-                className="inline-flex items-center gap-2 px-5 py-2.5 lg:px-6 lg:py-3 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm hover:scale-105 active:scale-95 transition-transform w-fit shadow-lg shadow-slate-900/20 dark:shadow-white/10"
+                className="inline-flex items-center gap-2 px-5 py-2.5 lg:px-6 lg:py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:scale-105 active:scale-95 transition-transform w-fit shadow-lg shadow-black/20 dark:shadow-white/10"
               >
                 View Infrastructure
                 <ArrowRight className="w-4 h-4" />

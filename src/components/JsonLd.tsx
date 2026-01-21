@@ -18,7 +18,7 @@ export default function JsonLd() {
           "value": "U24230BR2008PTC013937"
         },
         // SEO Win: Mentioning the 1982 roots shows legacy
-        "foundingDate": "2008-09-17", 
+        "foundingDate": "2008-09-17",
         "slogan": "Care For Life",
         "founder": {
           "@type": "Person",
