@@ -1,5 +1,4 @@
 import { MetadataRoute } from "next";
-// Make sure this path is correct based on your folder structure
 import { products } from "@/data/products"; 
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -14,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
-    // --- 1. Core Pages (From your old utils file) ---
+    // --- 1. Core Pages ---
     {
       url: baseUrl, // Home
       lastModified: new Date(),
@@ -40,15 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
 
-    // --- 2. High-Value B2B Pages (Added for SEO) ---
-    {
-      url: `${baseUrl}/infrastructure`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-
-    // --- 3. Dynamic Products ---
+    // --- 2. Dynamic Products ---
     ...productUrls,
   ];
 }
