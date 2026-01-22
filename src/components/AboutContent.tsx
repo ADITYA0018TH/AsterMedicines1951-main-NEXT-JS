@@ -1,309 +1,481 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import {
+    ArrowRight,
+    MapPin,
+    Factory,
+    Syringe,
+    FlaskConical,
+    ShieldCheck,
+    Microscope,
+    Activity,
+    Layers
+} from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger);
+// Safe Registration
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 const AboutContent = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [hoveredValue, setHoveredValue] = useState<number | null>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // The Text
+    // The Text & Highlights
+    const manifestoSegments = [
+        { text: "Aster Medicines", highlight: true },
+        { text: "was born from a singular vision: to put" },
+        { text: "Bihar", highlight: true },
+        { text: "on the national pharmaceutical map. Incorporated in" },
+        { text: "2008,", highlight: true },
+        { text: "we have evolved from a local unit into a high-volume manufacturing powerhouse, serving over" },
+        { text: "12 states", highlight: true },
+        { text: "with" },
+        { text: "WHO-GMP certified", highlight: true },
+        { text: "injectables." }
+    ];
 
     useGSAP(() => {
+        if (!containerRef.current) return;
+
         const ctx = gsap.context(() => {
 
-            // --- 1. HERO ANIMATIONS ---
-            const tl = gsap.timeline();
-            tl.from(".hero-line-inner", {
+            // --- 1. HERO LOAD ---
+            const heroTl = gsap.timeline();
+            heroTl.from(".hero-line", {
                 yPercent: 100,
+                opacity: 0,
                 duration: 1.2,
-                stagger: 0.15,
+                stagger: 0.1,
                 ease: "power4.out",
                 delay: 0.2
             });
-            tl.from(".hero-separator", {
-                scaleY: 0,
-                transformOrigin: "top",
-                duration: 0.8,
-                ease: "power3.inOut"
-            }, "-=0.8");
-            tl.from(".hero-desc-line", {
-                yPercent: 100,
-                duration: 0.8,
-                stagger: 0.05,
-                ease: "power3.out"
-            }, "-=0.6");
-            tl.from(".hero-meta", {
-                opacity: 0,
-                y: 20,
-                duration: 1,
-                ease: "power3.out"
-            }, "-=0.5");
 
-            // --- 2. MANIFESTO (Text Reveal) ---
-            const words = gsap.utils.toArray(".manifesto-word");
-            gsap.to(words, {
-                scrollTrigger: {
-                    trigger: ".manifesto-section",
-                    start: "top 60%",
-                    end: "bottom 60%",
-                    scrub: 0.5,
-                },
-                color: "inherit",
-                opacity: 1,
-                stagger: 0.1
-            });
+            // --- 2. MANIFESTO: MULTI-STYLE WORD ANIMATIONS ---
 
-            // --- 3. FOUNDER PINNING ---
-            const founderTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: ".founder-section",
-                    start: "top top",
-                    end: "+=150%",
-                    pin: true,
-                    scrub: true,
-                    anticipatePin: 1
-                }
-            });
-            founderTl.to(".founder-img-mask", {
-                clipPath: "inset(0% 0% 0% 0%)",
-                scale: 1,
-                duration: 1,
-                ease: "power2.inOut"
-            })
-                .to(".founder-text-content", {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5
-                }, "-=0.3");
-
-            // --- 4. STATS ANIMATION ---
-            gsap.from(".stat-item", {
-                scrollTrigger: {
-                    trigger: ".stats-section",
-                    start: "top 80%",
-                },
-                y: 60,
-                opacity: 0,
-                scale: 0.8,
-                duration: 0.8,
-                stagger: 0.15,
-                ease: "back.out(1.7)"
-            });
-
-            // --- 5. COUNTERS ---
-            const counters = document.querySelectorAll(".stat-counter");
-            counters.forEach((counter) => {
-                const target = parseInt(counter.getAttribute("data-value") || "0");
-                const suffix = counter.getAttribute("data-suffix") || "";
-                const obj = { value: 0 };
-
-                gsap.to(obj, {
-                    value: target,
-                    duration: 2,
-                    ease: "power2.out",
+            // Style 1: Fade Up
+            gsap.utils.toArray(".anim-fade-up").forEach((el: any) => {
+                gsap.from(el, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out",
                     scrollTrigger: {
-                        trigger: ".stats-section",
-                        start: "top 80%",
-                    },
-                    onUpdate: () => {
-                        counter.textContent = Math.round(obj.value) + suffix;
+                        trigger: el,
+                        start: "top 85%",
+                        end: "bottom 75%",
+                        scrub: 1
                     }
                 });
             });
 
+            // Style 2: Blur Reveal
+            gsap.utils.toArray(".anim-blur").forEach((el: any) => {
+                gsap.fromTo(el,
+                    { filter: "blur(10px)", opacity: 0 },
+                    {
+                        filter: "blur(0px)",
+                        opacity: 1,
+                        duration: 1,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 80%",
+                            end: "bottom 70%",
+                            scrub: 1
+                        }
+                    }
+                );
+            });
+
+            // Style 3: Scale In
+            gsap.utils.toArray(".anim-scale").forEach((el: any) => {
+                gsap.from(el, {
+                    scale: 2,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        end: "bottom 75%",
+                        scrub: 1
+                    }
+                });
+            });
+
+            // Style 4: Rotate In
+            gsap.utils.toArray(".anim-rotate").forEach((el: any) => {
+                gsap.from(el, {
+                    rotationX: 90,
+                    opacity: 0,
+                    y: -20,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 80%",
+                        end: "bottom 70%",
+                        scrub: 1
+                    }
+                });
+            });
+
+            // --- 3. HORIZONTAL FACTORY SCROLL ---
+            const scrollContainer = scrollContainerRef.current;
+            const panels = gsap.utils.toArray<HTMLElement>(".factory-panel");
+
+            if (scrollContainer && panels.length) {
+                gsap.to(panels, {
+                    xPercent: -100 * (panels.length - 1),
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".factory-section",
+                        pin: true,
+                        scrub: 1,
+                        snap: 1 / (panels.length - 1),
+                        end: () => "+=" + scrollContainer.offsetWidth
+                    }
+                });
+            }
+
+            // --- 4. PARALLAX IMAGES ---
+            const leaderImg = document.querySelector(".parallax-img");
+            if (leaderImg) {
+                gsap.to(leaderImg, {
+                    yPercent: 15,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".leadership-section",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            }
+
         }, containerRef);
+        return () => ctx.revert();
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="bg-background text-foreground selection:bg-brand-accent selection:text-white">
+        <div ref={containerRef} className="bg-background text-foreground font-sans selection:bg-primary selection:text-white">
             <Navbar />
+
             <main>
 
-                {/* --- 1. HERO SECTION --- */}
-                <section className="min-h-screen relative flex flex-col justify-center px-4 md:px-12 pt-16 md:pt-20 overflow-hidden">
-                    <div className="absolute top-0 right-0 p-6 md:p-12 hero-meta hidden md:block">
-                        <div className="text-xs md:text-sm font-mono tracking-widest uppercase opacity-60 text-right">
-                            ( Est. 1991 ) <br /> Hajipur, Bihar
-                        </div>
+                {/* --- 1. HERO: THE DASHBOARD --- */}
+                <section className="relative min-h-[90vh] pt-24 flex flex-col border-b border-border">
+                    {/* Background Grid */}
+                    <div className="absolute inset-0 flex justify-between pointer-events-none px-6 md:px-12 select-none">
+                        <div className="grid-line w-px h-full bg-border/50"></div>
+                        <div className="grid-line w-px h-full bg-border/50"></div>
+                        <div className="grid-line w-px h-full bg-border/50 hidden md:block"></div>
+                        <div className="grid-line w-px h-full bg-border/50"></div>
                     </div>
 
-                    <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-                        <div className="lg:col-span-8">
-                            <h1 className="text-[15vw] md:text-[13vw] lg:text-[10vw] leading-[0.9] lg:leading-[0.8] font-display font-bold uppercase tracking-tighter">
-                                <div className="overflow-hidden"><span className="hero-line-inner block">Pioneering</span></div>
-                                <div className="overflow-hidden"><span className="hero-line-inner block text-brand-accent">Pharma</span></div>
-                                <div className="overflow-hidden"><span className="hero-line-inner block">In East</span></div>
-                                <div className="overflow-hidden"><span className="hero-line-inner block">India.</span></div>
+                    <div className="container mx-auto px-6 md:px-12 flex-grow flex flex-col justify-center relative z-10">
+                        <div className="max-w-5xl">
+                            <div className="inline-flex items-center gap-2 mb-8 border border-primary/20 bg-primary/5 px-4 py-1.5 rounded-full text-xs font-bold uppercase text-primary tracking-widest">
+                                <Activity className="w-4 h-4" />
+                                System Operational • Est 2008
+                            </div>
+
+                            <h1 className="text-[12vw] leading-[0.8] font-black tracking-tighter uppercase mb-8 text-foreground overflow-hidden">
+                                <div className="hero-line block">Precision</div>
+                                <div className="hero-line block text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">Bio-Engineered.</div>
                             </h1>
-                        </div>
 
-                        <div className="lg:col-span-4 flex flex-row lg:flex-col items-start gap-4 md:gap-6 pb-2 lg:pb-4 mt-8 lg:mt-0">
-                            <div className="hero-separator w-[2px] h-24 lg:h-32 bg-brand-accent hidden lg:block" />
-                            <div className="space-y-1">
-                                <div className="overflow-hidden">
-                                    <p className="hero-desc-line text-lg md:text-2xl font-light leading-tight block">
-                                        <span className="font-medium text-brand-accent">Aster Medicines </span> is Bihar's
-                                    </p>
+                            <div className="flex flex-col md:flex-row gap-8 md:gap-16 border-l-2 border-primary pl-8">
+                                <div>
+                                    <p className="text-xs font-mono text-muted-foreground uppercase mb-2">Facility Location</p>
+                                    <p className="text-lg font-bold">Hajipur Industrial Area, <br />Phase-II, Bihar</p>
                                 </div>
-                                <div className="overflow-hidden">
-                                    <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
-                                        premier <span className="font-medium text-brand-accent">Third Party Manufacturer</span>
-                                    </p>
-                                </div>
-                                <div className="overflow-hidden">
-                                    <p className="hero-desc-line text-xl md:text-2xl font-light leading-tight block">
-                                        of Critical Care Injections.
-                                    </p>
+                                <div>
+                                    <p className="text-xs font-mono text-muted-foreground uppercase mb-2">Core Output</p>
+                                    <p className="text-lg font-bold">Critical Care Injectables <br />& Dry Syrups</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="hero-meta absolute bottom-8 left-6 md:left-12 flex items-center gap-4 opacity-50">
-                        <div className="w-10 h-10 rounded-full border border-foreground/30 flex items-center justify-center animate-bounce">
-                            <ArrowDown className="w-4 h-4" />
-                        </div>
-                        <span className="text-xs font-mono uppercase tracking-widest">Our Legacy</span>
-                    </div>
-
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
-                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-                </section>
-
-                {/* --- 2. MANIFESTO --- */}
-                <section className="manifesto-section min-h-[60vh] md:min-h-[80vh] flex items-center justify-center px-4 md:px-20 py-16 md:py-24 bg-white dark:bg-black">
-                    <div className="max-w-4xl text-black dark:text-white">
-                        <p className="text-2xl md:text-5xl lg:text-6xl font-display font-medium leading-[1.3] text-center md:text-left">
-                            {`Quality is not an accident; it is the result of intelligent effort. For over 30 years, our mission has been singular: to manufacture affordable, high-quality medicines right here in Bihar. We don't just make products; we build trust with every vial.`.split(" ").map((word, i) => (
-                                <span key={i} className="manifesto-word text-muted-foreground transition-colors inline-block mr-[0.25em]">
-                                    {word}
-                                </span>
-                            ))}
-                        </p>
-                    </div>
-                </section>
-
-                {/* --- 3. FOUNDER SECTION --- */}
-                <section className="founder-section min-h-screen w-full relative overflow-hidden flex flex-col md:flex-row bg-white dark:bg-black text-black dark:text-white">
-                    <div className="w-full md:w-1/2 h-[50vh] md:h-full relative flex items-center justify-center p-6 md:p-10">
-                        <div
-                            className="founder-img-mask w-full h-full relative overflow-hidden rounded-2xl md:rounded-none"
-                            style={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1.1 }}
-                        >
-                            <Image
-                                src="/My-uploads/DP.webp"
-                                alt="Rupesh Anand - Director Aster Medicines"
-                                fill
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className="object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700"
-                            />
-                            <div className="absolute bottom-8 left-8 p-4 rounded-xl border border-orange-500/30 bg-black/50 backdrop-blur-sm">
-                                <h2 className="text-4xl font-display font-bold text-orange-500">Rupesh Anand</h2>
-                                <p className="text-white/60 font-mono text-sm mt-2">MANAGING DIRECTOR</p>
+                    {/* Ticker Tape */}
+                    <div className="border-t border-border py-4 bg-secondary/50 backdrop-blur-sm relative z-10">
+                        <div className="flex gap-12 text-xs font-mono uppercase text-muted-foreground overflow-hidden">
+                            <div className="animate-marquee flex gap-12 whitespace-nowrap">
+                                <span>/// Third Party Manufacturing</span>
+                                <span>/// WHO-GMP Certified</span>
+                                <span>/// GLP Lab</span>
+                                <span>/// 12+ States Served</span>
+                                <span>/// 1.5M Daily Output</span>
+                                <span>/// Third Party Manufacturing</span>
+                                <span>/// WHO-GMP Certified</span>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <div className="w-full md:w-1/2 h-full flex items-center px-6 md:px-20 py-10 md:py-0">
-                        <div className="founder-text-content opacity-0 translate-y-10 space-y-6 md:space-y-8">
-                            <div className="w-16 h-1 bg-brand-accent mb-6 md:mb-8" />
-                            <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">
-                                Visionary <br /> Leadership.
+
+                {/* --- 2. MANIFESTO (Crash Fixed & Animated) --- */}
+                <section className="manifesto-section py-32 px-6 md:px-12 bg-background border-b border-border">
+                    <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+                        <div className="lg:col-span-4">
+                            <div className="sticky top-32">
+                                <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mb-6">
+                                    <Layers className="w-8 h-8 text-primary" />
+                                </div>
+                                <h3 className="text-xl font-bold uppercase tracking-widest mb-2">The Mission</h3>
+                                <p className="text-muted-foreground text-sm font-mono">Doc Ref: ASM-2025-V1</p>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-8">
+                            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-[1.3] tracking-tight">
+                                {manifestoSegments.map((segment, i) => (
+                                    <React.Fragment key={i}>
+                                        {segment.text.split(" ").map((word, j) => {
+                                            // Calculate global index for varied animation if needed, or just random/cyclic
+                                            const animIndex = i * 10 + j;
+                                            const animClass =
+                                                animIndex % 4 === 0 ? "anim-fade-up" :
+                                                    animIndex % 4 === 1 ? "anim-blur" :
+                                                        animIndex % 4 === 2 ? "anim-scale" :
+                                                            "anim-rotate";
+
+                                            return (
+                                                <span
+                                                    key={`${i}-${j}`}
+                                                    className={`manifesto-word inline-block mr-[0.25em] ${animClass} ${segment.highlight ? 'text-orange-500' : ''}`}
+                                                >
+                                                    {word}
+                                                </span>
+                                            );
+                                        })}
+                                        {/* Add space between segments if not last */}
+                                        <span className="inline-block mr-[0.25em]"></span>
+                                    </React.Fragment>
+                                ))}
                             </h2>
-                            <p className="text-lg md:text-xl opacity-70 leading-relaxed font-light max-w-md">
-                                "I established Aster Medicines with a vision to put Bihar on the pharmaceutical map. Today, we are proud to be the trusted manufacturing partner for brands across India."
-                            </p>
+                        </div>
+                    </div>
+                </section>
 
-                            <div className="pt-8 grid grid-cols-2 gap-8 border-t border-black/20 dark:border-white/20">
-                                <div>
-                                    <span className="block text-3xl font-bold text-brand-accent">1991</span>
-                                    <span className="text-sm opacity-50 uppercase tracking-wider">Established</span>
+
+                {/* --- 3. HORIZONTAL SCROLL (Factory Line) --- */}
+                <section className="factory-section h-screen bg-secondary overflow-hidden flex flex-col border-b border-border">
+                    <div className="px-6 md:px-12 py-6 border-b border-border bg-background z-20 flex justify-between items-center">
+                        <h2 className="text-xl font-bold uppercase flex items-center gap-3">
+                            <Factory className="w-5 h-5 text-primary" /> Infrastructure
+                        </h2>
+                        <div className="text-[10px] font-mono text-muted-foreground hidden md:block border border-border px-2 py-1 rounded">SCROLL TO INSPECT FLOW -</div>
+                    </div>
+
+                    <div ref={scrollContainerRef} className="flex-grow flex h-full w-full">
+
+                        {/* Panel 1: Start */}
+                        <div className="factory-panel min-w-[100vw] h-full flex items-center justify-center p-12 border-r border-border bg-secondary relative">
+                            <div className="text-center max-w-4xl relative z-10">
+                                <div className="text-[10rem] md:text-[15rem] leading-none font-black text-foreground opacity-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10">01</div>
+                                <h3 className="text-5xl md:text-8xl font-black uppercase mb-6">Production<br />Flow.</h3>
+
+                                <p className="text-xl text-muted-foreground mt-6">A walkthrough of our Hajipur Unit.</p>
+                            </div>
+                        </div>
+
+                        {/* Panel 2: Injectables */}
+                        <div className="factory-panel min-w-[100vw] h-full grid grid-cols-1 md:grid-cols-2 border-r border-border bg-background">
+                            <div className="p-12 md:p-20 flex flex-col justify-center border-b md:border-b-0 md:border-r border-border">
+                                <Syringe className="w-12 h-12 text-primary mb-8" />
+                                <h3 className="text-3xl md:text-5xl font-bold uppercase mb-6">Injectables Block</h3>
+                                <p className="text-lg text-muted-foreground mb-8">
+                                    A sterile fortress. We utilize automated washing, sterilization, and filling tunnels for <strong>Liquid Vials</strong> and <strong>Dry Powder</strong> injections.
+                                </p>
+                                <ul className="space-y-3 font-mono text-sm">
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> Beta-Lactam Compatible</li>
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> Nitrogen Purging</li>
+                                </ul>
+                            </div>
+                            <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
+
+                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Injectables" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                            </div>
+                        </div>
+
+                        {/* Panel 3: Orals */}
+                        <div className="factory-panel min-w-[100vw] h-full grid grid-cols-1 md:grid-cols-2 border-r border-border bg-background">
+                            <div className="p-12 md:p-20 flex flex-col justify-center border-b md:border-b-0 md:border-r border-border">
+                                <FlaskConical className="w-12 h-12 text-primary mb-8" />
+                                <h3 className="text-3xl md:text-5xl font-bold uppercase mb-6">Liquid Orals</h3>
+                                <p className="text-lg text-muted-foreground mb-8">
+                                    High-volume output. Our oral liquid section handles formulation, filling, and sealing for <strong>Dry Syrups</strong> and <strong>Paediatric Drops</strong>.
+                                </p>
+                                <ul className="space-y-3 font-mono text-sm">
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> 100+ Formulations</li>
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> Auto-Labeling</li>
+                                </ul>
+                            </div>
+                            <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
+
+                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Orals" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                            </div>
+                        </div>
+
+                        {/* Panel 4: QC Lab */}
+                        <div className="factory-panel min-w-[100vw] h-full grid grid-cols-1 md:grid-cols-2 border-r border-border bg-background">
+                            <div className="p-12 md:p-20 flex flex-col justify-center border-b md:border-b-0 md:border-r border-border">
+                                <Microscope className="w-12 h-12 text-primary mb-8" />
+                                <h3 className="text-3xl md:text-5xl font-bold uppercase mb-6">GLP Laboratory</h3>
+                                <p className="text-lg text-muted-foreground mb-8">
+                                    The brain of the operation. Our in-house Good Laboratory Practice (GLP) certified lab conducts rigorous testing: Sterility, Pyrogen, and Chemical Analysis.
+                                </p>
+                                <ul className="space-y-3 font-mono text-sm">
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> Microbiology Section</li>
+                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-primary rounded-full"></div> HPLC Instrumentation</li>
+                                </ul>
+                            </div>
+                            <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
+
+                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Lab" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                {/* --- 4. LEADERSHIP (Dossier) --- */}
+                <section className="leadership-section py-32 px-6 md:px-12 bg-background border-b border-border">
+                    <div className="container mx-auto">
+                        <div className="flex flex-col lg:flex-row gap-16 items-center">
+                            <div className="w-full lg:w-5/12 relative">
+                                <div className="aspect-[3/4] relative border border-border bg-secondary p-2">
+                                    <div className="absolute top-4 right-4 z-20 bg-primary text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
+                                        Managing Director
+                                    </div>
+                                    <div className="relative w-full h-full overflow-hidden bg-muted">
+                                        <Image
+                                            src="/My-uploads/DP.webp"
+                                            alt="Rupesh Anand"
+                                            fill
+                                            className="parallax-img object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                        />
+                                    </div>
+                                    {/* Tech Decors */}
+                                    <div className="absolute -bottom-4 -right-4 w-16 h-16 border-r-2 border-b-2 border-primary"></div>
+                                    <div className="absolute -top-4 -left-4 w-16 h-16 border-l-2 border-t-2 border-primary"></div>
                                 </div>
-                                <div>
-                                    <span className="block text-3xl font-bold text-brand-accent">30+</span>
-                                    <span className="text-sm opacity-50 uppercase tracking-wider">Years of Trust</span>
+                            </div>
+
+                            <div className="w-full lg:w-7/12">
+                                <h2 className="text-4xl md:text-6xl font-black uppercase mb-8">Leadership <br />Profile.</h2>
+                                <h3 className="text-3xl font-bold text-foreground mb-2">Mr. Rupesh Anand</h3>
+                                <p className="text-primary font-mono text-sm uppercase tracking-widest mb-8">Founder & Director</p>
+
+                                <div className="prose prose-lg text-muted-foreground mb-12">
+                                    <p>
+                                        &quot;Our vision is not just to manufacture medicine, but to engineer trust. Aster Medicines was founded on the belief that Bihar can be a hub for world-class pharmaceutical manufacturing. Since 2008, we have relentlessly pursued this goal through automation, strict compliance, and uncompromised quality.&quot;
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-8 border-t border-border pt-8">
+                                    <div>
+                                        <div className="text-3xl font-black text-foreground">2008</div>
+                                        <div className="text-xs font-mono uppercase text-muted-foreground mt-1">Incorporation</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-3xl font-black text-foreground">Hajipur</div>
+                                        <div className="text-xs font-mono uppercase text-muted-foreground mt-1">Base of Ops</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* --- 4. VALUES LIST --- */}
-                <section className="py-16 md:py-32 px-4 md:px-12">
-                    <div className="container mx-auto">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20">
-                            <h2 className="text-3xl md:text-4xl font-display font-bold">Our Core <span className="text-brand-accent">Values</span></h2>
-                            <p className="opacity-50 mt-4 md:mt-0 max-w-md text-left md:text-right text-sm md:text-base">
-                                The principles that guide our manufacturing and business relationships.
-                            </p>
-                        </div>
 
-                        <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10">
+                {/* --- 5. STATS GRID --- */}
+                <section className="stats-section bg-secondary py-24 px-6 md:px-12 border-b border-border">
+                    <div className="container mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
                             {[
-                                { title: "Quality First", id: "01", desc: "No compromise on raw materials or testing." },
-                                { title: "Timely Delivery", id: "02", desc: "Respecting our partners' timelines." },
-                                { title: "Transparency", id: "03", desc: "Clear communication in all contracts." },
-                                { title: "Innovation", id: "04", desc: "Adopting the latest manufacturing tech." }
-                            ].map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="group py-8 md:py-12 flex flex-col md:flex-row items-baseline justify-between cursor-pointer transition-all hover:px-4 hover:bg-foreground/5"
-                                    onMouseEnter={() => setHoveredValue(index)}
-                                    onMouseLeave={() => setHoveredValue(null)}
-                                >
-                                    <div className="flex items-baseline gap-4 md:gap-12">
-                                        <span className="font-mono text-sm text-muted-foreground">{item.id}</span>
-                                        <h3 className="text-2xl md:text-5xl font-display font-bold group-hover:translate-x-2 transition-transform duration-300">
-                                            {item.title}
-                                        </h3>
-                                    </div>
-                                    <div className="flex items-center gap-4 mt-4 md:mt-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                                        <span className="text-sm uppercase tracking-widest">{item.desc}</span>
-                                        <ArrowUpRight className="w-6 h-6" />
-                                    </div>
+                                { val: "17+", label: "Years Experience" },
+                                { val: "100+", label: "Formulations" },
+                                { val: "1.5M", label: "Daily Output" },
+                                { val: "12+", label: "States Served" }
+                            ].map((stat, i) => (
+                                <div key={i} className="stat-block bg-background p-12 flex flex-col items-center justify-center text-center hover:bg-secondary transition-colors">
+                                    <div className="text-5xl md:text-6xl font-black text-primary mb-4">{stat.val}</div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</div>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* --- 5. REALISTIC STATS --- */}
-                <section className="stats-section pb-16 md:pb-32 px-4 md:px-6">
-                    <div className="container mx-auto border border-foreground/10 rounded-3xl p-6 md:p-24 bg-white dark:bg-black text-black dark:text-white">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center">
-                            {[
-                                { label: "Products", value: 100, suffix: "+" }, // Realistic
-                                { label: "States Served", value: 5, suffix: "+" }, // Realistic for East India
-                                { label: "Happy Clients", value: 150, suffix: "+" }, // Realistic B2B
-                                { label: "Years Exp", value: 32, suffix: "+" }, // 1991 to now
-                            ].map((stat, i) => (
-                                <div key={i} className="stat-item flex flex-col items-center group">
-                                    <span
-                                        className="stat-counter text-4xl md:text-6xl lg:text-8xl font-display font-bold tracking-tighter mb-2 md:mb-4 group-hover:scale-110 group-hover:text-brand-accent transition-all duration-300"
-                                        data-value={stat.value}
-                                        data-suffix={stat.suffix}
-                                    >
-                                        0{stat.suffix}
-                                    </span>
-                                    <span className="text-sm font-mono uppercase tracking-widest opacity-70">
-                                        {stat.label}
-                                    </span>
+
+                {/* --- 6. LOCATIONS --- */}
+                <section className="py-24 px-6 md:px-12 bg-background">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="flex items-center gap-3 mb-12">
+                            <MapPin className="w-6 h-6 text-primary" />
+                            <h2 className="text-2xl font-bold uppercase tracking-widest">Operational Coordinates</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* HQ */}
+                            <div className="border border-border rounded-3xl p-10 relative overflow-hidden group hover:border-primary transition-colors bg-card">
+                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <ShieldCheck className="w-32 h-32" />
                                 </div>
-                            ))}
+                                <h3 className="text-2xl font-bold uppercase mb-4 text-foreground">Patna (HQ)</h3>
+                                <p className="text-muted-foreground mb-8 font-mono text-sm leading-relaxed">
+                                    North of Janta Hotel, 1st Floor,<br />
+                                    Govind Mitra Road, Patna - 800004
+                                </p>
+                                <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase text-primary border border-primary/20 px-2 py-1 rounded">
+                                    Administration / Sales
+                                </div>
+                            </div>
+
+                            {/* Plant */}
+                            <div className="border border-border rounded-3xl p-10 relative overflow-hidden group hover:border-primary transition-colors bg-card">
+                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <Factory className="w-32 h-32" />
+                                </div>
+                                <h3 className="text-2xl font-bold uppercase mb-4 text-foreground">Hajipur (Plant)</h3>
+                                <p className="text-muted-foreground mb-8 font-mono text-sm leading-relaxed">
+                                    Plot No. E/4, Industrial Area,<br />
+                                    Vaishali, Hajipur - 844101
+                                </p>
+                                <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase text-primary border border-primary/20 px-2 py-1 rounded">
+                                    Production / Logistics
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </section>
+
+                {/* --- 7. FOOTER CTA --- */}
+                <section className="bg-primary py-32 px-6 text-center text-primary-foreground">
+                    <h2 className="text-4xl md:text-7xl font-black uppercase mb-12 tracking-tight">
+                        Start Production.
+                    </h2>
+                    <Link href="/contact" className="inline-flex h-20 px-12 bg-background text-foreground rounded-full border-2 border-transparent hover:border-foreground transition-colors font-bold text-xl items-center gap-3 uppercase tracking-widest">
+                        Initialize Quote <ArrowRight className="w-6 h-6" />
+                    </Link>
                 </section>
 
             </main>
             <Footer />
-        </div >
+        </div>
     );
 };
 
