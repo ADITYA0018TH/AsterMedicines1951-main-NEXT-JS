@@ -76,8 +76,9 @@ const ContactContent = () => {
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
+        const mm = gsap.matchMedia();
 
-        // Hero Animation
+        // Hero Animation (Global)
         gsap.from(".hero-content", {
             opacity: 0,
             y: 20,
@@ -85,28 +86,60 @@ const ContactContent = () => {
             ease: "power3.out"
         });
 
-        // Contact Info Animation
-        gsap.from(".contact-info", {
-            scrollTrigger: {
-                trigger: ".contact-grid",
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-            },
-            x: -50,
-            duration: 0.6,
-            ease: "power3.out"
+        // Desktop Animations
+        mm.add("(min-width: 1024px)", () => {
+            gsap.from(".contact-info", {
+                scrollTrigger: {
+                    trigger: ".contact-grid",
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                x: -50,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            });
+
+            gsap.from(".contact-form-container", {
+                scrollTrigger: {
+                    trigger: ".contact-grid",
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                x: 50,
+                opacity: 0,
+                duration: 0.6,
+                delay: 0.2,
+                ease: "power3.out"
+            });
         });
 
-        // Contact Form Animation
-        gsap.from(".contact-form-container", {
-            scrollTrigger: {
-                trigger: ".contact-grid",
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-            },
-            x: 50,
-            duration: 0.6,
-            ease: "power3.out"
+        // Mobile Animations
+        mm.add("(max-width: 1023px)", () => {
+            gsap.from(".contact-info", {
+                scrollTrigger: {
+                    trigger: ".contact-grid",
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            });
+
+            gsap.from(".contact-form-container", {
+                scrollTrigger: {
+                    trigger: ".contact-grid",
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                delay: 0.2, // Slight stagger for mobile
+                ease: "power3.out"
+            });
         });
 
     }, []);
@@ -138,11 +171,11 @@ const ContactContent = () => {
                     </div>
                 </section>
 
-                <section className="pb-24 px-6">
+                <section className="pb-24 px-6 overflow-hidden">
                     <div className="container mx-auto">
                         <div className="contact-grid grid lg:grid-cols-2 gap-12">
                             {/* Contact Information */}
-                            <div className="contact-info space-y-8">
+                            <div className="contact-info space-y-8 w-full">
                                 <div className="bg-card border border-border rounded-2xl p-8 backdrop-blur-sm">
                                     <h2 className="text-2xl font-bold text-foreground mb-8">Get in Touch</h2>
 
@@ -207,7 +240,7 @@ const ContactContent = () => {
                             </div>
 
                             {/* Contact Form */}
-                            <div className="contact-form-container">
+                            <div className="contact-form-container w-full">
                                 <div className="bg-card border border-border rounded-2xl p-8 backdrop-blur-sm h-full">
                                     <h2 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h2>
 
