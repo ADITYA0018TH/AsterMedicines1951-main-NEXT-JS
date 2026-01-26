@@ -98,7 +98,7 @@ const Hero = () => {
               <div className="h-[1px] w-12 3xl:w-20 bg-pulse-500"></div>
               <MapPin className="w-4 h-4 text-slate-500" />
               <span className="text-xs 3xl:text-sm font-mono tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
-                Hajipur, Bihar • Est. 1991
+                Hajipur, Bihar • Est. 1982
               </span>
             </div>
 
@@ -136,7 +136,7 @@ const Hero = () => {
           <div className="lg:col-span-5 relative" ref={containerRef}>
             <div className="relative z-10 p-8 3xl:p-12">
               <div className="absolute inset-0 bg-gradient-to-br from-slate-100/50 to-white/20 dark:from-slate-800/50 dark:to-black/20 backdrop-blur-3xl rounded-[3rem] -z-10 border border-white/20 dark:border-white/10"></div>
-              
+
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3] 3xl:aspect-[5/4]">
                 <Image
                   ref={imageRef as any}
