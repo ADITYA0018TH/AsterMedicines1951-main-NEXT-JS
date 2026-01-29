@@ -75,6 +75,7 @@ export default {
       fontFamily: {
         sans: ['"Inter"', "sans-serif"],
         display: ['"Playfair Display"', "serif"],
+        slab: ['var(--font-roboto-slab)', "serif"],
       },
       keyframes: {
         "accordion-down": {
