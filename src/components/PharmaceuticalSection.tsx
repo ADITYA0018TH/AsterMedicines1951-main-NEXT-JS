@@ -1,231 +1,187 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Factory, Pipette, ShieldCheck } from "lucide-react"; // Added icons for visual context
+import React, { useRef } from "react";
+import { Factory, Pipette, ShieldCheck, ArrowRight, Activity, Globe } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const PharmaceuticalSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  const ticking = useRef(false);
-  const lastScrollY = useRef(0);
+  const targetRef = useRef<HTMLDivElement>(null);
 
-  const cardStyle = {
-    height: '60vh',
-    maxHeight: '600px',
-    borderRadius: '20px',
-    transition: 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1)',
-    willChange: 'transform, opacity'
-  };
+  // We use the scroll progress of the container to drive the horizontal, animation
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        setIsIntersecting(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
+  // Map vertical scroll (0 to 1) to horizontal translation
+  // We want to move the track leftwards as we scroll down
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+  // Parallax background movement - moves slower than the foreground
+  const bgX = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+
+  // Text reveal opacity based on scroll
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const headerY = useTransform(scrollYProgress, [0, 0.15], [0, -50]);
+
+  const cards = [
+    {
+      id: 1,
+      title: "Third Party Manufacturing",
+      subtitle: "B2B Excellence",
+      description: "Scalable contract manufacturing for global pharmaceutical brands. We handle the complex logistics of liquid injections and syrups so you can focus on growth.",
+      icon: <Factory className="w-8 h-8 text-orange-600 dark:text-orange-500" />,
+      stats: ["1M+ Units/Month", "99.9% On-Time"],
+      color: "from-orange-500/10 to-orange-600/5 dark:from-orange-500/20 dark:to-orange-600/5",
+    },
+    {
+      id: 2,
+      title: "Product Portfolio",
+      subtitle: "Diverse Range",
+      description: "A comprehensive catalog of high-demand formulations including Meropenem, Ondansetron, and specialized dry powder injections for critical care.",
+      icon: <Pipette className="w-8 h-8 text-blue-600 dark:text-blue-500" />,
+      stats: ["50+ Formulations", "Critical Care"],
+      color: "from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/5",
+    },
+    {
+      id: 3,
+      title: "Global Standards",
+      subtitle: "WHO-GMP & ISO",
+      description: "Our Hajipur facility effectively sets the benchmark for quality. Rigorous testing protocols ensure every vial meets international safety norms.",
+      icon: <ShieldCheck className="w-8 h-8 text-green-600 dark:text-green-500" />,
+      stats: ["ISO 9001:2015", "WHO-GMP"],
+      color: "from-green-500/10 to-green-600/5 dark:from-green-500/20 dark:to-green-600/5",
+    },
+    {
+      id: 4,
+      title: "R&D Innovation",
+      subtitle: "Future Ready",
+      description: "Continuous investment in research and development to bring newer, more effective drug delivery systems to the market.",
+      icon: <Activity className="w-8 h-8 text-purple-600 dark:text-purple-500" />,
+      stats: ["Modern Lab", "Expert Team"],
+      color: "from-purple-500/10 to-purple-600/5 dark:from-purple-500/20 dark:to-purple-600/5",
+    },
+    {
+      id: 5,
+      title: "Global Reach",
+      subtitle: "Expanding Horizons",
+      description: "Connecting healthcare solutions across borders. We are rapidly expanding our footprint to serve international markets.",
+      icon: <Globe className="w-8 h-8 text-cyan-600 dark:text-cyan-500" />,
+      stats: ["Pan-India", "Export Ready"],
+      color: "from-cyan-500/10 to-cyan-600/5 dark:from-cyan-500/20 dark:to-cyan-600/5",
     }
-
-    const handleScroll = () => {
-      if (!ticking.current) {
-        lastScrollY.current = window.scrollY;
-
-        window.requestAnimationFrame(() => {
-          if (!sectionRef.current) return;
-
-          const sectionRect = sectionRef.current.getBoundingClientRect();
-          const viewportHeight = window.innerHeight;
-          const totalScrollDistance = viewportHeight * 2;
-
-          let progress = 0;
-          if (sectionRect.top <= 0) {
-            progress = Math.min(1, Math.max(0, Math.abs(sectionRect.top) / totalScrollDistance));
-          }
-
-          if (progress >= 0.66) {
-            setActiveCardIndex(2);
-          } else if (progress >= 0.33) {
-            setActiveCardIndex(1);
-          } else {
-            setActiveCardIndex(0);
-          }
-
-          ticking.current = false;
-        });
-
-        ticking.current = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
-  const isFirstCardVisible = isIntersecting;
-  const isSecondCardVisible = activeCardIndex >= 1;
-  const isThirdCardVisible = activeCardIndex >= 2;
-
-  // Background style (kept your original)
-  const backgroundContent = (
-    <>
-      <div
-        className="absolute inset-0 z-0 dark:hidden"
-        style={{
-          backgroundColor: 'orange',
-          opacity: 1,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `repeating-radial-gradient(circle at 0 0, transparent 0, #FF6B00 30px), repeating-linear-gradient(#FFFFFF, #FFFFFF)`
-        }}
-      />
-      <div
-        className="absolute inset-0 z-0 hidden dark:block"
-        style={{
-          backgroundColor: 'black',
-          opacity: 1,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `repeating-radial-gradient(circle at 0 0, transparent 0, black 30px), repeating-linear-gradient(#333333, #666666)`
-        }}
-      />
-    </>
-  );
+  ];
 
   return (
-    <div
-      ref={sectionRef}
-      className="relative animate-on-scroll opacity-0"
-      style={{ height: '300vh' }}
-    >
-      <section className="w-full h-screen py-10 md:py-16 sticky top-0 overflow-hidden bg-background" id="why-pharmaceutical">
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-30 dark:opacity-20">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    // The container height determines the "duration" of the scroll effect
+    <section ref={targetRef} className="relative h-[300vh] bg-slate-50 dark:bg-neutral-950 transition-colors duration-500">
+
+      {/* Sticky Viewport */}
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+
+        {/* Dynamic Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-slate-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-950 transition-colors duration-500" />
+          <motion.div
+            style={{ x: bgX }}
+            className="absolute top-1/2 left-0 w-[200vw] h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 dark:via-orange-500/50 to-transparent blur-sm"
+          />
+          {/* Grid Pattern: Dark vs Light opacity handled via class */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-100 dark:opacity-100" />
         </div>
 
-        <div className="container px-4 sm:px-6 lg:px-8 mx-auto mt-10">
-          <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
-            <div className="flex items-center gap-6 mb-2 sm:mb-6">
-              <div className="hidden sm:block h-[1px] w-12 bg-gray-300 dark:bg-slate-700"></div>
-              <div className="pulse-chip-clean">
-                <span className="text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">02 — Expertise</span>
-              </div>
-              <div className="flex-1 h-[1px] bg-gray-300 dark:bg-slate-700"></div>
-            </div>
+        {/* Introductory Heading - Fades out as you scroll horizontal */}
+        <motion.div
+          style={{ opacity: headerOpacity, y: headerY }}
+          className="absolute top-24 left-8 md:left-24 z-20 max-w-2xl pointer-events-none"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-[2px] w-12 bg-orange-500"></div>
+            <span className="text-orange-600 dark:text-orange-500 font-bold tracking-widest uppercase text-sm">Our Expertise</span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-display font-bold text-slate-900 dark:text-white leading-tight transition-colors duration-500">
+            Manufacturing <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
+              In Motion.
+            </span>
+          </h2>
+          <p className="mt-6 text-slate-600 dark:text-neutral-400 text-lg md:text-xl max-w-lg transition-colors duration-500">
+            Scroll to explore our comprehensive pharmaceutical capabilities, from contract manufacturing to global quality standards.
+          </p>
+        </motion.div>
 
-            <h2 className="section-title text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-1 md:mb-2 text-foreground">
-              Manufacturing <span className="text-orange-500">Excellence</span>
-            </h2>
+        {/* Horizontal Track */}
+        <motion.div style={{ x }} className="flex gap-8 px-8 md:px-24 items-center relative z-10 pt-32 md:pt-0">
+
+          {/* Spacer to push first card past the header initially if needed, or just start right away. 
+              We'll add a 'ghost' title card to occupy the first slot effectively. */}
+          <div className="flex-shrink-0 w-[80vw] md:w-[40vw] h-[60vh] flex flex-col justify-end pb-12 p-8">
+            {/* Empty start block to align with the text */}
+            <div className="text-slate-400 dark:text-neutral-500 text-sm animate-pulse tracking-widest">
+              &larr; SCROLL TO EXPLORE
+            </div>
           </div>
 
-          <div ref={cardsContainerRef} className="relative flex-1 perspective-1000">
-            
-            {/* CARD 1: THIRD PARTY MANUFACTURING (The Money Maker) */}
-            <div
-              className={`absolute inset-0 overflow-hidden shadow-xl ${isFirstCardVisible ? 'animate-card-enter' : ''}`}
-              style={{
-                ...cardStyle,
-                zIndex: 10,
-                transform: `translateY(${isFirstCardVisible ? '90px' : '200px'}) scale(0.9)`,
-                opacity: isFirstCardVisible ? 0.9 : 0
-              }}
-            >
-              {backgroundContent}
-              <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10 gap-2">
-                   <Factory className="w-4 h-4" />
-                   <span className="text-sm font-medium">B2B Services</span>
-                </div>
-              </div>
-              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
-                <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
-                    Reliable <span className="text-black dark:text-brand-accent">Third Party Manufacturing</span> Partner.
-                  </h3>
-                  <p className="text-lg text-black/80 dark:text-white/80 font-medium">
-                    We offer contract manufacturing services for pharmaceutical injections and syrups with on-time delivery guarantees.
-                  </p>
-                </div>
-              </div>
-            </div>
+          {cards.map((card) => {
+            return (
+              <div
+                key={card.id}
+                className="group relative h-[55vh] md:h-[65vh] w-[85vw] md:w-[35vw] max-w-[500px] flex-shrink-0 rounded-3xl bg-white/60 dark:bg-neutral-900/50 border border-slate-200 dark:border-white/10 backdrop-blur-md overflow-hidden hover:bg-white dark:hover:bg-neutral-900/80 transition-all duration-500 shadow-sm hover:shadow-xl dark:shadow-none"
+              >
+                {/* Hover Gradient Bloom */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
 
-            {/* CARD 2: PRODUCT RANGE (The Specifics) */}
-            <div
-              className={`absolute inset-0 overflow-hidden shadow-xl ${isSecondCardVisible ? 'animate-card-enter' : ''}`}
-              style={{
-                ...cardStyle,
-                zIndex: 20,
-                transform: `translateY(${isSecondCardVisible ? activeCardIndex === 1 ? '55px' : '45px' : '200px'}) scale(0.95)`,
-                opacity: isSecondCardVisible ? 1 : 0,
-                pointerEvents: isSecondCardVisible ? 'auto' : 'none'
-              }}
-            >
-              {backgroundContent}
-              <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10 gap-2">
-                  <Pipette className="w-4 h-4" />
-                  <span className="text-sm font-medium">Product Range</span>
-                </div>
-              </div>
-              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
-                <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
-                    Premium Quality <br /> <span className="text-black dark:text-brand-accent">Injections & Syrups</span>
-                  </h3>
-                  <p className="text-lg text-black/80 dark:text-white/80 font-medium">
-                    Specializing in Liquid Injections (Meropenem, Ondansetron), Dry Powder Injections, and Oral Suspensions.
-                  </p>
-                </div>
-              </div>
-            </div>
+                <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="p-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm dark:shadow-none group-hover:scale-110 transition-transform duration-500">
+                        {card.icon}
+                      </div>
+                      <span className="text-7xl font-display font-bold text-slate-200 dark:text-white/5 group-hover:text-slate-300 dark:group-hover:text-white/10 transition-colors select-none">
+                        0{card.id}
+                      </span>
+                    </div>
 
-            {/* CARD 3: QUALITY/GMP (The Trust Factor) */}
-            <div
-              className={`absolute inset-0 overflow-hidden shadow-xl ${isThirdCardVisible ? 'animate-card-enter' : ''}`}
-              style={{
-                ...cardStyle,
-                zIndex: 30,
-                transform: `translateY(${isThirdCardVisible ? activeCardIndex === 2 ? '15px' : '0' : '200px'}) scale(1)`,
-                opacity: isThirdCardVisible ? 1 : 0,
-                pointerEvents: isThirdCardVisible ? 'auto' : 'none'
-              }}
-            >
-              {backgroundContent}
-              <div className="absolute top-4 right-4 z-20">
-                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white dark:text-white dark:border-white/10 gap-2">
-                  <ShieldCheck className="w-4 h-4" />
-                  <span className="text-sm font-medium">Quality Assurance</span>
-                </div>
-              </div>
-              <div className="relative z-10 p-5 sm:p-6 md:p-8 h-full flex items-center">
-                <div className="max-w-lg">
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display text-black dark:text-white font-bold leading-tight mb-4">
-                    WHO-GMP & ISO <span className="text-black dark:text-brand-accent">Certified Facility</span>
-                  </h3>
-                  <p className="text-lg text-black/80 dark:text-white/80 font-medium">
-                    Our state-of-the-art manufacturing unit in Hajipur adheres to strict international quality standards.
-                  </p>
-                </div>
-              </div>
-            </div>
+                    <h4 className="text-orange-600 dark:text-orange-400 text-sm font-bold uppercase tracking-wider mb-2">
+                      {card.subtitle}
+                    </h4>
+                    <h3 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-6">
+                      {card.title}
+                    </h3>
+                    <p className="text-slate-600 dark:text-neutral-400 text-lg leading-relaxed">
+                      {card.description}
+                    </p>
+                  </div>
 
+                  <div className="border-t border-slate-200 dark:border-white/10 pt-6">
+                    <div className="flex flex-wrap gap-4 mb-6">
+                      {card.stats.map((stat, i) => (
+                        <span key={i} className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-xs text-slate-600 dark:text-neutral-300 border border-slate-200 dark:border-white/5 font-medium">
+                          {stat}
+                        </span>
+                      ))}
+                    </div>
+                    <button className="flex items-center gap-2 text-slate-900 dark:text-white font-medium group/btn group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                      <span>Learn more</span>
+                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Final CTA Card */}
+          <div className="flex-shrink-0 h-[55vh] md:h-[65vh] w-[85vw] md:w-[30vw] flex flex-col justify-center items-center p-12 rounded-3xl bg-orange-600 text-center shadow-lg transform transition-transform hover:scale-[1.02]">
+            <h3 className="text-4xl font-display font-bold text-white mb-6">Ready to Partner?</h3>
+            <p className="text-orange-100 mb-8 max-w-sm">Join hands with Aster Medicines for world-class pharmaceutical manufacturing.</p>
+            <button className="px-8 py-4 bg-white text-orange-600 rounded-full font-bold hover:bg-orange-50 transition-colors shadow-xl">
+              Contact Us Now
+            </button>
           </div>
-        </div>
-      </section>
-    </div>
+
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
