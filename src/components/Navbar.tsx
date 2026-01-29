@@ -170,10 +170,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <ThemeToggle />
-              <Button3D href="/contact" variant="primary" size="sm">
-                Contact Us
-                <ChevronRight className="w-4 h-4" />
-              </Button3D>
+
             </div>
           </GlassSurface>
         </div>
