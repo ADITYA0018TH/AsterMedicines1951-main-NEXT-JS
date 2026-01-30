@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,17 @@ const LoginContent = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string | null>(null);
   const router = useRouter();
+
+  // Client-only time to prevent hydration mismatch
+  useEffect(() => {
+    setCurrentTime(new Date().toLocaleTimeString());
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,7 +142,7 @@ const LoginContent = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="email@astermedicines.com"
-                      className="w-full bg-background border border-border focus:border-pulse-500 focus:ring-1 focus:ring-pulse-500 py-3.5 pl-12 pr-4 rounded-[var(--radius)] outline-none transition-all text-sm"
+                      className="w-full bg-background border border-border focus:border-orange-500 focus:ring-1 focus:ring-orange-500 py-3.5 pl-12 pr-4 rounded-[var(--radius)] outline-none transition-all text-sm"
                       required
                     />
                   </div>
@@ -152,7 +162,7 @@ const LoginContent = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-background border border-border focus:border-pulse-500 focus:ring-1 focus:ring-pulse-500 py-3.5 pl-12 pr-12 rounded-[var(--radius)] outline-none transition-all text-sm"
+                      className="w-full bg-background border border-border focus:border-orange-500 focus:ring-1 focus:ring-orange-500 py-3.5 pl-12 pr-12 rounded-[var(--radius)] outline-none transition-all text-sm"
                       required
                     />
                     <button
@@ -205,7 +215,7 @@ const LoginContent = () => {
           </div>
           <div className="flex flex-col items-center border-l border-border pl-8">
             <span className="text-[9px] font-bold uppercase tracking-tighter text-muted-foreground">System Clock</span>
-            <span className="text-xs font-mono text-foreground uppercase">{new Date().toLocaleTimeString()}</span>
+            <span className="text-xs font-mono text-foreground uppercase">{currentTime || "--:--:--"}</span>
           </div>
         </div>
       </main>
