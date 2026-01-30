@@ -25,9 +25,35 @@ export const authOptions: NextAuthOptions = {
 
         const { email, password } = credentials;
 
-        // 1. Check against Environment Variables (Hardcoded Admin)
+        // 1. Check against Database FIRST (allows password reset to work)
+        try {
+          await connectDB();
+          const user = await User.findOne({ email: email.toLowerCase() });
+
+          if (user) {
+            // User exists in database - use database password
+            const isMatch = await user.comparePassword(password);
+
+            if (isMatch) {
+              return {
+                id: user._id.toString(),
+                email: user.email,
+                role: user.role,
+                name: user.name || "Admin User"
+              };
+            }
+            // If password doesn't match database, don't fall back to env
+            // This ensures reset passwords take priority
+            return null;
+          }
+        } catch (error) {
+          console.error("Auth DB error:", error);
+        }
+
+        // 2. Fall back to Environment Variables (Hardcoded Admin) if no DB user
         if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD &&
-            email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+            email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase() && 
+            password === process.env.ADMIN_PASSWORD) {
           return {
             id: "static_admin_id",
             email: email,
@@ -36,32 +62,7 @@ export const authOptions: NextAuthOptions = {
           };
         }
 
-        // 2. Check against Database
-        try {
-          await connectDB();
-          const user = await User.findOne({ email });
-
-          if (!user) {
-            return null; // or throw Error("User not found")
-          }
-
-          // Assuming user.comparePassword is an instance method on your Mongoose model
-          const isMatch = await user.comparePassword(password);
-
-          if (!isMatch) {
-            return null; // or throw Error("Invalid password")
-          }
-
-          return {
-            id: user._id.toString(),
-            email: user.email,
-            role: user.role,
-            name: user.name || "Admin User"
-          };
-        } catch (error) {
-          console.error("Auth error:", error);
-          return null;
-        }
+        return null;
       }
     })
   ],

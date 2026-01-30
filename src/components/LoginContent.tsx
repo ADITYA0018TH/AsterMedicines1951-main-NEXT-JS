@@ -183,13 +183,12 @@ const LoginContent = () => {
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={() => toast.info("Contact Admin", { description: "Please reach out to the IT department for credential resets." })}
-                className="w-full text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors"
+              <Link
+                href="/forgot-password"
+                className="w-full text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors block"
               >
-                Credential Recovery
-              </button>
+                Forgot Password?
+              </Link>
             </form>
           </div>
         </div>
