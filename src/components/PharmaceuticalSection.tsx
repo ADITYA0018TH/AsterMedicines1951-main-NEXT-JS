@@ -4,8 +4,11 @@ import React, { useRef } from "react";
 import { Factory, Pipette, ShieldCheck, ArrowRight, Activity, Globe } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
+import { useIsMobile } from "@/hooks/use-mobile";
+
 const PharmaceuticalSection = () => {
   const targetRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // We use the scroll progress of the container to drive the horizontal, animation
   const { scrollYProgress } = useScroll({
@@ -14,7 +17,8 @@ const PharmaceuticalSection = () => {
 
   // Map vertical scroll (0 to 1) to horizontal translation
   // We want to move the track leftwards as we scroll down
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
+  // Increased to -87% for mobile to ensure the last card and CTA are fully visible
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-87%" : "-65%"]);
 
   // Parallax background movement - moves slower than the foreground
   const bgX = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
