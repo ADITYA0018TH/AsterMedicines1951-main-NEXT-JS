@@ -5,8 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Mail, Phone, MapPin, Clock, Send, Loader2, Globe, Building2 } from "lucide-react";
 import { submitContactForm } from "@/services/api";
-import SuccessNotification from "@/components/SuccessNotification";
 import Button3D from "@/components/ui/Button3D";
+import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -34,7 +34,6 @@ const ContactContent = () => {
         subject: "",
         message: ""
     });
-    const [status, setStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -50,16 +49,26 @@ const ContactContent = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setStatus({ type: null, message: '' });
+
+        const promise = submitContactForm(formData);
+
+        toast.promise(promise, {
+            loading: 'Sending message...',
+            success: () => {
+                setFormData({
+                    firstName: "", lastName: "", email: "", mobileNumber: "", subject: "", message: ""
+                });
+                return 'Message sent successfully! We will get back to you soon.';
+            },
+            error: (error: any) => {
+                return error.message || 'Failed to connect to the server.';
+            },
+        });
 
         try {
-            await submitContactForm(formData);
-            setStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' });
-            setFormData({
-                firstName: "", lastName: "", email: "", mobileNumber: "", subject: "", message: ""
-            });
-        } catch (error: any) {
-            setStatus({ type: 'error', message: error.message || 'Failed to connect to the server.' });
+            await promise;
+        } catch (error) {
+            // Error is handled by toast
         } finally {
             setIsSubmitting(false);
         }
@@ -105,13 +114,6 @@ const ContactContent = () => {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-slate-50 dark:bg-neutral-950 text-slate-900 dark:text-white transition-colors duration-500 overflow-x-hidden selection:bg-orange-500/30">
-            {status.message && status.type === 'success' && (
-                <SuccessNotification
-                    title="Message Sent!"
-                    description="We'll be in touch shortly."
-                    onClose={() => setStatus({ type: null, message: '' })}
-                />
-            )}
             <Navbar />
 
             <main className="relative pt-24 lg:pt-32 pb-32 mb:pb-40">
@@ -125,7 +127,7 @@ const ContactContent = () => {
                         <div className="overflow-hidden pt-4">
                             <h1 className="hero-text-reveal text-4xl md:text-7xl lg:text-8xl font-display font-bold text-slate-900 dark:text-white leading-tight">
                                 Let's Start a <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500"> Conversation.</span>
+                                <span className="text-transparent bg-clip-text bg-orange-500"> Conversation.</span>
                             </h1>
                         </div>
                         <p className="hero-subtext text-base md:text-xl text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed px-4">
@@ -216,12 +218,7 @@ const ContactContent = () => {
                                     <p className="text-slate-500 dark:text-neutral-400 text-sm md:text-base">Fill in the form below and our team will get back to you within 24 hours.</p>
                                 </div>
 
-                                {status.message && status.type === 'error' && (
-                                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium flex items-center gap-3">
-                                        <div className="w-2 h-2 rounded-full bg-red-500" />
-                                        {status.message}
-                                    </div>
-                                )}
+
 
                                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                                     <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
@@ -229,35 +226,35 @@ const ContactContent = () => {
                                             <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">First Name</label>
                                             <input
                                                 type="text" name="firstName" value={formData.firstName} onChange={handleChange} required
-                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
-                                                placeholder="John"
+                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
+                                                placeholder="Aster"
                                             />
                                         </div>
                                         <div className="space-y-2 group">
                                             <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">Last Name</label>
                                             <input
                                                 type="text" name="lastName" value={formData.lastName} onChange={handleChange}
-                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
-                                                placeholder="Doe"
+                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
+                                                placeholder="Medicines"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
                                         <div className="space-y-2 group">
-                                            <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">Email Address</label>
+                                            <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-500 dark:group-focus-within:text-orange-500">Email Address</label>
                                             <input
                                                 type="email" name="email" value={formData.email} onChange={handleChange} required
-                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
-                                                placeholder="john@example.com"
+                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
+                                                placeholder="aster@astermedicines.com"
                                             />
                                         </div>
                                         <div className="space-y-2 group">
-                                            <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">Phone</label>
+                                            <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-500 dark:group-focus-within:text-orange-500">Phone</label>
                                             <input
                                                 type="tel" name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} required
-                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
-                                                placeholder="+91..."
+                                                className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
+                                                placeholder="+91 **********"
                                             />
                                         </div>
                                     </div>
@@ -266,7 +263,7 @@ const ContactContent = () => {
                                         <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">Subject</label>
                                         <input
                                             type="text" name="subject" value={formData.subject} onChange={handleChange}
-                                            className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
+                                            className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600"
                                             placeholder="How can we help you?"
                                         />
                                     </div>
@@ -275,7 +272,7 @@ const ContactContent = () => {
                                         <label className="text-sm font-medium text-slate-700 dark:text-neutral-300 ml-1 transition-colors group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500">Message</label>
                                         <textarea
                                             name="message" value={formData.message} onChange={handleChange} required rows={4}
-                                            className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600 resize-none"
+                                            className="w-full px-4 md:px-5 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500 transition-all outline-none placeholder:text-slate-400 dark:placeholder:text-neutral-600 resize-none"
                                             placeholder="Tell us more about your requirements..."
                                         />
                                     </div>
