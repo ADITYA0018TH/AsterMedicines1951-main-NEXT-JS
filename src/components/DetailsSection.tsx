@@ -79,7 +79,7 @@ const DetailsSection = () => {
               <p className="text-sm font-semibold text-slate-900 dark:text-white mb-2">Corporate Office:</p>
               <p className="text-slate-600 dark:text-slate-400 mb-1">Plot No E/4, Industrial Area, Hajipur, Bihar - 844101</p>
               <p className="text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-orange-700 dark:text-orange-400">Email:</span> sales@astermedicines.com
+                <span className="font-semibold text-orange-700 dark:text-orange-400">Email:</span> accounts@astermedicines.com, hr@astermedicines.com, astermedicinespvtltd@gmail.com
               </p>
             </div>
           </div>

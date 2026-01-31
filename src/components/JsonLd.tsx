@@ -10,7 +10,7 @@ export default function JsonLd() {
         "alternateName": ["Aster Medicines", "Aster Pharma"],
         "url": "https://astermedicines.com",
         "logo": "https://astermedicines.com/icon.png",
-        "email": "sales@astermedicines.com",
+        "email": "accounts@astermedicines.com",
         // Trust Signal: Using the CIN (Corporate Identity Number) proves you are a real Indian entity
         "identifier": {
           "@type": "PropertyValue",
@@ -44,7 +44,7 @@ export default function JsonLd() {
           },
           {
             "@type": "ContactPoint",
-            "telephone": "+91-7061452180", // Verified number from trade directories
+            "telephone": "+91-7909071165", // Verified number from trade directories
             "contactType": "customer service",
             "areaServed": "IN"
           }

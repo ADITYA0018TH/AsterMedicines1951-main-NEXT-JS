@@ -29,15 +29,15 @@ export const organizationStructuredData = {
   "contactPoint": [
     {
       "@type": "ContactPoint",
-      "telephone": "+91-7061452180",
+      "telephone": "+91-7909071165",
       "contactType": "Customer Service",
       "areaServed": "IN",
       "availableLanguage": ["English", "Hindi"],
-      "email": "sales@astermedicines.com"
+      "email": "accounts@astermedicines.com"
     },
     {
       "@type": "ContactPoint",
-      "telephone": "+91-7061452180",
+      "telephone": "+91-7909071165",
       "contactType": "Sales",
       "areaServed": "Worldwide",
       "availableLanguage": ["English"]
@@ -62,8 +62,8 @@ export const localBusinessStructuredData = {
   "image": "https://astermedicines.com/og-image-update.webp",
   "@id": "https://astermedicines.com",
   "url": "https://astermedicines.com",
-  "telephone": "+91-7061452180",
-  "email": "sales@astermedicines.com",
+  "telephone": "+91-7909071165",
+  "email": "accounts@astermedicines.com",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",

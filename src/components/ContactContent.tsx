@@ -147,17 +147,17 @@ const ContactContent = () => {
                                 {[{
                                     icon: <Mail className="w-5 h-5" />,
                                     label: "Email Us",
-                                    value: "sales@astermedicines.com",
+                                    value: "accounts@astermedicines.com, hr@astermedicines.com, astermedicinespvtltd@gmail.com",
                                     color: "bg-blue-500/10 text-blue-600 dark:text-blue-400"
                                 }, {
                                     icon: <Phone className="w-5 h-5" />,
                                     label: "Call Us",
-                                    value: "+91 7061452180",
+                                    value: "+91 7909071165",
                                     color: "bg-green-500/10 text-green-600 dark:text-green-400"
                                 }, {
                                     icon: <MapPin className="w-5 h-5" />,
                                     label: "Visit HQ",
-                                    value: "Hajipur, Vaishali, Bihar-844102",
+                                    value: "E-4 Part, Phase-2, Industrial Area, Hajipur, Vaishali, Bihar-844102",
                                     color: "bg-red-500/10 text-red-600 dark:text-red-400"
                                 }, {
                                     icon: <Clock className="w-5 h-5" />,

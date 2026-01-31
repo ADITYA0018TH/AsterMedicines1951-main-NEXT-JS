@@ -44,7 +44,7 @@ const COMPANY_DETAILS = {
   incorporation: "2008",
   regOffice: "Govind Mitra Road, Patna, Bihar 800004",
   factory: "Industrial Area E/4, Hajipur, Vaishali, Bihar 844102",
-  phone: "+91-7061452180",
+  phone: "+91-7909071165",
   cin: "U24230BR2008PTC013937"
 };
 
@@ -163,7 +163,7 @@ export default function RootLayout({
         "alternateName": ["Aster Medicines", "Aster Pharma"],
         "url": "https://astermedicines.com",
         "logo": "https://astermedicines.com/icon.png",
-        "email": "sales@astermedicines.com",
+        "email": ["accounts@astermedicines.com", "hr@astermedicines.com", "astermedicinespvtltd@gmail.com"],
         "identifier": {
           "@type": "PropertyValue",
           "propertyID": "CIN",
@@ -195,7 +195,7 @@ export default function RootLayout({
           },
           {
             "@type": "ContactPoint",
-            "telephone": "+91-7061452180",
+            "telephone": "+91-7909071165",
             "contactType": "customer service",
             "areaServed": "IN"
           }

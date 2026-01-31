@@ -183,7 +183,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               </motion.a>
 
               <motion.a
-                href="tel:+917061452180"
+                href="tel:+917909071165"
                 className="flex items-center gap-3 group"
                 whileHover={{ x: 5 }}
                 onMouseEnter={handleMouseEnter}
@@ -191,12 +191,12 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               >
                 <Phone className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
                 <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  +91 7061452180
+                  +91 7909071165
                 </span>
               </motion.a>
 
               <motion.a
-                href="mailto:sales@astermedicines.com"
+                href="mailto:accounts@astermedicines.com"
                 className="flex items-center gap-3 group"
                 whileHover={{ x: 5 }}
                 onMouseEnter={handleMouseEnter}
@@ -204,7 +204,33 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               >
                 <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
                 <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  sales@astermedicines.com
+                  accounts@astermedicines.com
+                </span>
+              </motion.a>
+
+              <motion.a
+                href="mailto:hr@astermedicines.com"
+                className="flex items-center gap-3 group"
+                whileHover={{ x: 5 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                  hr@astermedicines.com
+                </span>
+              </motion.a>
+
+              <motion.a
+                href="mailto:astermedicinespvtltd@gmail.com"
+                className="flex items-center gap-3 group"
+                whileHover={{ x: 5 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                  astermedicinespvtltd@gmail.com
                 </span>
               </motion.a>
             </div>
