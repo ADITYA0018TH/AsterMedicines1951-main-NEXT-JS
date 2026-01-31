@@ -94,7 +94,7 @@ const Hero = () => {
           {/* Left Column: Typography (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center text-left">
             {/* Clinical Label with Location */}
-            <div className="flex items-center gap-3 mb-8 3xl:mb-12">
+            <div className="flex items-center gap-3 mb-8 3xl:mb-12 mt-10">
               <div className="h-[1px] w-12 3xl:w-20 bg-pulse-500"></div>
               <MapPin className="w-4 h-4 text-slate-500" />
               <span className="text-xs 3xl:text-sm font-mono tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
@@ -104,7 +104,7 @@ const Hero = () => {
 
             {/* OPTIMIZED H1 TAG */}
             <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
-              <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-slab text-slate-900 dark:text-white leading-none mb-2 -ml-1">
+              <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-saira-stencil text-slate-900 dark:text-white leading-none mb-2 -ml-1">
                 Aster Medicines
               </span>
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
@@ -151,13 +151,13 @@ const Hero = () => {
               </div>
 
               {/* Floating Badge */}
-              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 3xl:-bottom-10 3xl:-left-10 bg-white dark:bg-black p-4 md:p-6 3xl:p-8 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3 md:gap-4 3xl:gap-6 animate-bounce-slow transform transition-all z-20">
-                <div className="w-10 h-10 md:w-12 md:h-12 3xl:w-16 3xl:h-16 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
-                  <Microscope className="w-5 h-5 md:w-6 md:h-6 3xl:w-8 3xl:h-8" />
+              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 3xl:-bottom-10 3xl:-left-10 bg-white dark:bg-black p-3.5 md:p-6 3xl:p-8 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-2.5 md:gap-4 3xl:gap-6 animate-bounce-slow transform transition-all z-20">
+                <div className="w-9 h-9 md:w-12 md:h-12 3xl:w-16 3xl:h-16 bg-pulse-50 rounded-full flex items-center justify-center text-pulse-500">
+                  <Microscope className="w-4.5 h-4.5 md:w-6 md:h-6 3xl:w-8 3xl:h-8" />
                 </div>
                 <div>
-                  <div className="text-xl md:text-2xl 3xl:text-4xl font-bold text-slate-900 dark:text-white">GMP</div>
-                  <div className="text-[10px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">Certified Unit</div>
+                  <div className="text-lg md:text-2xl 3xl:text-4xl font-bold text-slate-900 dark:text-white">GMP</div>
+                  <div className="text-[9px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">Certified Unit</div>
                 </div>
               </div>
             </div>

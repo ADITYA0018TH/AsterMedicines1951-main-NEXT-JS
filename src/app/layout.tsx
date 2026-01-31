@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Roboto_Slab } from "next/font/google";
+import { Inter, Playfair_Display, Roboto_Slab, Saira_Stencil_One } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
@@ -19,6 +19,13 @@ const playfair = Playfair_Display({
 const robotoSlab = Roboto_Slab({
   subsets: ["latin"],
   variable: "--font-roboto-slab",
+  display: "swap",
+});
+
+const sairaStencil = Saira_Stencil_One({
+  weight: '400',
+  subsets: ["latin"],
+  variable: "--font-saira-stencil",
   display: "swap",
 });
 
@@ -255,7 +262,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${robotoSlab.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${robotoSlab.variable} ${sairaStencil.variable}`}>
       <body suppressHydrationWarning>
         <JsonLd />
         <Providers>
