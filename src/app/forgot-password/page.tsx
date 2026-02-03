@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                     className="flex flex-col items-center mb-12"
                 >
                     <Image
-                        src="/My-uploads/logo.webp"
+                        src="/uploads/logo.webp"
                         alt="Aster Medicines Logo"
                         width={180}
                         height={120}

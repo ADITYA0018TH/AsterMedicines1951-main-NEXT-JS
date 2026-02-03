@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     "Aster Medicines Pvt Ltd",
     "Aster Medicines Private Limited",
     "Aster Medicines",
+    "Aster Medicines Products",
+    "Aster Medicines Pvt Ltd Products",
+    "Aster Medicines Private Limited Products",
+    "Aster Medicines Manufacturer",
+    "Aster Medicines Govind Mitra Road",
+    "Aster Medicines Hajipur",
     "Pharma Manufacturer Bihar",
     "Injection Manufacturing India",
     "Third Party Pharma Manufacturing",
@@ -36,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "Aster Medicines Pvt Ltd",
     images: [
       {
-        url: "/og-image-update.webp",
+        url: "/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Aster Medicines Manufacturing Plant Entrance",
@@ -50,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aster Medicines - Pharmaceutical Manufacturer",
     description: "Leading Injection & Syrup Manufacturer in East India.",
-    images: ["/og-image-update.webp"],
+    images: ["/og-image.webp"],
   },
 };
 

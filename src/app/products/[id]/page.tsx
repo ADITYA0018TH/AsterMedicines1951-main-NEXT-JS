@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetailContent from "@/components/ProductDetailContent";
 import { getProduct } from "@/lib/products";
-import ProductJsonLd from "@/components/ProductJsonLd"; 
+import ProductJsonLd from "@/components/ProductJsonLd";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   // FIX 1: Use the first image from the array, or a default
-  const mainImage = product.images?.[0] || "/og-image-update.webp";
+  const mainImage = product.images?.[0] || "/og-image.webp";
 
   return {
     title: `${product.name} | Manufacturer in Bihar - Aster Medicines`,
@@ -49,19 +49,19 @@ export default async function ProductDetailPage({ params }: Props) {
   const product = await getProduct(id);
 
   if (!product) {
-    notFound(); 
+    notFound();
   }
 
   return (
     <>
       {/* FIX 2: Map 'images[0]' to 'image' for the Schema */}
-      <ProductJsonLd 
+      <ProductJsonLd
         product={{
           id: product.id,
           name: product.name,
           description: product.description || "",
           // We take the first image from your array
-          image: product.images?.[0] || "/placeholder.jpg", 
+          image: product.images?.[0] || "/placeholder.jpg",
           category: product.category
         }}
       />

@@ -14,9 +14,9 @@ interface ProductJsonLdProps {
 
 export default function ProductJsonLd({ product }: ProductJsonLdProps) {
   // Use a fallback image if the product doesn't have one
-  const imageUrl = product.image 
+  const imageUrl = product.image
     ? `https://astermedicines.com${product.image.startsWith('/') ? product.image : '/' + product.image}`
-    : "https://astermedicines.com/og-image-update.webp";
+    : "https://astermedicines.com/og-image.webp";
 
   const schema = {
     "@context": "https://schema.org",
@@ -35,7 +35,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
       "name": "Aster Medicines Pvt Ltd"
     },
     "category": product.category || "Pharmaceuticals",
-    
+
     // Google STRONGLY prefers an 'offers' section, even for B2B.
     // We set a placeholder structure here to avoid "Missing Field" errors.
     "offers": {

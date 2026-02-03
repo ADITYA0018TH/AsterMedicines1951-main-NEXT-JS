@@ -44,7 +44,7 @@ export const sendPasswordResetEmail = async ({
                   <!-- Header -->
                   <tr>
                     <td style="padding: 40px 40px 20px; text-align: center; border-bottom: 1px solid #e4e4e7;">
-                      <img src="https://astermedicines.com/My-uploads/logo2.webp" alt="Aster Medicines" style="height: 60px; width: auto;">
+                      <img src="https://astermedicines.com/uploads/logo2.webp" alt="Aster Medicines" style="height: 60px; width: auto;">
                       <p style="margin: 16px 0 0; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #71717a;">Admin Portal</p>
                     </td>
                   </tr>

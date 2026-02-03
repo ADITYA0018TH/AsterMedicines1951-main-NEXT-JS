@@ -305,7 +305,7 @@ const AboutContent = () => {
                             </div>
                             <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
 
-                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Injectables" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                                <Image src="/uploads/AD_OIL_NEW_BOX.webp" alt="Injectables" width={500} height={500} className="object-contain drop-shadow-2xl" />
                             </div>
                         </div>
 
@@ -324,7 +324,7 @@ const AboutContent = () => {
                             </div>
                             <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
 
-                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Orals" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                                <Image src="/uploads/AD_OIL_NEW_BOX.webp" alt="Orals" width={500} height={500} className="object-contain drop-shadow-2xl" />
                             </div>
                         </div>
 
@@ -343,7 +343,7 @@ const AboutContent = () => {
                             </div>
                             <div className="relative h-full bg-secondary/50 flex items-center justify-center p-12">
 
-                                <Image src="/My-uploads/AD_OIL_NEW_BOX.webp" alt="Lab" width={500} height={500} className="object-contain drop-shadow-2xl" />
+                                <Image src="/uploads/AD_OIL_NEW_BOX.webp" alt="Lab" width={500} height={500} className="object-contain drop-shadow-2xl" />
                             </div>
                         </div>
 
@@ -362,7 +362,7 @@ const AboutContent = () => {
                                     </div>
                                     <div className="relative w-full h-full overflow-hidden bg-muted">
                                         <Image
-                                            src="/My-uploads/DP.webp"
+                                            src="/uploads/DP.webp"
                                             alt="Rupesh Anand"
                                             fill
                                             className="parallax-img object-cover grayscale hover:grayscale-0 transition-all duration-700"

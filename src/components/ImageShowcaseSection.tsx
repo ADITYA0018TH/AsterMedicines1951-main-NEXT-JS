@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ContainerScroll } from "@/components/container-scroll-animation";
+import { ContainerScroll } from "@/components/ContainerScrollAnimation";
 import { Sparkles, Zap, Shield, ArrowRight, Droplets } from "lucide-react";
 
 const ImageShowcaseSection = () => {
@@ -116,7 +116,7 @@ const ImageShowcaseSection = () => {
             <div className="w-full lg:w-1/2 mt-0 hover:scale-[1.02] transition-transform duration-500">
               <ContainerScroll scrollYProgress={scrollYProgress}>
                 <Image
-                  src="/My-uploads/AD_OIL_170.webp"
+                  src="/uploads/AD_OIL_170.webp"
                   // SEO WIN: Specific Alt Text with Brand + Location + Machine Type
                   alt="Aster Medicines Injection Manufacturing Plant in Hajipur Industrial Area"
                   fill

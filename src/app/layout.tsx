@@ -100,7 +100,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image-update.webp",
+        url: "/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Aster Medicines Factory Unit in Hajipur Industrial Area",
@@ -112,7 +112,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aster Medicines Pvt Ltd - Patna & Hajipur",
     description: "Leading Manufacturer of Pharmaceutical Injections and Syrups in Bihar. Contact for Third Party Manufacturing.",
-    images: ["/og-image-update.webp"],
+    images: ["/og-image.webp"],
   },
 
   icons: {
@@ -211,7 +211,7 @@ export default function RootLayout({
         "parentOrganization": { "@id": "https://astermedicines.com/#organization" },
         "name": "Aster Medicines Manufacturing Unit",
         "description": "WHO-GMP Certified Manufacturing Unit for Beta-Lactam & Non-Beta Lactam Injections.",
-        "image": "https://astermedicines.com/og-image-update.webp",
+        "image": "https://astermedicines.com/og-image.webp",
         // 2. FACTORY ADDRESS (Hajipur)
         "address": {
           "@type": "PostalAddress",

@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         ...(product.isGmpCertified ? ['GMP Certified'] : []),
         ...(product.isWhoApproved ? ['WHO Approved'] : [])
       ],
-      images: product.images.map((img: string) => img.replace(/lovable-uploads/gi, 'My-uploads')),
+      images: product.images,
       price: product.price,
       availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
       detailedDescription: product.description,
