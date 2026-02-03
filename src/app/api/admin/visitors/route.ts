@@ -63,3 +63,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+        await connectDB();
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        const all = searchParams.get('all');
+
+        if (all === 'true') {
+            await Visitor.deleteMany({});
+            return NextResponse.json({ success: true, message: 'All logs cleared' });
+        }
+
+        if (id) {
+            await Visitor.findByIdAndDelete(id);
+            return NextResponse.json({ success: true, message: 'Visitor deleted' });
+        }
+
+        return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
+    } catch (error) {
+        console.error('Error deleting visitor:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}

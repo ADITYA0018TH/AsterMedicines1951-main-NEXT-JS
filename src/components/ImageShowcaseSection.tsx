@@ -116,7 +116,7 @@ const ImageShowcaseSection = () => {
             <div className="w-full lg:w-1/2 mt-0 hover:scale-[1.02] transition-transform duration-500">
               <ContainerScroll scrollYProgress={scrollYProgress}>
                 <Image
-                  src="/uploads/AD_OIL_170.webp"
+                  src="https://res.cloudinary.com/diszdorz0/image/upload/v1770127431/aster-medicines/products/AD_OIL_170.webp"
                   // SEO WIN: Specific Alt Text with Brand + Location + Machine Type
                   alt="Aster Medicines Injection Manufacturing Plant in Hajipur Industrial Area"
                   fill

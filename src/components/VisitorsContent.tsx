@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, Clock, Globe, Laptop, MapPin, Monitor } from "lucide-react";
+import { ArrowLeft, Clock, Globe, Laptop, MapPin, Monitor, Trash2 } from "lucide-react";
 import Link from "next/link";
 import StatsCards from "@/components/StatsCards";
 
@@ -66,6 +66,42 @@ const VisitorsContent = () => {
         fetchVisitors();
     }, []);
 
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this log?")) return;
+
+        try {
+            const res = await fetch(`/api/admin/visitors?id=${id}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                setVisitors((prev) => prev.filter((v) => v._id !== id));
+                // Update pagination total count roughly
+                setPagination((prev) => prev ? { ...prev, total: prev.total - 1 } : null);
+            }
+        } catch (error) {
+            console.error("Failed to delete visitor", error);
+        }
+    };
+
+    const handleClearAll = async () => {
+        if (!confirm("Are you sure you want to delete ALL visitor logs? This cannot be undone.")) return;
+
+        try {
+            const res = await fetch(`/api/admin/visitors?all=true`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                setVisitors([]);
+                setPagination(null);
+                setStats(null); // Or reset stats to zero
+                fetchVisitors(1); // Refresh to be sure
+            }
+        } catch (error) {
+            console.error("Failed to clear logs", error);
+        }
+    };
+
     const formatUserAgent = (ua: string) => {
         if (!ua) return "Unknown";
         if (ua.includes("Mobile")) return "Mobile Device";
@@ -102,8 +138,19 @@ const VisitorsContent = () => {
                                     Visitor <span className="text-pulse-500">Logs</span>
                                 </h1>
                             </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                                Total Visits: {pagination?.total || 0}
+                            <div className="flex items-center gap-4">
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Total Visits: {pagination?.total || 0}
+                                </div>
+                                {visitors.length > 0 && (
+                                    <button
+                                        onClick={handleClearAll}
+                                        className="flex items-center gap-2 px-3 py-1.5 text-sm bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors border border-red-200"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                        Clear History
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -125,6 +172,7 @@ const VisitorsContent = () => {
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Page</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Source</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Device</th>
+                                                <th className="p-4 font-semibold text-gray-700 dark:text-gray-200 text-right">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
@@ -188,11 +236,20 @@ const VisitorsContent = () => {
                                                             </div>
                                                         </div>
                                                     </td>
+                                                    <td className="p-4 text-sm text-right">
+                                                        <button
+                                                            onClick={() => handleDelete(visitor._id)}
+                                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                                            title="Delete Log"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                             {visitors.length === 0 && (
                                                 <tr>
-                                                    <td colSpan={6} className="p-8 text-center text-gray-500">
+                                                    <td colSpan={7} className="p-8 text-center text-gray-500">
                                                         No visits recorded yet.
                                                     </td>
                                                 </tr>
