@@ -43,7 +43,7 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
         <div className="min-h-screen bg-slate-50 dark:bg-black text-foreground selection:bg-orange-500/30">
             <Navbar />
 
-            <main className="pt-32 pb-20">
+            <main className="pt-24 lg:pt-32 pb-20">
                 {/* Breadcrumb / Navigation */}
                 <div className="container mx-auto px-4 lg:px-6 mb-8 gsap-fade-in relative z-20">
                     <Link href="/products">
@@ -67,7 +67,7 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                                     <CarouselContent>
                                         {(product.images && product.images.length > 0 ? product.images : ["/placeholder.png"]).map((img, index) => (
                                             <CarouselItem key={index}>
-                                                <div className="aspect-square flex items-center justify-center p-8 lg:p-12">
+                                                <div className="aspect-square flex items-center justify-center p-4 sm:p-8 lg:p-12">
                                                     <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-105">
                                                         <Image
                                                             src={img}
@@ -93,7 +93,7 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                             </div>
 
                             {/* Verification Badges */}
-                            <div className="grid grid-cols-3 gap-4 mt-6">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-6">
                                 {[
                                     { label: "Quality Assured", icon: ShieldCheck, active: product.isQualityAssured, color: "text-emerald-500 bg-emerald-500/10" },
                                     { label: "GMP Certified", icon: Award, active: product.isGmpCertified, color: "text-blue-500 bg-blue-500/10" },
@@ -101,7 +101,7 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                                 ].filter(b => b.active).map((badge, i) => (
                                     <div key={i} className={`flex flex-col items-center justify-center p-3 rounded-xl border border-slate-100 dark:border-white/5 ${badge.color} bg-opacity-10 backdrop-blur-sm text-center`}>
                                         <badge.icon className="w-6 h-6 mb-2 opacity-80" />
-                                        <span className="text-[10px] uppercase font-bold tracking-wider opacity-75">{badge.label}</span>
+                                        <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider opacity-75">{badge.label}</span>
                                     </div>
                                 ))}
                             </div>
@@ -122,7 +122,7 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                                         </Badge>
                                     )}
                                 </div>
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-slate-900 dark:text-white mb-6 leading-tight">
                                     {product.name}
                                 </h1>
                                 <p className="text-xl text-slate-700 dark:text-slate-200 leading-relaxed font-light">
@@ -258,12 +258,12 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                             </div>
 
                             {/* Call to Action Bar */}
-                            <div className="sticky bottom-6 z-30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-lg border border-slate-200 dark:border-white/10 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 items-center justify-between">
+                            <div className="sticky bottom-4 sm:bottom-6 z-30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-lg border border-slate-200 dark:border-white/10 p-3 sm:p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 items-center justify-between">
                                 <div className="hidden sm:block">
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Interested in this product?</p>
                                     <p className="text-sm font-bold text-slate-900 dark:text-white">Bulk orders available</p>
                                 </div>
-                                <div className="flex w-full sm:w-auto gap-3">
+                                <div className="flex w-full sm:w-auto gap-2 sm:gap-3">
                                     <Link href="/contact" className="w-full sm:w-auto">
                                         <Button size="lg" className="w-full sm:w-auto bg-brand-accent hover:bg-brand-accent/90 text-white shadow-lg shadow-brand-accent/25 rounded-xl">
                                             Enquire Now <ArrowRight className="w-4 h-4 ml-2" />
