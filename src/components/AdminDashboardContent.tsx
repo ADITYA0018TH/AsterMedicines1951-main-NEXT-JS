@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Package, MessageSquare, LogOut } from "lucide-react";
+import { Package, MessageSquare, LogOut, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
@@ -44,19 +44,19 @@ const AdminDashboardContent = () => {
 
                         <p className="text-gray-600 dark:text-gray-300 mb-8">Welcome to the admin panel. Choose an option below to get started.</p>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {/* Manage Products Card */}
                             <Link href="/admin/products">
-                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group">
+                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group h-full">
                                     <div className="flex flex-col items-center text-center space-y-4">
                                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pulse-500 to-pulse-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                             <Package className="h-10 w-10 text-white" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Products</h2>
-                                        <p className="text-gray-600 dark:text-gray-300">
-                                            Add, edit, or delete products from your catalog. Manage inventory and pricing.
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Manage Products</h2>
+                                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                            Add, edit, or delete products. Manage inventory.
                                         </p>
-                                        <div className="button-primary mt-4">
+                                        <div className="button-primary mt-auto">
                                             Go to Products →
                                         </div>
                                     </div>
@@ -65,17 +65,35 @@ const AdminDashboardContent = () => {
 
                             {/* View Messages Card */}
                             <Link href="/admin/messages">
-                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group">
+                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group h-full">
                                     <div className="flex flex-col items-center text-center space-y-4">
                                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                             <MessageSquare className="h-10 w-10 text-white" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">View Messages</h2>
-                                        <p className="text-gray-600 dark:text-gray-300">
-                                            Read and manage customer messages and inquiries from the contact form.
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">View Messages</h2>
+                                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                            Read customer inquires from the contact form.
                                         </p>
-                                        <div className="button-primary mt-4">
+                                        <div className="button-primary mt-auto">
                                             Go to Messages →
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+
+                            {/* View Visitors Card */}
+                            <Link href="/admin/visitors">
+                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group h-full">
+                                    <div className="flex flex-col items-center text-center space-y-4">
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                            <Users className="h-10 w-10 text-white" />
+                                        </div>
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Visitor Logs</h2>
+                                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                            Track website traffic and view visitor details.
+                                        </p>
+                                        <div className="button-primary mt-auto">
+                                            View Logs →
                                         </div>
                                     </div>
                                 </div>

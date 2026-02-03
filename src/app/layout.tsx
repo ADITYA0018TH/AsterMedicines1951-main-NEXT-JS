@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Roboto_Slab, Saira_Stencil_One } from "next/fo
 import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
+import VisitorTracker from "@/components/VisitorTracker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -266,6 +267,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <JsonLd />
         <Providers>
+          <VisitorTracker />
           {children}
         </Providers>
       </body>
