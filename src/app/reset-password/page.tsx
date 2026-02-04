@@ -69,7 +69,7 @@ function ResetPasswordContent() {
 
             // Redirect to login after 3 seconds
             setTimeout(() => {
-                router.push("/login");
+                router.push("/7061452180");
             }, 3000);
         } catch (error: any) {
             toast.error("Reset Failed", {
@@ -140,7 +140,7 @@ function ResetPasswordContent() {
                             </p>
                         </div>
 
-                        <Link href="/login" className="group flex items-center text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors">
+                        <Link href="/7061452180" className="group flex items-center text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors">
                             Return to Login
                             <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </Link>
@@ -252,7 +252,7 @@ function ResetPasswordContent() {
                                     Your password has been successfully updated. Redirecting you to login...
                                 </p>
                                 <Link
-                                    href="/login"
+                                    href="/7061452180"
                                     className="inline-flex items-center gap-2 text-pulse-500 text-sm font-bold hover:underline"
                                 >
                                     Go to Login

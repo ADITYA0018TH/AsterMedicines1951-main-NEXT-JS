@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 // Extracted Data for SEO Consistency
 const COMPANY_DETAILS = {
   name: "Aster Medicines Pvt Ltd",
-  founder: "Raj Kumar",
+  founder: "Late Mr. Raj Kumar",
   est: "1982",
   incorporation: "2008",
   regOffice: "Govind Mitra Road, Patna, Bihar 800004",
@@ -63,7 +63,8 @@ export const metadata: Metadata = {
     "Aster Medicines Pvt Ltd",
     "Aster Medicines Patna",
     "Aster Medicines Hajipur",
-    "Raj Kumar Aster Medicines",
+    "Aster Medicines Private Limited",
+    "Late Raj Kumar Aster Medicines",
     "Pharma Company in Govind Mitra Road Patna",
     "Injection Manufacturer in Hajipur Industrial Area",
     "Top 10 Pharma Companies in Bihar",
@@ -161,7 +162,7 @@ export default function RootLayout({
         "@id": "https://astermedicines.com/#organization",
         "name": "Aster Medicines Pvt Ltd",
         "legalName": "Aster Medicines Private Limited",
-        "alternateName": ["Aster Medicines", "Aster Pharma"],
+        "alternateName": ["Aster Medicines", "Aster Medicines Pvt Ltd", "Aster Medicines Private Limited"],
         "url": "https://astermedicines.com",
         "logo": "https://astermedicines.com/icon.png",
         "email": ["accounts@astermedicines.com", "hr@astermedicines.com", "astermedicinespvtltd@gmail.com"],

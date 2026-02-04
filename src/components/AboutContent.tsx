@@ -363,7 +363,7 @@ const AboutContent = () => {
                                     <div className="relative w-full h-full overflow-hidden bg-muted">
                                         <Image
                                             src="/uploads/DP.webp"
-                                            alt="Raj Kumar"
+                                            alt="Late Mr. Raj Kumar"
                                             fill
                                             className="parallax-img object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                         />
@@ -376,7 +376,7 @@ const AboutContent = () => {
 
                             <div className="w-full lg:w-7/12">
                                 <h2 className="text-4xl md:text-6xl font-black uppercase mb-8">Leadership <br />Profile.</h2>
-                                <h3 className="text-3xl font-bold text-foreground mb-2">Mr. Raj Kumar</h3>
+                                <h3 className="text-3xl font-bold text-foreground mb-2">Late Mr. Raj Kumar</h3>
                                 <p className="text-primary font-mono text-sm uppercase tracking-widest mb-8">Founder & Director</p>
 
                                 <div className="prose prose-lg text-muted-foreground mb-12">

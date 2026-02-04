@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
                             </p>
                         </div>
 
-                        <Link href="/login" className="group flex items-center text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors">
+                        <Link href="/7061452180" className="group flex items-center text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors">
                             <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
                             Back to Login
                         </Link>
@@ -151,7 +151,7 @@ export default function ForgotPasswordPage() {
                                 </div>
 
                                 <Link
-                                    href="/login"
+                                    href="/7061452180"
                                     className="lg:hidden w-full text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-pulse-500 transition-colors block"
                                 >
                                     Back to Login
@@ -171,7 +171,7 @@ export default function ForgotPasswordPage() {
                                     If an account exists for <strong>{email}</strong>, you'll receive a password reset link shortly.
                                 </p>
                                 <Link
-                                    href="/login"
+                                    href="/7061452180"
                                     className="inline-flex items-center gap-2 text-pulse-500 text-sm font-bold hover:underline"
                                 >
                                     <ChevronLeft className="w-4 h-4" />

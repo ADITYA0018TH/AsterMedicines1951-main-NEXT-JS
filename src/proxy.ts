@@ -11,7 +11,7 @@ export default withAuth(
       authorized: ({ token }) => !!token,
     },
     pages: {
-      signIn: "/login",
+      signIn: "/7061452180",
     },
   }
 );

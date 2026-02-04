@@ -16,7 +16,7 @@ const AdminDashboardContent = () => {
         document.cookie = "isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         localStorage.removeItem("isAuthenticated");
         toast.success("Logged out successfully");
-        router.push("/login");
+        router.push("/7061452180");
     };
 
     return (

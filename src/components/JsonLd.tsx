@@ -9,7 +9,7 @@ export default function JsonLd() {
         "@id": "https://astermedicines.com/#organization",
         "name": "Aster Medicines Pvt Ltd",
         "legalName": "Aster Medicines Private Limited",
-        "alternateName": ["Aster Medicines", "Aster Pharma"],
+        "alternateName": ["Aster Medicines", "Aster Medicines Pvt Ltd", "Aster Medicines Private Limited" ],
         "url": "https://astermedicines.com",
         "logo": "https://astermedicines.com/icon.png",
         "email": ["accounts@astermedicines.com", "hr@astermedicines.com", "astermedicinespvtltd@gmail.com"],
