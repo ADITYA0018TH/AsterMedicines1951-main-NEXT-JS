@@ -18,6 +18,7 @@ export interface IVisitor extends Document {
   };
   screenResolution?: string;
   language?: string;
+  device?: string;
 }
 
 const VisitorSchema: Schema = new Schema({
@@ -56,6 +57,9 @@ const VisitorSchema: Schema = new Schema({
     type: String,
   },
   language: {
+    type: String,
+  },
+  device: {
     type: String,
   },
 }, {

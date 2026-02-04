@@ -23,6 +23,7 @@ interface Visitor {
     isp?: string;
     screenResolution?: string;
     language?: string;
+    device?: string;
 }
 
 interface Stats {
@@ -219,7 +220,9 @@ const VisitorsContent = () => {
                                                         <div className="flex flex-col">
                                                             <div className="flex items-center gap-2">
                                                                 <Laptop className="h-4 w-4 text-gray-400" />
-                                                                <span title={visitor.userAgent}>{formatUserAgent(visitor.userAgent)}</span>
+                                                                <span title={visitor.userAgent} className="font-medium text-gray-900 dark:text-gray-100">
+                                                                    {visitor.device || formatUserAgent(visitor.userAgent)}
+                                                                </span>
                                                             </div>
                                                             <div className="text-xs text-gray-400 pl-6 mt-1 space-x-2">
                                                                 {visitor.screenResolution && (

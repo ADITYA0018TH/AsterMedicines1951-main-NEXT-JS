@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Visitor from '@/models/Visitor';
+import { UAParser } from 'ua-parser-js';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +24,44 @@ export async function POST(req: NextRequest) {
 
     const userAgent = req.headers.get('user-agent') || 'Unknown';
     
+    // Parse User Agent for Device Info
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+    
+    // Construct readable device string
+    let deviceName = 'Desktop'; // Default
+    
+    // Check for specific device info
+    if (result.device.model || result.device.type) {
+        const vendor = result.device.vendor || '';
+        const model = result.device.model || '';
+        const type = result.device.type || '';
+        
+        // Handle Mac specifically as it often reports just model='Macintosh'
+        if (model === 'Macintosh') {
+             deviceName = `Apple Mac`;
+        } else {
+             deviceName = `${vendor} ${model}`.trim() || type;
+        }
+    }
+    
+    // Append OS for better context (e.g., "Apple Mac (macOS 10.15.7)")
+    if (result.os.name) {
+         if (deviceName === 'Desktop') {
+             deviceName = `${result.os.name} ${result.os.version || ''}`;
+         } else {
+             deviceName += ` (${result.os.name} ${result.os.version || ''})`;
+         }
+    }
+
+    // Only append browser if generic Desktop, to avoid "Browser Name" confusion
+    if (deviceName === 'Desktop' && result.browser.name) {
+         deviceName += ` (${result.browser.name})`;
+    } else if (!result.device.model && result.browser.name) {
+        // For cases like "Windows 10", simplified browser info might be helpful but can be omitted if user prefers strict device look
+        // We will keep it for generic OS names to differentiate environments
+    }
+
     let location = undefined;
     let isp = undefined;
     let coordinates = undefined;
@@ -70,7 +109,8 @@ export async function POST(req: NextRequest) {
       isp,
       coordinates,
       screenResolution,
-      language
+      language,
+      device: deviceName
     });
 
     return NextResponse.json({ success: true });
