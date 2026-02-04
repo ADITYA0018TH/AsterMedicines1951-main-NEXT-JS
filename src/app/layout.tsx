@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 // Extracted Data for SEO Consistency
 const COMPANY_DETAILS = {
   name: "Aster Medicines Pvt Ltd",
-  founder: "Rupesh Anand",
+  founder: "Raj Kumar",
   est: "1982",
   incorporation: "2008",
   regOffice: "Govind Mitra Road, Patna, Bihar 800004",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     "Aster Medicines Pvt Ltd",
     "Aster Medicines Patna",
     "Aster Medicines Hajipur",
-    "Rupesh Anand Aster Medicines",
+    "Raj Kumar Aster Medicines",
     "Pharma Company in Govind Mitra Road Patna",
     "Injection Manufacturer in Hajipur Industrial Area",
     "Top 10 Pharma Companies in Bihar",
