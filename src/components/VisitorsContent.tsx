@@ -269,7 +269,7 @@ const VisitorsContent = () => {
                                 <button
                                     onClick={() => fetchVisitors(pagination.page - 1)}
                                     disabled={pagination.page === 1}
-                                    className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-3xl disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-800 rounded-3xl disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-gray-700"
                                 >
                                     Previous
                                 </button>
@@ -279,7 +279,7 @@ const VisitorsContent = () => {
                                 <button
                                     onClick={() => fetchVisitors(pagination.page + 1)}
                                     disabled={pagination.page === pagination.pages}
-                                    className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-3xl disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-800 rounded-3xl disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-gray-700"
                                 >
                                     Next
                                 </button>
