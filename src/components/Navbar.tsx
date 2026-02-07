@@ -75,12 +75,12 @@ const Navbar = () => {
               id="navbar-logo-surface"
             >
               <Link href="/" className="flex items-center gap-2 group">
-                <div className="relative h-16 w-24">
+                <div className="relative h-14 w-20">
                   <Image
                     src="/uploads/logo.webp"
                     alt="Aster Medicines Logo"
-                    width={96}
-                    height={64}
+                    width={80}
+                    height={56}
                     className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
                     priority
                   />
@@ -90,7 +90,7 @@ const Navbar = () => {
           ) : (
             <div className="px-0 py-0 transition-all duration-300 rounded-full backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10">
               <Link href="/" className="flex items-center gap-2 group">
-                <div className="relative h-16 w-24">
+                <div className="relative h-10 w-16 my-3 mx-4 py-0.5">
                   <Image
                     src="/uploads/logo.webp"
                     alt="Aster Medicines Logo"
