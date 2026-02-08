@@ -19,6 +19,16 @@ export interface IVisitor extends Document {
   screenResolution?: string;
   language?: string;
   device?: string;
+  browser?: {
+    name: string;
+    version: string;
+  };
+  os?: {
+    name: string;
+    version: string;
+  };
+  deviceType?: string;
+  timeSpent?: number; // in seconds
 }
 
 const VisitorSchema: Schema = new Schema({
@@ -61,6 +71,21 @@ const VisitorSchema: Schema = new Schema({
   },
   device: {
     type: String,
+  },
+  browser: {
+    name: { type: String },
+    version: { type: String },
+  },
+  os: {
+    name: { type: String },
+    version: { type: String },
+  },
+  deviceType: {
+    type: String,
+  },
+  timeSpent: {
+    type: Number,
+    default: 0,
   },
 }, {
   timestamps: true,

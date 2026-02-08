@@ -24,6 +24,16 @@ interface Visitor {
     screenResolution?: string;
     language?: string;
     device?: string;
+    browser?: {
+        name: string;
+        version: string;
+    };
+    os?: {
+        name: string;
+        version: string;
+    };
+    deviceType?: string;
+    timeSpent?: number;
 }
 
 interface Stats {
@@ -31,6 +41,7 @@ interface Stats {
     today: number;
     topCountry: string;
     topPage: string;
+    avgTime?: number;
 }
 
 interface Pagination {
@@ -66,7 +77,6 @@ const VisitorsContent = () => {
     useEffect(() => {
         fetchVisitors();
     }, []);
-
 
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this log?")) return;
@@ -110,6 +120,14 @@ const VisitorsContent = () => {
         if (ua.includes("Windows")) return "Windows";
         if (ua.includes("Linux")) return "Linux";
         return "Desktop"; // Simplified
+    };
+
+    const formatTimeSpent = (seconds?: number) => {
+        if (!seconds) return "0s";
+        if (seconds < 60) return `${Math.floor(seconds)}s`;
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes}m ${remainingSeconds}s`;
     };
 
     const formatDate = (dateString: string) => {
@@ -170,7 +188,7 @@ const VisitorsContent = () => {
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Time</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">IP / ISP</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Location</th>
-                                                <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Page</th>
+                                                <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Page / Duration</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Source</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200">Device</th>
                                                 <th className="p-4 font-semibold text-gray-700 dark:text-gray-200 text-right">Actions</th>
@@ -206,9 +224,16 @@ const VisitorsContent = () => {
                                                         )}
                                                     </td>
                                                     <td className="p-4 text-sm text-gray-600 dark:text-gray-300">
-                                                        <div className="flex items-center gap-2">
-                                                            <Globe className="h-4 w-4 text-gray-400" />
-                                                            {visitor.path}
+                                                        <div className="flex flex-col gap-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <Globe className="h-4 w-4 text-gray-400" />
+                                                                <span className="font-medium truncate max-w-[150px]" title={visitor.path}>{visitor.path}</span>
+                                                            </div>
+                                                            {visitor.timeSpent !== undefined && (
+                                                                <div className="text-xs text-gray-500 pl-6">
+                                                                    Duration: {formatTimeSpent(visitor.timeSpent)}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </td>
                                                     <td className="p-4 text-sm text-gray-600 dark:text-gray-300">
@@ -224,16 +249,21 @@ const VisitorsContent = () => {
                                                                     {visitor.device || formatUserAgent(visitor.userAgent)}
                                                                 </span>
                                                             </div>
-                                                            <div className="text-xs text-gray-400 pl-6 mt-1 space-x-2">
+                                                            <div className="text-xs text-gray-400 pl-6 mt-1 flex flex-wrap gap-2">
+                                                                {visitor.browser?.name && (
+                                                                    <span title={`${visitor.browser.name} ${visitor.browser.version}`} className="bg-blue-50 text-blue-600 px-1.5 rounded">
+                                                                        {visitor.browser.name}
+                                                                    </span>
+                                                                )}
+                                                                {visitor.os?.name && (
+                                                                    <span title={`${visitor.os.name} ${visitor.os.version}`} className="bg-green-50 text-green-600 px-1.5 rounded">
+                                                                        {visitor.os.name}
+                                                                    </span>
+                                                                )}
                                                                 {visitor.screenResolution && (
                                                                     <span className="inline-flex items-center gap-1" title="Screen Resolution">
                                                                         <Monitor className="h-3 w-3" />
                                                                         {visitor.screenResolution}
-                                                                    </span>
-                                                                )}
-                                                                {visitor.language && (
-                                                                    <span title="Language" className="bg-gray-100 dark:bg-gray-800 px-1.5 rounded">
-                                                                        {visitor.language}
                                                                     </span>
                                                                 )}
                                                             </div>
