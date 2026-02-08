@@ -3,6 +3,18 @@ import connectDB from '@/lib/db';
 import Visitor from '@/models/Visitor';
 import { UAParser } from 'ua-parser-js';
 
+// Common bot patterns to check against User-Agent
+const BOT_PATTERNS = [
+  /bot/i, /crawler/i, /spider/i, /ping/i, /nagios/i, /monitoring/i,
+  /headless/i, /lighthouse/i, /facebookexternalhit/i, /slurp/i,
+  /googlebot/i, /bingbot/i, /yandex/i, /baiduspider/i, /duckduckbot/i
+];
+
+function isBot(userAgent: string): boolean {
+  if (!userAgent) return false;
+  return BOT_PATTERNS.some(pattern => pattern.test(userAgent));
+}
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
@@ -98,7 +110,8 @@ export async function POST(req: NextRequest) {
       browser,
       os,
       deviceType,
-      timeSpent: 0
+      timeSpent: 0,
+      isBot: isBot(userAgent) || !deviceType,
     });
 
     return NextResponse.json({ success: true, id: newVisitor._id });

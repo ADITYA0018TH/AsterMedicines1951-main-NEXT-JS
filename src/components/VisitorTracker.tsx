@@ -9,6 +9,11 @@ const VisitorTracker = () => {
     const startTimeRef = useRef<number>(Date.now());
 
     useEffect(() => {
+        // Check if we should ignore this visitor (e.g. Admin)
+        if (typeof window !== 'undefined' && localStorage.getItem('exclude_me') === 'true') {
+            return;
+        }
+
         // Reset start time on path change
         startTimeRef.current = Date.now();
         visitorIdRef.current = null;
