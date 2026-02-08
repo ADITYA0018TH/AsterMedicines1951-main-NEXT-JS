@@ -13,7 +13,20 @@ export async function GET(request: Request) {
       query = { category };
     }
 
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    const page = parseInt(searchParams.get('page') || '0');
+    const limit = parseInt(searchParams.get('limit') || '0');
+
+    let products;
+    let total = 0;
+
+    if (page && limit) {
+      const skip = (page - 1) * limit;
+      total = await Product.countDocuments(query);
+      products = await Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    } else {
+      products = await Product.find(query).sort({ createdAt: -1 });
+      total = products.length;
+    }
 
     const transformedProducts = products.map(product => ({
       _id: product._id,
@@ -46,6 +59,18 @@ export async function GET(request: Request) {
       isWhoApproved: product.isWhoApproved || false
     }));
 
+    if (page && limit) {
+      return NextResponse.json({
+        products: transformedProducts,
+        pagination: {
+          total,
+          page,
+          limit,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    }
+
     return NextResponse.json(transformedProducts);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -57,6 +82,13 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const body = await request.json();
+
+    // Handle Bulk Create
+    if (Array.isArray(body)) {
+        const newProducts = await Product.insertMany(body);
+        return NextResponse.json({ message: 'Products created successfully', products: newProducts, count: newProducts.length }, { status: 201 });
+    }
+
     const { 
       name, description, price, category, images, stock, featured, 
       composition, dosageInstructions, indications, sideEffects, precautions,

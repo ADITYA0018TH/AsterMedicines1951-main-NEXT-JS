@@ -26,6 +26,8 @@ export async function POST(request: Request) {
           {
             folder: 'aster-medicines/products',
             resource_type: 'auto',
+            format: 'webp', // Convert to WebP
+            transformation: [{ quality: 'auto' }] // Optimize quality
           },
           (error, result) => {
             if (error) {

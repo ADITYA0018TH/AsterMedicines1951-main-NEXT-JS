@@ -20,6 +20,9 @@ export async function POST(req: NextRequest) {
     await connectDB();
     const body = await req.json();
     const { path, referrer, screenResolution, language } = body;
+    if (!path) {
+        return NextResponse.json({ error: 'Path is required' }, { status: 400 });
+    }
 
     // Get IP address
     let ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');

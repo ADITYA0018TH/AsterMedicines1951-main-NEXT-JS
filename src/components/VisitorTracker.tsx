@@ -18,8 +18,10 @@ const VisitorTracker = () => {
         startTimeRef.current = Date.now();
         visitorIdRef.current = null;
 
-        // Function to report visit
         const reportVisit = async () => {
+            const currentPath = pathname || window.location.pathname || '/';
+            if (!currentPath) return; // Should not happen with fallback, but safety first
+
             try {
                 const res = await fetch('/api/track-visit', {
                     method: 'POST',
@@ -27,7 +29,7 @@ const VisitorTracker = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        path: pathname,
+                        path: currentPath,
                         referrer: document.referrer || 'Direct',
                         screenResolution: `${window.screen.width}x${window.screen.height}`,
                         language: navigator.language,
@@ -54,17 +56,7 @@ const VisitorTracker = () => {
                 timeSpent: timeSpent
             });
 
-            // Try beacon first for reliability on unload
-            if (navigator.sendBeacon) {
-                const blob = new Blob([data], { type: 'application/json' });
-                navigator.sendBeacon('/api/track-visit', blob); // This might fail if endpoint expects PUT,Beacon sends POST usually. 
-                // Actually sendBeacon sends POST. My API expects PUT for updates. 
-                // Let's stick to fetch with keepalive for now as it supports PUT, 
-                // or change API to handle POST updates. 
-                // But typically sendBeacon is POST.
-                // Let's just use fetch with keepalive which is modern standard.
-            }
-
+            // Use fetch with keepalive for reliable updates on unload/visibility change
             fetch('/api/track-visit', {
                 method: 'PUT',
                 headers: {

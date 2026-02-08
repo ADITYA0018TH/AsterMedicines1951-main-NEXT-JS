@@ -12,15 +12,77 @@ const contactSchema = z.object({
   message: z.string().min(1, "Message is required"),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectDB();
-    const contacts = await Contact.find().sort({ createdAt: -1 });
-    return NextResponse.json(contacts);
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const search = searchParams.get('search') || '';
+    const status = searchParams.get('status') || 'All';
+
+    const query: any = {};
+
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: 'i' } },
+        { lastName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { subject: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (status && status !== 'All') {
+      query.status = status;
+    }
+
+    const skip = (page - 1) * limit;
+    
+    const [messages, total] = await Promise.all([
+      Contact.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Contact.countDocuments(query)
+    ]);
+
+    return NextResponse.json({
+      messages,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     console.error('Error fetching contacts:', error);
     return NextResponse.json({ message: 'Error fetching contacts' }, { status: 500 });
   }
+}
+
+export async function PATCH(request: Request) {
+    try {
+        await connectDB();
+        const body = await request.json();
+        const { id, status } = body;
+
+        if (!id || !status) {
+            return NextResponse.json({ message: 'ID and status are required' }, { status: 400 });
+        }
+
+        const updatedContact = await Contact.findByIdAndUpdate(
+            id, 
+            { status }, 
+            { new: true }
+        );
+
+        if (!updatedContact) {
+            return NextResponse.json({ message: 'Contact not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: 'Status updated', contact: updatedContact });
+    } catch (error) {
+        console.error('Error updating contact status:', error);
+        return NextResponse.json({ message: 'Error updating status' }, { status: 500 });
+    }
 }
 
 export async function POST(request: Request) {

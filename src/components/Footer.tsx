@@ -4,21 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowUp, Heart, MapPin, Phone, Mail } from "lucide-react"
 import { useRef, useState } from "react"
 import Link from "next/link"
-
-const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Instagram, href: "https://www.instagram.com/aster_medicines?igsh=MTRwODV4bXJwM3BtMg==", label: "Instagram" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Youtube, href: "https://www.youtube.com/@astermedicines13", label: "Youtube" },
-]
-
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
-  { label: "Products", href: "/products" },
-  { label: "Contact", href: "/contact" },
-]
+import { useSettings } from "@/context/SettingsContext";
 
 interface FooterProps {
   setCursorVariant?: (variant: "default" | "text" | string) => void
@@ -27,6 +13,22 @@ interface FooterProps {
 export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   const containerRef = useRef<HTMLElement>(null)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const { settings } = useSettings();
+
+  const socialLinks = [
+    { icon: Facebook, href: settings.social.facebook, label: "Facebook" },
+    { icon: Twitter, href: settings.social.twitter, label: "Twitter" },
+    { icon: Instagram, href: settings.social.instagram, label: "Instagram" },
+    { icon: Linkedin, href: settings.social.linkedin, label: "LinkedIn" },
+    { icon: Youtube, href: settings.social.youtube, label: "Youtube" },
+  ].filter(link => link.href); // Only show links that are set
+
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Products", href: "/products" },
+    { label: "Contact", href: "/contact" },
+  ]
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -165,74 +167,82 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
           <div className="space-y-6">
             <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">Contact</h4>
             <div className="space-y-6">
-              <motion.a
-                href="https://maps.app.goo.gl/hQDTvWxUv5rqNafW7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-3 group"
-                whileHover={{ x: 5 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <MapPin className="w-5 h-5 text-brand-accent mt-0.5 shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors leading-tight">
-                  E-4 Part, Phase-2,<br />
-                  Industrial Area, Hajipur,<br />
-                  Vaishali, Bihar-844102
-                </span>
-              </motion.a>
+              {settings.contact.mapLink && (
+                <motion.a
+                  href={settings.contact.mapLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 group"
+                  whileHover={{ x: 5 }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <MapPin className="w-5 h-5 text-brand-accent mt-0.5 shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors leading-tight whitespace-pre-line">
+                    {settings.contact.address || "Address not available"}
+                  </span>
+                </motion.a>
+              )}
 
-              <motion.a
-                href="tel:+917909071165"
-                className="flex items-center gap-3 group"
-                whileHover={{ x: 5 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <Phone className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  +91 7909071165
-                </span>
-              </motion.a>
+              {settings.contact.phone && (
+                <motion.a
+                  href={`tel:${settings.contact.phone}`}
+                  className="flex items-center gap-3 group"
+                  whileHover={{ x: 5 }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Phone className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                    {settings.contact.phone}
+                  </span>
+                </motion.a>
+              )}
 
-              <motion.a
-                href="mailto:accounts@astermedicines.com"
-                className="flex items-center gap-3 group"
-                whileHover={{ x: 5 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  accounts@astermedicines.com
-                </span>
-              </motion.a>
+              {settings.contact.email && (
+                <motion.a
+                  href={`mailto:${settings.contact.email}`}
+                  className="flex items-center gap-3 group"
+                  whileHover={{ x: 5 }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                    {settings.contact.email}
+                  </span>
+                </motion.a>
+              )}
 
-              <motion.a
-                href="mailto:hr@astermedicines.com"
-                className="flex items-center gap-3 group"
-                whileHover={{ x: 5 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  hr@astermedicines.com
-                </span>
-              </motion.a>
+              {settings.contact.hrEmail && (
+                <motion.a
+                  href={`mailto:${settings.contact.hrEmail}`}
+                  className="flex items-center gap-3 group"
+                  whileHover={{ x: 5 }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                    {settings.contact.hrEmail}
+                  </span>
+                </motion.a>
+              )}
 
-              <motion.a
-                href="mailto:astermedicinespvtltd@gmail.com"
-                className="flex items-center gap-3 group"
-                whileHover={{ x: 5 }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                  astermedicinespvtltd@gmail.com
-                </span>
-              </motion.a>
+              {settings.contact.supportEmail && (
+                <motion.a
+                  href={`mailto:${settings.contact.supportEmail}`}
+                  className="flex items-center gap-3 group"
+                  whileHover={{ x: 5 }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
+                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
+                    {settings.contact.supportEmail}
+                  </span>
+                </motion.a>
+              )}
             </div>
           </div>
 
@@ -240,7 +250,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
           <div className="flex flex-col justify-between">
             <div>
               <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">Connect</h4>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={social.label}

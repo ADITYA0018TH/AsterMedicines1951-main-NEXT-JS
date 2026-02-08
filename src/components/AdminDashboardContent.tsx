@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Package, MessageSquare, LogOut, Users } from "lucide-react";
+import { Package, MessageSquare, LogOut, Users, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
@@ -94,6 +94,24 @@ const AdminDashboardContent = () => {
                                         </p>
                                         <div className="button-primary mt-auto">
                                             View Logs →
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+
+                            {/* Site Settings Card */}
+                            <Link href="/admin/settings">
+                                <div className="glass-card p-8 hover:scale-105 transition-all duration-300 cursor-pointer group h-full">
+                                    <div className="flex flex-col items-center text-center space-y-4">
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                            <Settings className="h-10 w-10 text-white" />
+                                        </div>
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Site Settings</h2>
+                                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                            Manage contact info, social links, and maintenance mode.
+                                        </p>
+                                        <div className="button-primary mt-auto">
+                                            Go to Settings →
                                         </div>
                                     </div>
                                 </div>

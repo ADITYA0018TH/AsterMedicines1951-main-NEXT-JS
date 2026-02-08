@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useSettings } from "@/context/SettingsContext";
 import {
     ArrowRight,
     MapPin,
@@ -28,6 +29,7 @@ if (typeof window !== "undefined") {
 const AboutContent = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const { settings } = useSettings();
 
     // The Text
     // The Text & Highlights
@@ -362,7 +364,7 @@ const AboutContent = () => {
                                     </div>
                                     <div className="relative w-full h-full overflow-hidden bg-muted">
                                         <Image
-                                            src="/uploads/DP.webp"
+                                            src={settings.about?.founderImage || "/uploads/DP.webp"}
                                             alt="Late Mr. Raj Kumar"
                                             fill
                                             className="parallax-img object-cover grayscale hover:grayscale-0 transition-all duration-700"

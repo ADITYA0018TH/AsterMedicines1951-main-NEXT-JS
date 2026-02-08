@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 
 import Link from "next/link";
 import Image from "next/image";
@@ -9,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { Plus, Pencil, Trash2, MessageSquare, ArrowLeft } from "lucide-react";
+import { Plus, Pencil, Trash2, MessageSquare, ArrowLeft, Download, Upload, ChevronLeft, ChevronRight, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -29,15 +31,21 @@ interface Product {
 const AdminProductsContent = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [importing, setImporting] = useState(false);
 
-    const { data: products, isLoading } = useQuery({
-        queryKey: ["admin-products"],
+    const { data: responseData, isLoading } = useQuery({
+        queryKey: ["admin-products", page, limit],
         queryFn: async () => {
-            const response = await fetch("/api/products");
+            const response = await fetch(`/api/products?page=${page}&limit=${limit}`);
             if (!response.ok) throw new Error("Failed to fetch products");
-            return response.json() as Promise<Product[]>;
+            return response.json();
         },
     });
+
+    const products = responseData?.products || [];
+    const pagination = responseData?.pagination;
 
 
 
@@ -56,6 +64,102 @@ const AdminProductsContent = () => {
         onError: () => toast.error("Failed to delete product"),
     });
 
+
+    const handleExport = async () => {
+        try {
+            // Fetch all products for export
+            const res = await fetch("/api/products");
+            const allProducts = await res.json();
+
+            if (!Array.isArray(allProducts)) return;
+
+            const headers = ["Name", "Category", "Price", "Stock", "Description", "Features"];
+            const csvContent = [
+                headers.join(","),
+                ...allProducts.map((p: any) => [
+                    `"${p.name.replace(/"/g, '""')}"`,
+                    `"${p.category}"`,
+                    p.price,
+                    p.stock,
+                    `"${p.description.replace(/"/g, '""')}"`,
+                    `"${(p.isQualityAssured ? "Quality Assured" : "")} ${(p.isGmpCertified ? "GMP" : "")}"`.trim()
+                ].join(","))
+            ].join("\n");
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `products_export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            toast.error("Failed to export products");
+        }
+    };
+
+    const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setImporting(true);
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const text = e.target?.result as string;
+                // Simple CSV parser assuming standard format (Name, Description, Price, Category, Stock)
+                // Skipping header row
+                const rows = text.split('\n').slice(1).filter(row => row.trim());
+
+                const newProducts = rows.map(row => {
+                    // Handle quoted strings loosely
+                    const regex = /(?:^|,)(?:"([^"]*)"|([^,]*))/g;
+                    const matches = [];
+                    let match;
+                    while ((match = regex.exec(row))) {
+                        matches.push(match[1] || match[2] || '');
+                    }
+                    // Clean up matches
+                    const values = matches.filter(m => m !== undefined);
+
+                    // Fallback to simple split if regex fails or structure is simple
+                    const simpleValues = row.split(',').map(v => v.replace(/^"|"$/g, '').replace(/""/g, '"'));
+                    const data = values.length >= 5 ? values : simpleValues;
+
+                    return {
+                        name: data[0] || "New Product",
+                        category: data[1] || "Uncategorized",
+                        price: parseFloat(data[2]) || 0,
+                        stock: parseInt(data[3]) || 0,
+                        description: data[4] || "",
+                        images: ["/placeholder.svg"] // Default image
+                    };
+                });
+
+                if (newProducts.length === 0) throw new Error("No valid products found");
+
+                const response = await fetch("/api/products", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newProducts),
+                });
+
+                if (!response.ok) throw new Error("Failed to import products");
+
+                toast.success(`Successfully imported ${newProducts.length} products`);
+                queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to import CSV. Ensure format: Name,Category,Price,Stock,Description");
+            } finally {
+                setImporting(false);
+                // Reset input
+                event.target.value = '';
+            }
+        };
+        reader.readAsText(file);
+    };
 
 
     return (
@@ -98,7 +202,36 @@ const AdminProductsContent = () => {
                                             <span className="sm:hidden">Add</span>
                                         </>
                                     }
+
                                 />
+                                <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1 hidden sm:block" />
+                                <Button
+                                    variant="outline"
+                                    onClick={handleExport}
+                                    className="gap-2 hidden md:flex"
+                                    title="Export CSV"
+                                >
+                                    <Download className="h-4 w-4" />
+                                    Export
+                                </Button>
+                                <div className="relative hidden md:block">
+                                    <input
+                                        type="file"
+                                        accept=".csv"
+                                        onChange={handleImport}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        disabled={importing}
+                                    />
+                                    <Button
+                                        variant="outline"
+                                        className="gap-2"
+                                        disabled={importing}
+                                        title="Import CSV"
+                                    >
+                                        {importing ? <div className="w-4 h-4 animate-spin rounded-full border-2 border-current border-t-transparent" /> : <Upload className="h-4 w-4" />}
+                                        Import
+                                    </Button>
+                                </div>
                             </div>
                         </div>
 
@@ -170,6 +303,56 @@ const AdminProductsContent = () => {
                         ) : (
                             <div className="text-center py-12 glass-card rounded-lg">
                                 <p className="text-gray-600 dark:text-gray-400 text-lg">No products yet</p>
+                            </div>
+                        )}
+
+                        {/* Pagination Controls */}
+                        {pagination && pagination.pages > 1 && (
+                            <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Showing <span className="font-medium">{(page - 1) * limit + 1}</span> to <span className="font-medium">{Math.min(page * limit, pagination.total)}</span> of <span className="font-medium">{pagination.total}</span> products
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                                        disabled={page === 1}
+                                        className="h-8 w-8 p-0"
+                                    >
+                                        <ChevronLeft className="h-4 w-4" />
+                                    </Button>
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
+                                            // Simple logic to show current page surroundings
+                                            let p = i + 1;
+                                            if (pagination.pages > 5 && page > 3) {
+                                                p = page - 2 + i;
+                                                if (p > pagination.pages) p -= (p - pagination.pages);
+                                            }
+                                            return (
+                                                <Button
+                                                    key={p}
+                                                    variant={page === p ? "default" : "ghost"}
+                                                    size="sm"
+                                                    onClick={() => setPage(p)}
+                                                    className={`h-8 w-8 p-0 ${page === p ? "bg-pulse-500 hover:bg-pulse-600" : ""}`}
+                                                >
+                                                    {p}
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setPage(p => Math.min(pagination.pages, p + 1))}
+                                        disabled={page === pagination.pages}
+                                        className="h-8 w-8 p-0"
+                                    >
+                                        <ChevronRight className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </div>
                         )}
                     </div>
