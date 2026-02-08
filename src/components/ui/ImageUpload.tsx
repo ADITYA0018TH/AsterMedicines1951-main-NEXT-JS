@@ -61,6 +61,9 @@ export function ImageUpload({ value, onChange, disabled, folder = "aster-medicin
         setUploading(true);
         const formData = new FormData();
         formData.append("images", file); // API expects 'images' field
+        if (folder) {
+            formData.append("folder", folder);
+        }
 
         // Note: The current API route might hardcode the folder. 
         // Ideally we'd pass 'folder' in formData too if API supported it.

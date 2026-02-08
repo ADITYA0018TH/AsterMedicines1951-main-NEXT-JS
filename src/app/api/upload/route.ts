@@ -17,14 +17,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No files uploaded' }, { status: 400 });
     }
 
+    const folder = formData.get('folder') as string || 'aster-medicines/products';
+
     const uploadPromises = files.map(async (file) => {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
+      const filename = file.name.replace(/\.[^/.]+$/, "") + "-" + Date.now(); // Append timestamp for uniqueness
+
       return new Promise<string>((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
-            folder: 'aster-medicines/products',
+            folder: folder,
+            public_id: filename, // Use original filename
+            use_filename: true,
+            unique_filename: false, // Prevent adding random characters
             resource_type: 'auto',
             format: 'webp', // Convert to WebP
             transformation: [{ quality: 'auto' }] // Optimize quality

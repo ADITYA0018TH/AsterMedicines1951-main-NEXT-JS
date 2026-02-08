@@ -32,6 +32,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({
         files.forEach(file => {
             formData.append('images', file);
         });
+        formData.append('folder', 'aster-medicines/products');
 
         try {
             const response = await fetch('/api/upload', {
