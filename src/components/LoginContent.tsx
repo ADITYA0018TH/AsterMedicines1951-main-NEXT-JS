@@ -10,6 +10,7 @@ import { Eye, EyeOff, Mail, Lock, Loader2, ChevronRight, Fingerprint } from "luc
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import Navbar from "@/components/Navbar";
+import { Globe } from "@/components/ui/Globe";
 
 const LoginContent = () => {
   const [email, setEmail] = useState("");
@@ -62,6 +63,11 @@ const LoginContent = () => {
 
       {/* 1. Dynamic Background Layer (Uses your animate-gradient-x) */}
       <div className="absolute inset-0 opacity-10 dark:opacity-20 animate-gradient-x bg-black" />
+
+      {/* 3D Globe Layer */}
+      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
+        <Globe />
+      </div>
 
       {/* 2. Scanning Lines Layer (Uses your animate-dash) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
