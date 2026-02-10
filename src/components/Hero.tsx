@@ -88,7 +88,7 @@ const Hero = () => {
         )}
       </div>
 
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto h-full flex flex-col justify-center py-20 lg:py-0">
+      <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto h-full flex flex-col justify-center py-20 lg:pt-24 lg:pb-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 3xl:gap-16 items-center">
 
           {/* Left Column: Typography (7 cols) */}
