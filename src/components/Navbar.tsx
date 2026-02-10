@@ -71,7 +71,7 @@ const Navbar = () => {
               borderWidth={isScrolled ? 0.07 : 0}
               backgroundOpacity={0}
               opacity={isScrolled ? 0.93 : 0}
-              className="px-6 py-2 transition-all duration-300"
+              className="px-6 py-2 transition-all duration-300 dark:!bg-white"
               id="navbar-logo-surface"
             >
               <Link href="/" className="flex items-center gap-2 group">
