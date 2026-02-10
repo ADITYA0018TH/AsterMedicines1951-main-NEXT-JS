@@ -141,6 +141,13 @@ export const organizationStructuredData = {
             "@type": "Product",
             "name": p.name,
             "description": p.description,
+            "image": p.images[0],
+            "sku": String(p.id),
+            "url": `https://astermedicines.com/products/${p.id}`,
+            "brand": {
+              "@type": "Brand",
+              "name": "Aster Medicines"
+            },
             "offers": {
               "@type": "Offer",
               "url": `https://astermedicines.com/products/${p.id}`,
