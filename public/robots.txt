@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /account/
+Disallow: /search?*
+Crawl-delay: 1
+
+Sitemap: https://astermedicines.com/sitemap.xml

@@ -1,21 +1,26 @@
 import React from 'react';
 
-// Define the shape of the data this component expects
 interface ProductJsonLdProps {
   product: {
-    id: string;
+    id: string | number;
     name: string;
     description: string;
-    image?: string;       // Optional, falls back to placeholder
-    category?: string;    // e.g. "Antibiotic Injection"
-    brand?: string;       // Defaults to "Aster Medicines"
+    image?: string;
+    category?: string;
+    brand?: string;
+    composition?: string;
+    indications?: string;
+    dosage?: string;
+    features?: string[];
   };
 }
 
 export default function ProductJsonLd({ product }: ProductJsonLdProps) {
-  // Use a fallback image if the product doesn't have one
+  // Handle image URL - if it's already a full URL (cloudinary), use as-is
   const imageUrl = product.image
-    ? `https://astermedicines.com${product.image.startsWith('/') ? product.image : '/' + product.image}`
+    ? (product.image.startsWith('http')
+      ? product.image
+      : `https://astermedicines.com${product.image.startsWith('/') ? product.image : '/' + product.image}`)
     : "https://astermedicines.com/og-image.webp";
 
   const schema = {
@@ -24,25 +29,50 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
     "name": product.name,
     "image": imageUrl,
     "description": product.description || `High-quality ${product.name} manufactured by Aster Medicines Pvt Ltd.`,
-    "sku": product.id,
-    "mpn": product.id, // Manufacturer Part Number: Critical for B2B/Industrial parts
+    "sku": String(product.id),
+    "mpn": String(product.id),
     "brand": {
       "@type": "Brand",
       "name": product.brand || "Aster Medicines"
     },
     "manufacturer": {
       "@type": "Organization",
-      "name": "Aster Medicines Pvt Ltd"
+      "name": "Aster Medicines Pvt Ltd",
+      "url": "https://astermedicines.com"
     },
     "category": product.category || "Pharmaceuticals",
 
-    // Google STRONGLY prefers an 'offers' section, even for B2B.
-    // We set a placeholder structure here to avoid "Missing Field" errors.
+    // Additional properties for rich schema
+    ...(product.composition && {
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Composition",
+          "value": product.composition
+        },
+        ...(product.indications ? [{
+          "@type": "PropertyValue",
+          "name": "Indications",
+          "value": product.indications
+        }] : []),
+        ...(product.dosage ? [{
+          "@type": "PropertyValue",
+          "name": "Dosage",
+          "value": product.dosage
+        }] : []),
+      ]
+    }),
+
+    // Features as keywords
+    ...(product.features && product.features.length > 0 && {
+      "keywords": product.features.join(", ")
+    }),
+
     "offers": {
       "@type": "Offer",
       "url": `https://astermedicines.com/products/${product.id}`,
       "priceCurrency": "INR",
-      "price": "100", // Placeholder: Change this if you have real prices, or leave as a base estimate.
+      "price": "0",
       "priceValidUntil": "2027-12-31",
       "itemCondition": "https://schema.org/NewCondition",
       "availability": "https://schema.org/InStock",

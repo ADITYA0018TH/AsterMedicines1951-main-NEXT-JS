@@ -1,43 +1,67 @@
 import type { Metadata } from "next";
 import HomeContent from "@/components/HomeContent";
-import { organizationStructuredData, websiteStructuredData, faqStructuredData } from "@/data/structuredData";
+import { organizationStructuredData, websiteStructuredData, faqStructuredData, localBusinessStructuredData } from "@/data/structuredData";
 
 export const metadata: Metadata = {
-  // 1. TITLE: Targets "Manufacturer" (B2B) + "Location" (Local SEO)
-  title: "Aster Medicines Pvt Ltd | Top Pharmaceutical Manufacturer in Bihar",
+  // 1. TITLE: Brand name + "Private Limited" + core business + location
+  title: "Aster Medicines Pvt Ltd (Private Limited) | Best Pharmaceutical Manufacturer in Bihar, Patna & Hajipur",
 
-  // 2. DESCRIPTION: Proof of Authority (ISO/GMP) + Specific Products (Injections)
-  // 2. DESCRIPTION: Proof of Authority (ISO/GMP) + Specific Products
-  description: "Aster Medicines Pvt Ltd (Est. 1982) is a leading manufacturer and wholesaler of Pharmaceutical Injections, Syrups, and Baby Massage Oil. ISO & GMP Certified.",
+  // 2. DESCRIPTION: Every searchable keyword packed naturally
+  description: "Aster Medicines Pvt Ltd (CIN: U24230BR2008PTC013937) — WHO-GMP & ISO certified pharmaceutical manufacturer since 1982. Manufacturing Meropenem, Ceftriaxone, Amikacin, Ondansetron, Adrenaline, Dexamethasone injections, B-Codex Syrup, Lu-Zyme Syrup & Aster AD Baby Massage Oil. Factory at Hajipur Industrial Area. Office at Govind Mitra Road, Patna, Bihar. Third Party Manufacturing & PCD Pharma Franchise available.",
 
-  // 3. KEYWORDS: Swapped generic words for high-value B2B terms
+  // 3. KEYWORDS: Every brand variation + product + location
   keywords: [
+    "Aster Medicines",
     "Aster Medicines Pvt Ltd",
     "Aster Medicines Private Limited",
-    "Aster Medicines",
-    "Aster Medicines Products",
-    "Aster Medicines Pvt Ltd Products",
-    "Aster Medicines Private Limited Products",
-    "Aster Medicines Manufacturer",
-    "Aster Medicines Govind Mitra Road",
+    "Aster Pharma",
+    "Aster Medicines India",
+    "Aster Medicines Bihar",
+    "Aster Medicines Patna",
     "Aster Medicines Hajipur",
-    "Pharma Manufacturer Bihar",
-    "Injection Manufacturing India",
-    "Third Party Pharma Manufacturing",
+    "Aster Medicines Govind Mitra Road",
+    "Aster Medicines Products",
+    "Aster Medicines Injections",
     "Meropenem Injection Manufacturer",
+    "Ceftriaxone Injection Manufacturer India",
+    "Amikacin Injection Manufacturer",
+    "Ondansetron Injection Manufacturer",
+    "Adrenaline Injection Manufacturer",
+    "Dexamethasone Injection Manufacturer",
+    "Frusemide Injection Manufacturer",
+    "Sodium Bicarbonate Injection Manufacturer",
+    "Dextrose Injection Manufacturer",
+    "Calcium Gluconate Injection",
+    "Aminophylline Injection",
+    "Lignocaine Injection",
+    "Atropine Sulphate Injection",
+    "Amoxicillin Clavulanate Injection",
+    "Baby Massage Oil Manufacturer Bihar",
+    "Aster AD Vitamin Baby Oil",
+    "B-Codex Syrup",
+    "Lu-Zyme Syrup Digestive Enzyme",
+    "Third Party Manufacturing Pharma Bihar",
     "PCD Pharma Franchise Bihar",
-    "Hajipur Industrial Area Pharma",
-    "Contract Manufacturing"
+    "Contract Manufacturing Pharma India",
+    "Pharma Manufacturer Bihar",
+    "Injection Manufacturer Hajipur",
+    "Injection Manufacturer Bihar",
+    "Top Pharma Company Bihar",
+    "WHO GMP Certified Pharma Bihar",
+    "Government Tender Pharma Supplier Bihar",
+    "Beta Lactam Injection Manufacturer",
+    "Non Beta Lactam Injection Manufacturer",
+    "Critical Care Injection Manufacturer India"
   ],
 
-  // 4. CANONICAL: Tells Google this is the main homepage
+  // 4. CANONICAL
   alternates: {
     canonical: "https://astermedicines.com",
   },
 
   openGraph: {
-    title: "Aster Medicines - GMP Certified Pharma Manufacturing Unit",
-    description: "Your trusted partner for quality pharmaceutical manufacturing. Specializing in Critical Care Injections and Syrups.",
+    title: "Aster Medicines Pvt Ltd — WHO-GMP Certified Injection & Syrup Manufacturer | Patna, Bihar",
+    description: "Leading manufacturer of Meropenem, Ceftriaxone, Adrenaline, Dexamethasone injections, syrups & baby massage oil. ISO certified. Third Party Manufacturing & PCD Franchise available. Est. 1982.",
     url: "https://astermedicines.com",
     siteName: "Aster Medicines Pvt Ltd",
     images: [
@@ -45,17 +69,17 @@ export const metadata: Metadata = {
         url: "/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "Aster Medicines Manufacturing Plant Entrance",
+        alt: "Aster Medicines Pvt Ltd Manufacturing Plant at Hajipur Industrial Area, Bihar",
       },
     ],
     type: "website",
-    locale: "en_IN", // Specifically targeting India
+    locale: "en_IN",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Aster Medicines - Pharmaceutical Manufacturer",
-    description: "Leading Injection & Syrup Manufacturer in East India.",
+    title: "Aster Medicines Pvt Ltd - Pharmaceutical Manufacturer in Bihar",
+    description: "WHO-GMP certified. Manufacturing Meropenem, Ceftriaxone, Adrenaline injections, syrups & baby oil since 1982. PCD Franchise & Third Party Manufacturing available.",
     images: ["/og-image.webp"],
   },
 };
@@ -63,7 +87,7 @@ export const metadata: Metadata = {
 export default function Home() {
   const combinedStructuredData = {
     "@context": "https://schema.org",
-    "@graph": [organizationStructuredData, websiteStructuredData, faqStructuredData]
+    "@graph": [organizationStructuredData, websiteStructuredData, faqStructuredData, localBusinessStructuredData]
   };
 
   return (

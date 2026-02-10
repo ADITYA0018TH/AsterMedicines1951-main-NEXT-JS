@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 const FAQSection = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-    // Extract FAQs from the structured data source
-    const faqs = faqStructuredData.mainEntity;
+    // Show only 5 FAQs in the UI (all 12 remain in structured data for SEO)
+    const faqs = faqStructuredData.mainEntity.slice(0, 5);
 
     const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);

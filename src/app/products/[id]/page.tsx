@@ -19,24 +19,59 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  // FIX 1: Use the first image from the array, or a default
   const mainImage = product.images?.[0] || "/og-image.webp";
 
+  // Build a comprehensive description pulling in every searchable field
+  const descParts = [
+    product.detailedDescription || product.description,
+    product.composition ? `Composition: ${product.composition}.` : "",
+    product.indications ? `Used for: ${product.indications}.` : "",
+    product.dosage ? `Dosage: ${product.dosage}.` : "",
+    `Category: ${product.category}. Manufactured by Aster Medicines Pvt Ltd, Bihar, India. WHO-GMP Certified.`,
+  ].filter(Boolean).join(" ");
+
+  // Trim to ~300 chars for meta description but keep full for keywords
+  const metaDescription = descParts.length > 320 ? descParts.slice(0, 317) + "..." : descParts;
+
+  // Generate keywords from product data
+  const productKeywords = [
+    product.name,
+    `${product.name} manufacturer`,
+    `${product.name} India`,
+    `${product.name} Bihar`,
+    `${product.name} price`,
+    `Buy ${product.name}`,
+    product.category,
+    `${product.category} injection manufacturer`,
+    `Aster Medicines ${product.name}`,
+    ...(product.composition ? product.composition.split(",").map(c => c.trim()) : []),
+    ...(product.features || []),
+    "Aster Medicines Pvt Ltd",
+    "Pharmaceutical Manufacturer Bihar",
+  ];
+
   return {
-    title: `${product.name} | Manufacturer in Bihar - Aster Medicines`,
-    description: product.description || `GMP Certified manufacturing of ${product.name}.`,
+    title: `${product.name} | ${product.category} — Buy from Aster Medicines Pvt Ltd, Bihar`,
+    description: metaDescription,
+    keywords: productKeywords,
     openGraph: {
-      title: `${product.name} - Manufacturing Details`,
-      description: product.description?.slice(0, 150) + "...",
+      title: `${product.name} — ${product.category} | Aster Medicines`,
+      description: product.detailedDescription || product.description || `WHO-GMP Certified ${product.name} manufactured by Aster Medicines Pvt Ltd.`,
       url: `https://astermedicines.com/products/${id}`,
       images: [
         {
-          url: mainImage, // Uses the fixed variable
+          url: mainImage,
           width: 800,
           height: 600,
-          alt: product.name,
+          alt: `${product.name} by Aster Medicines Pvt Ltd`,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} | Aster Medicines`,
+      description: product.description || `${product.name} - manufactured by Aster Medicines Pvt Ltd`,
+      images: [mainImage],
     },
     alternates: {
       canonical: `https://astermedicines.com/products/${id}`,
@@ -54,18 +89,19 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <>
-      {/* FIX 2: Map 'images[0]' to 'image' for the Schema */}
       <ProductJsonLd
         product={{
           id: product.id,
           name: product.name,
-          description: product.description || "",
-          // We take the first image from your array
+          description: product.detailedDescription || product.description || "",
           image: product.images?.[0] || "/placeholder.jpg",
-          category: product.category
+          category: product.category,
+          composition: product.composition,
+          indications: product.indications,
+          dosage: product.dosage,
+          features: product.features,
         }}
       />
-
       <ProductDetailContent product={product} />
     </>
   );

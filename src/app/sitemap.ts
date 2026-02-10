@@ -3,43 +3,40 @@ import { products } from "@/data/products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://astermedicines.com";
+  const locales = ['en', 'hi', 'ja'];
+  const corePages = ['', '/about', '/products', '/contact'];
 
-  // Dynamic Product Routes
-  const productUrls = products.map((product) => ({
-    url: `${baseUrl}/products/${product.id}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  // Generate URLs for each locale for core pages
+  const localeUrls = locales.flatMap(locale => 
+    corePages.map(page => ({
+      url: `${baseUrl}/${locale}${page}`,
+      lastModified: new Date(),
+      changeFrequency: page === '/products' ? 'daily' as const : 'weekly' as const,
+      priority: page === '' ? 1 : page === '/products' ? 0.9 : 0.8,
+    }))
+  );
+
+  // Generate product URLs for each locale
+  const productUrls = locales.flatMap(locale =>
+    products.map((product) => ({
+      url: `${baseUrl}/${locale}/products/${product.id}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }))
+  );
 
   return [
-    // --- 1. Core Pages ---
+    // Root URL (redirects to /en)
     {
-      url: baseUrl, // Home
+      url: baseUrl,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
     },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/products`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-
-    // --- 2. Dynamic Products ---
+    // All locale-specific URLs
+    ...localeUrls,
+    // All product URLs across locales
     ...productUrls,
   ];
 }
