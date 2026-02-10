@@ -140,7 +140,20 @@ export const organizationStructuredData = {
           "itemOffered": {
             "@type": "Product",
             "name": p.name,
-            "description": p.description
+            "description": p.description,
+            "offers": {
+              "@type": "Offer",
+              "url": `https://astermedicines.com/products/${p.id}`,
+              "availability": "https://schema.org/InStock",
+              "priceCurrency": "INR",
+              "price": "0",
+              "priceValidUntil": "2027-12-31",
+              "itemCondition": "https://schema.org/NewCondition",
+              "seller": {
+                "@type": "Organization",
+                "name": "Aster Medicines Pvt Ltd"
+              }
+            }
           }
         }))
     }))
@@ -205,6 +218,10 @@ export const productCatalogStructuredData = {
       "offers": {
         "@type": "Offer",
         "url": `https://astermedicines.com/products/${product.id}`,
+        "priceCurrency": "INR",
+        "price": "0",
+        "priceValidUntil": "2027-12-31",
+        "itemCondition": "https://schema.org/NewCondition",
         "availability": "https://schema.org/InStock",
         "seller": {
           "@type": "Organization",
