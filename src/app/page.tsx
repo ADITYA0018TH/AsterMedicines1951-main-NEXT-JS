@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import HomeContent from "@/components/HomeContent";
-import { organizationStructuredData, websiteStructuredData, faqStructuredData, localBusinessStructuredData } from "@/data/structuredData";
+import { faqStructuredData, patnaOfficeStructuredData } from "@/data/structuredData";
 
 export const metadata: Metadata = {
   // 1. TITLE: Brand name + "Private Limited" + core business + location
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
 export default function Home() {
   const combinedStructuredData = {
     "@context": "https://schema.org",
-    "@graph": [organizationStructuredData, websiteStructuredData, faqStructuredData, localBusinessStructuredData]
+    "@graph": [faqStructuredData, patnaOfficeStructuredData]
   };
 
   return (

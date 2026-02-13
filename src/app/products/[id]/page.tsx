@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetailContent from "@/components/ProductDetailContent";
-import { getProduct } from "@/lib/products";
+import { getProduct, getRelatedProducts } from "@/lib/products";
 import ProductJsonLd from "@/components/ProductJsonLd";
+import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // ... metadata generation logic remains same ...
   const { id } = await params;
   const product = await getProduct(id);
 
@@ -87,6 +89,9 @@ export default async function ProductDetailPage({ params }: Props) {
     notFound();
   }
 
+  // Fetch related products for the section
+  const relatedProducts = await getRelatedProducts(product.category, product.id);
+
   return (
     <>
       <ProductJsonLd
@@ -102,7 +107,15 @@ export default async function ProductDetailPage({ params }: Props) {
           features: product.features,
         }}
       />
-      <ProductDetailContent product={product} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "Products", item: "/products" },
+          { name: product.category, item: `/products?category=${encodeURIComponent(product.category)}` },
+          { name: product.name, item: `/products/${product.id}` },
+        ]}
+      />
+      <ProductDetailContent product={product} relatedProducts={relatedProducts} />
     </>
   );
 }

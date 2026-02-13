@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AboutContent from "@/components/AboutContent";
+import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
     title: "About Aster Medicines Pvt Ltd (Private Limited) | WHO-GMP Certified Pharma Company in Bihar Since 1982",
@@ -34,5 +35,15 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-    return <AboutContent />;
+    return (
+        <>
+            <BreadcrumbJsonLd
+                items={[
+                    { name: "Home", item: "/" },
+                    { name: "About Aster Medicines", item: "/about" },
+                ]}
+            />
+            <AboutContent />
+        </>
+    );
 }

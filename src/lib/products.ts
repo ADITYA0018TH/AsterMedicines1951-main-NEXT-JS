@@ -47,3 +47,45 @@ export async function getProduct(id: string): Promise<Product | null> {
     throw error;
   }
 }
+
+export async function getRelatedProducts(category: string, currentProductId: string, limit: number = 4): Promise<Product[]> {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({
+      category,
+      _id: { $ne: currentProductId }
+    }).limit(limit);
+
+    return products.map(product => ({
+      id: product._id.toString(),
+      name: product.name,
+      description: product.description,
+      category: product.category,
+      dosage: product.stock ? `${product.stock} units` : 'Contact',
+      features: [], // Minimal data for card
+      images: product.images,
+      price: product.price,
+      availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
+      isQualityAssured: product.isQualityAssured,
+      isGmpCertified: product.isGmpCertified,
+      isWhoApproved: product.isWhoApproved
+    }));
+  } catch (error) {
+    console.error('Error in getRelatedProducts:', error);
+    return [];
+  }
+}
+
+export async function getAllProducts(): Promise<{ id: string; updatedAt: Date }[]> {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({}, '_id updatedAt').lean();
+    return products.map(p => ({
+      id: p._id.toString(),
+      updatedAt: p.updatedAt ? new Date(p.updatedAt) : new Date(),
+    }));
+  } catch (error) {
+    console.error('Error in getAllProducts:', error);
+    return [];
+  }
+}

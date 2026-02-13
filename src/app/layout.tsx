@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     template: "%s | Aster Medicines Pvt Ltd",
   },
 
-  description: "Aster Medicines Pvt Ltd (CIN: U24230BR2008PTC013937), est. 1982 by Late Mr. Raj Kumar. WHO-GMP & ISO 9001:2015 certified pharmaceutical manufacturer. Products: Meropenem, Ceftriaxone, Amikacin, Ondansetron, Adrenaline, Dexamethasone injections, B-Codex Syrup, Lu-Zyme Syrup, Aster AD Baby Massage Oil. Factory at Industrial Area E/4, Hajipur. Office at Govind Mitra Road, Patna, Bihar.",
+  description: "Aster Medicines Pvt Ltd (est. 1982) is a WHO-GMP & ISO certified pharmaceutical manufacturer in Patna & Hajipur, Bihar. Specializing in third-party manufacturing of injections and syrups.",
 
   keywords: [
     // Primary brand — exact match searches
@@ -162,12 +162,7 @@ export const metadata: Metadata = {
   // },
 
   alternates: {
-    canonical: "./",
-    languages: {
-      "en": "https://astermedicines.com",
-      "hi": "https://astermedicines.com/hi",
-      "ja": "https://astermedicines.com/ja",
-    },
+    canonical: "https://astermedicines.com",
   },
 };
 

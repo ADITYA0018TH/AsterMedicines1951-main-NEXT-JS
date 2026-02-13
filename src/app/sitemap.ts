@@ -1,42 +1,31 @@
 import { MetadataRoute } from "next";
-import { products } from "@/data/products"; 
+import { getAllProducts } from "@/lib/products";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://astermedicines.com";
-  const locales = ['en', 'hi', 'ja'];
   const corePages = ['', '/about', '/products', '/contact'];
 
-  // Generate URLs for each locale for core pages
-  const localeUrls = locales.flatMap(locale => 
-    corePages.map(page => ({
-      url: `${baseUrl}/${locale}${page}`,
-      lastModified: new Date(),
-      changeFrequency: page === '/products' ? 'daily' as const : 'weekly' as const,
-      priority: page === '' ? 1 : page === '/products' ? 0.9 : 0.8,
-    }))
-  );
+  // Generate URLs for core pages (English/Default only)
+  const pages = corePages.map(page => ({
+    url: `${baseUrl}${page}`,
+    lastModified: new Date(),
+    changeFrequency: page === '/products' ? 'daily' as const : 'weekly' as const,
+    priority: page === '' ? 1 : page === '/products' ? 0.9 : 0.8,
+  }));
 
-  // Generate product URLs for each locale
-  const productUrls = locales.flatMap(locale =>
-    products.map((product) => ({
-      url: `${baseUrl}/${locale}/products/${product.id}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }))
-  );
+  // Fetch all products from DB
+  const dbProducts = await getAllProducts();
+
+  // Generate product URLs
+  const productUrls = dbProducts.map((product) => ({
+    url: `${baseUrl}/products/${product.id}`,
+    lastModified: product.updatedAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
 
   return [
-    // Root URL (redirects to /en)
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    // All locale-specific URLs
-    ...localeUrls,
-    // All product URLs across locales
+    ...pages,
     ...productUrls,
   ];
 }

@@ -13,6 +13,7 @@ export const organizationStructuredData = {
     "Aster Medicines Pvt Ltd",
     "Aster Medicines Private Limited",
     "Aster Pharma",
+    "Aster",
     "Aster Medicines India",
     "AM Pvt Ltd"
   ],
@@ -33,9 +34,18 @@ export const organizationStructuredData = {
     "propertyID": "CIN",
     "value": "U24230BR2008PTC013937"
   },
+  "disambiguatingDescription": "Aster Medicines Pvt Ltd (Bihar) is a distinct pharmaceutical manufacturing company established in 1982 by Late Mr. Raj Kumar. It is unrelated to Aster DM Healthcare or Dr. Azad Moopen.",
   "founder": {
     "@type": "Person",
-    "name": "Late Mr. Raj Kumar"
+    "name": "Late Mr. Raj Kumar",
+    "jobTitle": "Founder",
+    "nationality": "Indian",
+    "gender": "Male",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Aster Medicines Pvt Ltd"
+    },
+    "disambiguatingDescription": "Founder of Aster Medicines Pvt Ltd (Bihar, 1982). Distinct from Dr. Azad Moopen of Aster DM Healthcare."
   },
   "employee": {
     "@type": "Person",
@@ -384,6 +394,48 @@ export const localBusinessStructuredData = {
       "dayOfWeek": "Saturday",
       "opens": "10:00",
       "closes": "16:00"
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/astermedicines/",
+    "https://www.indiamart.com/astermedicines/",
+    "https://www.linkedin.com/company/aster-medicines-pvt-ltd/"
+  ]
+};
+
+// ============================================================
+// PATNA OFFICE - Specific LocalBusiness for Registered Office
+// ============================================================
+export const patnaOfficeStructuredData = {
+  "@type": ["LocalBusiness", "MedicalBusiness"],
+  "@id": "https://astermedicines.com/#patna-office",
+  "name": "Aster Medicines Pvt Ltd - Registered Office (Patna)",
+  "description": "Registered Office of Aster Medicines Pvt Ltd. Pharmaceutical Manufacturer & Supplier in Govind Mitra Road, Patna.",
+  "image": "https://astermedicines.com/og-image.webp",
+  "url": "https://astermedicines.com",
+  "telephone": "+91-9934006655",
+  "email": "astermedicinespvtltd@gmail.com",
+  "priceRange": "$$",
+  "parentOrganization": { "@id": "https://astermedicines.com/#organization" },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "North of Janta Hotel, 1st Floor, Govind Mitra Road",
+    "addressLocality": "Patna",
+    "addressRegion": "Bihar",
+    "postalCode": "800004",
+    "addressCountry": "IN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 25.6154, 
+    "longitude": 85.1485
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "10:30",
+      "closes": "19:00"
     }
   ],
   "sameAs": [

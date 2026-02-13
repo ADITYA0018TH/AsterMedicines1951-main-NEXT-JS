@@ -78,7 +78,7 @@ export const products: Product[] = [
   },
   {
     id: 4,
-    name: "Frusemide Injection I.P.",
+    name: "Frusemide Injection I.P. (UTRIX)",
     category: "Cardiovascular",
     description: "Utrix injection for diuretic therapy and fluid management",
     dosage: "2ml x 50 Ampoules",
@@ -124,7 +124,7 @@ export const products: Product[] = [
   },
   {
     id: 7,
-    name: "Ondansetron Injection I.P.",
+    name: "Ondansetron Injection I.P. (ON-2)",
     category: "Antiemetic",
     description: "ON-2 injection for prevention and treatment of nausea and vomiting",
     dosage: "2ml x 50 Ampoules",

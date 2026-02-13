@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContactContent from "@/components/ContactContent";
 import { faqStructuredData, localBusinessStructuredData } from "@/data/structuredData";
+import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
     title: "Contact Aster Medicines Pvt Ltd | Govind Mitra Road Patna & Hajipur Factory, Bihar",
@@ -42,6 +43,12 @@ export default function ContactPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [faqStructuredData, localBusinessStructuredData] }) }}
+            />
+            <BreadcrumbJsonLd
+                items={[
+                    { name: "Home", item: "/" },
+                    { name: "Contact Us", item: "/contact" },
+                ]}
             />
             <ContactContent />
         </>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProductsContent from "@/components/ProductsContent";
 import { productCatalogStructuredData } from "@/data/structuredData";
+import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
     title: "Products | Meropenem, Ceftriaxone, Injections, Syrups & Baby Oil - Aster Medicines Pvt Ltd",
@@ -54,6 +55,12 @@ export default function ProductsPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...productCatalogStructuredData }) }}
+            />
+            <BreadcrumbJsonLd
+                items={[
+                    { name: "Home", item: "/" },
+                    { name: "Products", item: "/products" },
+                ]}
             />
             <ProductsContent />
         </>

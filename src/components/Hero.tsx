@@ -102,21 +102,21 @@ const Hero = () => {
               </span>
             </div>
 
-            {/* OPTIMIZED H1 TAG */}
+            {/* OPTIMIZED H1 TAG: Includes Brand + Core Service + Location */}
             <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
               <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-saira-stencil text-slate-900 dark:text-white leading-none mb-2 -ml-1">
                 Aster Medicines
               </span>
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
-                Pharmaceutical
+                Pharma Manufacturer
               </span>
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-light mt-1 normal-case leading-tight font-sans tracking-normal text-slate-400 dark:text-slate-500">
-                Manufacturing Unit.
+                in Patna & Hajipur, Bihar.
               </span>
             </h1>
 
             <p className="mt-8 sm:mt-12 3xl:mt-16 text-lg sm:text-xl 3xl:text-2xl 4xl:text-3xl text-slate-600 dark:text-slate-400 max-w-xl 3xl:max-w-2xl 4xl:max-w-3xl leading-relaxed font-light border-l border-slate-200 dark:border-slate-800 pl-6 3xl:pl-10">
-              ISO & GMP Certified Manufacturer of <strong className="font-semibold text-slate-800 dark:text-slate-200">Critical Care Injections</strong>, Syrups, and Dry Injections. Premier destination for <strong className="font-semibold text-slate-800 dark:text-slate-200">Third Party Manufacturing</strong> in East India.
+              WHO-GMP Certified Manufacturer of <strong className="font-semibold text-slate-800 dark:text-slate-200">Critical Care Injections</strong> (Meropenem, Ceftriaxone), Syrups & Baby Oil. Your trusted partner for <strong className="font-semibold text-slate-800 dark:text-slate-200">Third Party Manufacturing</strong> in East India.
             </p>
 
             <div className="mt-10 sm:mt-16 3xl:mt-20 flex flex-wrap gap-5">

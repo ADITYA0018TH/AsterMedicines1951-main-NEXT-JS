@@ -19,9 +19,10 @@ import { Product } from "@/types/product";
 
 interface ProductDetailContentProps {
     product: Product;
+    relatedProducts: Product[];
 }
 
-const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
+const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContentProps) => {
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -281,7 +282,68 @@ const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
                     </div>
                 </div>
             </main>
-            <Footer />
+
+            {/* RELATED PRODUCTS SECTION */}
+            <section className="py-20 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-black relative z-10">
+                <div className="container mx-auto px-4 lg:px-6">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                        <div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                                Related Products
+                            </h2>
+                            <p className="text-slate-600 dark:text-slate-400">
+                                More {product.category} solutions from our catalog
+                            </p>
+                        </div>
+                        <Link href="/products" className="hidden md:flex items-center text-brand-accent font-semibold hover:underline">
+                            View All Products <ArrowRight className="w-4 h-4 ml-2" />
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {relatedProducts.map((relatedProduct) => (
+                            <Link
+                                href={`/products/${relatedProduct.id}`}
+                                key={relatedProduct.id}
+                                className="group block bg-slate-50 dark:bg-neutral-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-brand-accent/50 dark:hover:border-brand-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-brand-accent/5"
+                            >
+                                <div className="aspect-[4/3] relative p-6 bg-white dark:bg-white/5 flex items-center justify-center">
+                                    <Image
+                                        src={relatedProduct.images[0]}
+                                        alt={relatedProduct.name}
+                                        fill
+                                        className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+                                        sizes="(max-width: 768px) 100vw, 25vw"
+                                    />
+                                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="w-8 h-8 rounded-full bg-brand-accent text-white flex items-center justify-center shadow-lg">
+                                            <ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="p-5">
+                                    <h3 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-accent transition-colors">
+                                        {relatedProduct.name}
+                                    </h3>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                        {relatedProduct.description}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}
+                        {/* Fallback if no related products found */}
+                        {relatedProducts.length === 0 && (
+                            <div className="col-span-full text-center py-10 text-slate-500 dark:text-slate-400">
+                                <p>View our full catalog for more medicines.</p>
+                                <Link href="/products" className="inline-block mt-4 text-brand-accent hover:underline">Browse Catalog</Link>
+                            </div>
+                        )}
+                    </div>
+                    <Link href="/products" className="md:hidden flex items-center justify-center mt-8 text-brand-accent font-semibold hover:underline">
+                        View All Products <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                </div>
+            </section>
         </div>
     );
 };

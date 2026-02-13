@@ -31,35 +31,35 @@ const PharmaceuticalSection = () => {
     {
       id: 1,
       title: "Third Party Manufacturing",
-      subtitle: "B2B Excellence",
-      description: "Scalable contract manufacturing for global pharmaceutical brands. We handle the complex logistics of liquid injections and syrups so you can focus on growth.",
+      subtitle: "Injection Manufacturing",
+      description: "Scalable contract manufacturing for Beta-Lactam & Non-Beta Lactam injections. We handle complex production of critical care medicines for global brands.",
       icon: <Factory className="w-8 h-8 text-orange-600 dark:text-orange-500" />,
-      stats: ["1M+ Units/Month", "99.9% On-Time"],
+      stats: ["1M+ Vials/Month", "99.9% On-Time"],
       color: "from-orange-500/10 to-orange-600/5 dark:from-orange-500/20 dark:to-orange-600/5",
     },
     {
       id: 2,
       title: "Product Portfolio",
-      subtitle: "Diverse Range",
-      description: "A comprehensive catalog of high-demand formulations including Meropenem, Ondansetron, and specialized dry powder injections for critical care.",
+      subtitle: "Meropenem & Ceftriaxone",
+      description: "A comprehensive catalog of high-demand formulations including Meropenem, Ceftriaxone, Piperacillin Tazobactam, and specialized dry powder injections.",
       icon: <Pipette className="w-8 h-8 text-blue-600 dark:text-blue-500" />,
       stats: ["50+ Formulations", "Critical Care"],
       color: "from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/5",
     },
     {
       id: 3,
-      title: "Global Standards",
-      subtitle: "WHO-GMP & ISO",
-      description: "Our Hajipur facility effectively sets the benchmark for quality. Rigorous testing protocols ensure every vial meets international safety norms.",
+      title: "WHO-GMP Certified",
+      subtitle: "Quality Standards",
+      description: "Our WHO-GMP & ISO 9001:2015 certified plant in Hajipur, Bihar sets the industry benchmark. Rigorous quality control for every liquid and dry injection.",
       icon: <ShieldCheck className="w-8 h-8 text-green-600 dark:text-green-500" />,
-      stats: ["ISO 9001:2015", "WHO-GMP"],
+      stats: ["ISO 9001:2015", "GLP Certified"],
       color: "from-green-500/10 to-green-600/5 dark:from-green-500/20 dark:to-green-600/5",
     },
     {
       id: 4,
       title: "R&D Innovation",
-      subtitle: "Future Ready",
-      description: "Continuous investment in research and development to bring newer, more effective drug delivery systems to the market.",
+      subtitle: "New Formulations",
+      description: "Continuous investment in research to develop effective antibiotic combinations and stable injectable formulations for the Indian market.",
       icon: <Activity className="w-8 h-8 text-purple-600 dark:text-purple-500" />,
       stats: ["Modern Lab", "Expert Team"],
       color: "from-purple-500/10 to-purple-600/5 dark:from-purple-500/20 dark:to-purple-600/5",
@@ -67,10 +67,10 @@ const PharmaceuticalSection = () => {
     {
       id: 5,
       title: "Global Reach",
-      subtitle: "Expanding Horizons",
-      description: "Connecting healthcare solutions across borders. We are rapidly expanding our footprint to serve international markets.",
+      subtitle: "Export & PAN India",
+      description: "Connecting healthcare providers across Bihar, West Bengal, and beyond. We are rapidly expanding our pharmaceutical supply network.",
       icon: <Globe className="w-8 h-8 text-cyan-600 dark:text-cyan-500" />,
-      stats: ["Pan-India", "Export Ready"],
+      stats: ["Pan-India Supply", "Export Ready"],
       color: "from-cyan-500/10 to-cyan-600/5 dark:from-cyan-500/20 dark:to-cyan-600/5",
     }
   ];
@@ -105,7 +105,7 @@ const PharmaceuticalSection = () => {
           <h2 className="text-5xl md:text-7xl font-display font-bold text-slate-900 dark:text-white leading-tight transition-colors duration-500">
             Manufacturing <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
-              In Motion.
+              Critical Care Injections.
             </span>
           </h2>
           <p className="mt-6 text-slate-600 dark:text-neutral-400 text-lg md:text-xl max-w-lg transition-colors duration-500">
