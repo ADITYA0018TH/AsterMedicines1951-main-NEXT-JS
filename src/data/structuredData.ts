@@ -257,6 +257,8 @@ export const generateProductCatalogData = (products: any[]) => ({
   }))
 });
 
+export const productCatalogStructuredData = generateProductCatalogData(products);
+
 // ============================================================
 // FAQ - Comprehensive questions for FAQ rich results
 // ============================================================

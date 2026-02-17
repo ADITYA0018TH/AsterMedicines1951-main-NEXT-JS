@@ -1,6 +1,7 @@
 import connectDB from '@/lib/db';
 import ProductModel from '@/models/Product';
 import { Product } from '@/types/product';
+import { products as staticProducts } from '@/data/products';
 
 
 function transformProduct(product: any): Product {
@@ -52,6 +53,19 @@ export async function getProduct(id: string): Promise<Product | null> {
 }
 
 export async function getRelatedProducts(category: string, currentProductId: string, limit: number = 4): Promise<Product[]> {
+  // Get related from static data
+  const staticRelated = staticProducts
+    .filter(p => p.category === category && p.id.toString() !== currentProductId)
+    .slice(0, limit)
+    .map(p => ({
+      ...p,
+      id: p.id.toString(),
+      stock: 0,
+      featured: false,
+      price: p.price || 0,
+      availability: p.availability || 'Contact'
+    }));
+
   try {
     await connectDB();
     const products = await ProductModel.find({
@@ -59,7 +73,7 @@ export async function getRelatedProducts(category: string, currentProductId: str
       _id: { $ne: currentProductId }
     }).limit(limit);
 
-    return products.map(product => ({
+    const dbRelated = products.map(product => ({
       id: product._id.toString(),
       name: product.name,
       description: product.description,
@@ -73,33 +87,52 @@ export async function getRelatedProducts(category: string, currentProductId: str
       isGmpCertified: product.isGmpCertified,
       isWhoApproved: product.isWhoApproved
     }));
+
+    // Combine and limit
+    return [...staticRelated, ...dbRelated].slice(0, limit);
   } catch (error) {
     console.error('Error in getRelatedProducts:', error);
-    return [];
+    return staticRelated;
   }
 }
 
 export async function getAllProducts(): Promise<{ id: string; updatedAt: Date }[]> {
+  const staticIds = staticProducts.map(p => ({
+    id: p.id.toString(),
+    updatedAt: new Date()
+  }));
+
   try {
     await connectDB();
     const products = await ProductModel.find({}, '_id updatedAt').lean();
-    return products.map(p => ({
+    const dbIds = products.map(p => ({
       id: p._id.toString(),
       updatedAt: p.updatedAt ? new Date(p.updatedAt) : new Date(),
     }));
+    return [...staticIds, ...dbIds];
   } catch (error) {
     console.error('Error in getAllProducts:', error);
-    return [];
+    return staticIds;
   }
 }
 
 export async function getAllProductsFull(): Promise<Product[]> {
+  const staticFull = staticProducts.map(p => ({
+    ...p,
+    id: p.id.toString(),
+    stock: 0,
+    featured: false,
+    price: p.price || 0,
+    availability: p.availability || 'Contact'
+  }));
+
   try {
     await connectDB();
     const products = await ProductModel.find({});
-    return products.map(transformProduct);
+    const dbFull = products.map(transformProduct);
+    return [...staticFull, ...dbFull];
   } catch (error) {
     console.error('Error in getAllProductsFull:', error);
-    return [];
+    return staticFull;
   }
 }

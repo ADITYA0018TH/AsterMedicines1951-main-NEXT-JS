@@ -3,9 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Microscope, ChevronRight, MapPin } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
   const imageRef = useRef<HTMLImageElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -98,25 +100,25 @@ const Hero = () => {
               <div className="h-[1px] w-12 3xl:w-20 bg-pulse-500"></div>
               <MapPin className="w-4 h-4 text-slate-500" />
               <span className="text-xs 3xl:text-sm font-mono tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
-                Hajipur, Bihar • Est. 1982
+                {t('hero.est')}
               </span>
             </div>
 
             {/* OPTIMIZED H1 TAG: Includes Brand + Core Service + Location */}
             <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
               <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-saira-stencil text-slate-900 dark:text-white leading-none mb-2 -ml-1">
-                Aster Medicines
-              </span>
+                {t('hero.title_start')}
+              </span>{' '}
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
-                Pharma Manufacturer
-              </span>
+                {t('hero.title_highlight')}
+              </span>{' '}
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-light mt-1 normal-case leading-tight font-sans tracking-normal text-slate-400 dark:text-slate-500">
-                in Patna & Hajipur, Bihar.
+                {t('hero.title_end')}
               </span>
             </h1>
 
             <p className="mt-8 sm:mt-12 3xl:mt-16 text-lg sm:text-xl 3xl:text-2xl 4xl:text-3xl text-slate-600 dark:text-slate-400 max-w-xl 3xl:max-w-2xl 4xl:max-w-3xl leading-relaxed font-light border-l border-slate-200 dark:border-slate-800 pl-6 3xl:pl-10">
-              WHO-GMP Certified Manufacturer of <strong className="font-semibold text-slate-800 dark:text-slate-200">Critical Care Injections</strong> (Meropenem, Ceftriaxone), Syrups & Baby Oil. Your trusted partner for <strong className="font-semibold text-slate-800 dark:text-slate-200">Third Party Manufacturing</strong> in East India.
+              {t('hero.description')}
             </p>
 
             <div className="mt-10 sm:mt-16 3xl:mt-20 flex flex-wrap gap-5">
@@ -124,7 +126,7 @@ const Hero = () => {
                 href="/contact"
                 className="group inline-flex items-center justify-between gap-4 px-6 py-4 3xl:px-8 3xl:py-6 text-white bg-gradient-to-r from-[#FE5C02] to-[#FE5C02] rounded-full shadow-[inset_2px_2px_6px_rgba(255,255,255,0.2),_inset_-2px_-2px_6px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 active:scale-95 active:shadow-[inset_1px_1px_4px_rgba(0,0,0,0.2)] animate-bounce hover:animate-none"
               >
-                <span className="text-lg 3xl:text-xl 4xl:text-2xl font-medium">Get Quote</span>
+                <span className="text-lg 3xl:text-xl 4xl:text-2xl font-medium">{t('hero.cta_quote')}</span>
                 <span className="flex items-center justify-center w-10 h-10 3xl:w-12 3xl:h-12 bg-white rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.6)] group-hover:animate-pulse shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4),_inset_-2px_-2px_5px_rgba(0,0,0,0.1)] active:shadow-inner active:scale-90">
                   <ChevronRight className="text-[#FE5C02] w-5 h-5 3xl:w-6 3xl:h-6" />
                 </span>
@@ -157,7 +159,7 @@ const Hero = () => {
                 </div>
                 <div>
                   <div className="text-lg md:text-2xl 3xl:text-4xl font-bold text-slate-900 dark:text-white">GMP</div>
-                  <div className="text-[9px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">Certified Unit</div>
+                  <div className="text-[9px] md:text-xs 3xl:text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('hero.gmp_certified')}</div>
                 </div>
               </div>
             </div>

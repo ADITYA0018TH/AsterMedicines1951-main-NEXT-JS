@@ -1,10 +1,11 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "framer-motion"
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowUp, Heart, MapPin, Phone, Mail } from "lucide-react"
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowUp, Heart, MapPin, Phone, Mail, Globe, Check, ChevronUp } from "lucide-react"
 import { useRef, useState } from "react"
 import Link from "next/link"
 import { useSettings } from "@/context/SettingsContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface FooterProps {
   setCursorVariant?: (variant: "default" | "text" | string) => void
@@ -14,6 +15,13 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   const containerRef = useRef<HTMLElement>(null)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const { settings } = useSettings();
+  const { language, setLanguage, t } = useLanguage();
+  const [isLangOpen, setIsLangOpen] = useState(false)
+
+  const languages = [
+    { code: "en", label: "English", flag: "🇺🇸" },
+    { code: "hi", label: "Hindi", flag: "🇮🇳" }
+  ]
 
   const socialLinks = [
     { icon: Facebook, href: settings.social.facebook, label: "Facebook" },
@@ -93,7 +101,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
               <h3 className="text-3xl font-black tracking-tighter">
                 <span className="text-brand-accent">ASTER</span>
                 <br />
-                <span className="text-foreground">MEDICINES</span>
+                <span className="text-foreground">{t('footer.brand_sub')}</span>
               </h3>
               <motion.div
                 className="absolute -bottom-2 left-0 h-[3px] bg-gradient-to-r from-brand-accent to-transparent"
@@ -104,8 +112,8 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
             </motion.div>
 
             <p className="text-muted-foreground text-sm leading-relaxed font-mono">
-              Advancing global health with high-quality pharmaceutical solutions.
-              <span className="text-brand-accent block mt-2 font-bold">Trusted since 1982.</span>
+              {t('footer.tagline')}
+              <span className="text-brand-accent block mt-2 font-bold">{t('footer.trusted')}</span>
             </p>
 
             {/* Status indicator */}
@@ -117,13 +125,13 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                 }}
                 transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
               />
-              <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Serving Humanity</span>
+              <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">{t('footer.status')}</span>
             </div>
           </div>
 
           {/* Column 2: Navigation */}
           <div className="lg:pl-8">
-            <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">Navigation</h4>
+            <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">{t('footer.nav_title')}</h4>
             <nav className="flex flex-col gap-4">
               {navLinks.map((link, index) => (
                 <motion.div
@@ -145,7 +153,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                     }}
                   >
                     <span className="text-muted-foreground text-sm font-medium transition-colors group-hover:text-brand-accent">
-                      {link.label}
+                      {t(`nav.${link.label.toLowerCase().replace(" ", "_")}`) === `nav.${link.label.toLowerCase().replace(" ", "_")}` ? link.label : t(`nav.${link.label.toLowerCase().replace(" ", "_")}`)}
                     </span>
                     <motion.span
                       className="text-brand-accent text-xs absolute -left-4"
@@ -165,7 +173,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
 
           {/* Column 3: Contact Info */}
           <div className="space-y-6">
-            <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">Contact</h4>
+            <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">{t('footer.contact_title')}</h4>
             <div className="space-y-6">
               {settings.contact.mapLink && (
                 <motion.a
@@ -249,7 +257,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
           {/* Column 4: Connect & Actions */}
           <div className="flex flex-col justify-between">
             <div>
-              <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">Connect</h4>
+              <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">{t('footer.connect_title')}</h4>
               <div className="flex gap-4 flex-wrap">
                 {socialLinks.map((social, index) => (
                   <motion.a
@@ -289,7 +297,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                 <ArrowUp className="w-4 h-4 text-muted-foreground group-hover:text-brand-accent transition-colors" aria-hidden="true" />
               </div>
               <span className="text-xs font-mono text-muted-foreground uppercase tracking-[0.2em] group-hover:text-brand-accent transition-colors">
-                Back to top
+                {t('footer.back_to_top')}
               </span>
             </motion.button>
           </div>
@@ -315,9 +323,9 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
             <span className="text-muted-foreground">©</span>
             <span>{new Date().getFullYear()}</span>
             <span className="text-muted-foreground">|</span>
-            <span>Aster Medicines PVT LTD</span>
+            <span>{t('footer.rights')}</span>
             <span className="text-muted-foreground">|</span>
-            <span>Crafted with</span>
+            <span>{t('footer.crafted')}</span>
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 0.6, repeat: Number.POSITIVE_INFINITY }}
@@ -326,8 +334,62 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
             </motion.span>
           </motion.p>
 
-          {/* Tech badges */}
+          {/* Tech badges & Language */}
           <div className="flex items-center gap-3">
+            {/* Language Selector */}
+            <div className="relative">
+              <motion.button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="flex items-center gap-2 px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border rounded bg-secondary/50 text-muted-foreground hover:border-brand-accent/50 hover:text-brand-accent transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Globe className="w-3 h-3" />
+                <span>{languages.find(l => l.code === language)?.label}</span>
+                <ChevronUp
+                  className={`w-3 h-3 transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`}
+                />
+              </motion.button>
+
+              <AnimatePresence>
+                {isLangOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsLangOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute bottom-full right-0 mb-2 w-32 bg-popover/95 backdrop-blur-md border border-border rounded-lg shadow-xl overflow-hidden z-50"
+                    >
+                      {languages.map((l) => (
+                        <button
+                          key={l.code}
+                          onClick={() => {
+                            setLanguage(l.code as any)
+                            setIsLangOpen(false)
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors ${language === l.code
+                            ? "bg-brand-accent/10 text-brand-accent"
+                            : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                            }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span>{l.flag}</span>
+                            <span className="font-medium">{l.label}</span>
+                          </span>
+                          {language === l.code && <Check className="w-3 h-3" />}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Separator */}
+            <div className="h-4 w-px bg-border hidden sm:block" />
+
             {["GMP Certified", "ISO 9001:2015"].map((tech, index) => (
               <motion.span
                 key={tech}
@@ -341,7 +403,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
                   boxShadow: "0 0 15px rgba(251, 146, 60, 0.1)"
                 }}
               >
-                {tech}
+                {tech === "GMP Certified" ? t('footer.badges.gmp') : t('footer.badges.iso')}
               </motion.span>
             ))}
           </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
 import VisitorTracker from "@/components/VisitorTracker";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -200,8 +201,10 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <JsonLd />
         <Providers>
-          <VisitorTracker />
-          {children}
+          <LanguageProvider>
+            <VisitorTracker />
+            {children}
+          </LanguageProvider>
         </Providers>
       </body>
     </html>
