@@ -159,10 +159,34 @@ export const metadata: Metadata = {
 
   // verification: {
   //   google: "YOUR_GOOGLE_VERIFICATION_CODE", // Add your Google Search Console verification code here
+  //   yandex: "yandex",
+  //   yahoo: "yahoo",
+  //   other: {
+  //     me: ["my-email", "my-link"],
+  //   },
   // },
+
+  category: 'pharmaceutical',
+
+  appleWebApp: {
+    title: 'Aster Medicines',
+    statusBarStyle: 'black-translucent',
+    startupImage: [
+      '/icon.png',
+    ],
+  },
+
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 
   alternates: {
     canonical: "https://astermedicines.com",
+    languages: {
+      'en-IN': 'https://astermedicines.com',
+    },
   },
 };
 

@@ -3,7 +3,10 @@ import { products, categories } from "./products";
 // ============================================================
 // ORGANIZATION - Accurate company details for brand searches
 // ============================================================
-export const organizationStructuredData = {
+// ============================================================
+// ORGANIZATION - Accurate company details for brand searches
+// ============================================================
+export const generateOrganizationData = (products: any[], categories: string[]) => ({
   "@type": "Organization",
   "@id": "https://astermedicines.com/#organization",
   "name": "Aster Medicines Pvt Ltd",
@@ -175,7 +178,7 @@ export const organizationStructuredData = {
         }))
     }))
   }
-};
+});
 
 // ============================================================
 // WEBSITE - For sitelinks search box in Google
@@ -202,7 +205,10 @@ export const websiteStructuredData = {
 // ============================================================
 // PRODUCT CATALOG - Real products for rich results
 // ============================================================
-export const productCatalogStructuredData = {
+// ============================================================
+// PRODUCT CATALOG - Real products for rich results
+// ============================================================
+export const generateProductCatalogData = (products: any[]) => ({
   "@type": "ItemList",
   "@id": "https://astermedicines.com/products/#itemlist",
   "name": "Aster Medicines Complete Product Catalog",
@@ -227,11 +233,13 @@ export const productCatalogStructuredData = {
         "@type": "Organization",
         "name": "Aster Medicines Pvt Ltd"
       },
-      ...(product.composition && { "additionalProperty": {
-        "@type": "PropertyValue",
-        "name": "Composition",
-        "value": product.composition
-      }}),
+      ...(product.composition && {
+        "additionalProperty": {
+          "@type": "PropertyValue",
+          "name": "Composition",
+          "value": product.composition
+        }
+      }),
       "offers": {
         "@type": "Offer",
         "url": `https://astermedicines.com/products/${product.id}`,
@@ -247,7 +255,7 @@ export const productCatalogStructuredData = {
       }
     }
   }))
-};
+});
 
 // ============================================================
 // FAQ - Comprehensive questions for FAQ rich results
@@ -427,7 +435,7 @@ export const patnaOfficeStructuredData = {
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 25.6154, 
+    "latitude": 25.6154,
     "longitude": 85.1485
   },
   "openingHoursSpecification": [

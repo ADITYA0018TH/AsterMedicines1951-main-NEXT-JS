@@ -2,6 +2,39 @@ import connectDB from '@/lib/db';
 import ProductModel from '@/models/Product';
 import { Product } from '@/types/product';
 
+
+function transformProduct(product: any): Product {
+  return {
+    id: product._id.toString(),
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    dosage: product.stock ? `${product.stock} ${product.stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
+    features: [
+      `Price: ₹${product.price}`,
+      `Category: ${product.category}`,
+      ...(product.featured ? ['Featured Product'] : []),
+      ...(product.isQualityAssured ? ['Quality Assured'] : []),
+      ...(product.isGmpCertified ? ['GMP Certified'] : []),
+      ...(product.isWhoApproved ? ['WHO Approved'] : [])
+    ],
+    images: product.images,
+    price: product.price,
+    availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
+    detailedDescription: product.description,
+    composition: product.composition || 'Available on request - Please contact for detailed composition information',
+    indications: product.indications || 'Please consult healthcare professional for indications and usage',
+    dosageInstructions: product.dosageInstructions || 'As prescribed by physician',
+    sideEffects: product.sideEffects || 'Consult your healthcare provider for potential side effects',
+    precautions: product.precautions || 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.',
+    isQualityAssured: product.isQualityAssured,
+    isGmpCertified: product.isGmpCertified,
+    isWhoApproved: product.isWhoApproved,
+    stock: product.stock,
+    featured: product.featured
+  };
+}
+
 export async function getProduct(id: string): Promise<Product | null> {
   try {
     await connectDB();
@@ -11,37 +44,7 @@ export async function getProduct(id: string): Promise<Product | null> {
       return null;
     }
 
-    const transformedProduct: Product = {
-      id: product._id.toString(),
-      name: product.name,
-      description: product.description,
-      category: product.category,
-      dosage: product.stock ? `${product.stock} ${product.stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
-      features: [
-        `Price: ₹${product.price}`,
-        `Category: ${product.category}`,
-        ...(product.featured ? ['Featured Product'] : []),
-        ...(product.isQualityAssured ? ['Quality Assured'] : []),
-        ...(product.isGmpCertified ? ['GMP Certified'] : []),
-        ...(product.isWhoApproved ? ['WHO Approved'] : [])
-      ],
-      images: product.images,
-      price: product.price,
-      availability: product.stock > 0 ? 'In Stock' : 'Out of Stock',
-      detailedDescription: product.description,
-      composition: product.composition || 'Available on request - Please contact for detailed composition information',
-      indications: product.indications || 'Please consult healthcare professional for indications and usage',
-      dosageInstructions: product.dosageInstructions || 'As prescribed by physician',
-      sideEffects: product.sideEffects || 'Consult your healthcare provider for potential side effects',
-      precautions: product.precautions || 'Keep out of reach of children. Store in a cool, dry place. Consult physician before use.',
-      isQualityAssured: product.isQualityAssured,
-      isGmpCertified: product.isGmpCertified,
-      isWhoApproved: product.isWhoApproved,
-      stock: product.stock,
-      featured: product.featured
-    };
-
-    return transformedProduct;
+    return transformProduct(product);
   } catch (error) {
     console.error('Error in getProduct:', error);
     throw error;
@@ -86,6 +89,17 @@ export async function getAllProducts(): Promise<{ id: string; updatedAt: Date }[
     }));
   } catch (error) {
     console.error('Error in getAllProducts:', error);
+    return [];
+  }
+}
+
+export async function getAllProductsFull(): Promise<Product[]> {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({});
+    return products.map(transformProduct);
+  } catch (error) {
+    console.error('Error in getAllProductsFull:', error);
     return [];
   }
 }
