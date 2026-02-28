@@ -86,7 +86,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const product = await getProduct(id);
 
   if (!product) {
-    notFound();
+    return notFound();
   }
 
   // Fetch related products for the section

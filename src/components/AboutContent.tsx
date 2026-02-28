@@ -214,13 +214,13 @@ const AboutContent = () => {
                     <div className="border-t border-border py-4 bg-secondary/50 backdrop-blur-sm relative z-10">
                         <div className="flex gap-12 text-xs font-mono uppercase text-muted-foreground overflow-hidden">
                             <div className="animate-marquee flex gap-12 whitespace-nowrap">
-                                <span>/// Third Party Manufacturing</span>
-                                <span>/// WHO-GMP Certified</span>
-                                <span>/// GLP Lab</span>
-                                <span>/// 12+ States Served</span>
-                                <span>/// 1.5M Daily Output</span>
-                                <span>/// Third Party Manufacturing</span>
-                                <span>/// WHO-GMP Certified</span>
+                                <span>{"///"} Third Party Manufacturing</span>
+                                <span>{"///"} WHO-GMP Certified</span>
+                                <span>{"///"} GLP Lab</span>
+                                <span>{"///"} 12+ States Served</span>
+                                <span>{"///"} 1.5M Daily Output</span>
+                                <span>{"///"} Third Party Manufacturing</span>
+                                <span>{"///"} WHO-GMP Certified</span>
                             </div>
                         </div>
                     </div>

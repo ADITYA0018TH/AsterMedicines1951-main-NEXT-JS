@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { ArrowLeft, Home, Search, Mail } from "lucide-react";
+import { Home, Search, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
@@ -16,16 +16,16 @@ const NotFound = () => {
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background text-foreground selection:bg-orange-500 selection:text-white">
-            
+
             {/* Background Grid Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-            
+
             {/* Ambient Glows */}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
             <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="relative z-10 max-w-2xl w-full mx-4 text-center">
-                
+
                 {/* 404 Glitch Effect */}
                 <div className="mb-8 relative inline-block group cursor-default">
                     <h1 className="text-9xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/20 leading-none select-none">
@@ -52,7 +52,7 @@ const NotFound = () => {
                             Return Home
                         </Button>
                     </Link>
-                    
+
                     <Link href="/products">
                         <Button size="lg" variant="outline" className="rounded-full border-border hover:bg-secondary gap-2 px-8">
                             <Search className="w-4 h-4" />
@@ -63,7 +63,7 @@ const NotFound = () => {
 
                 {/* Footer Help Link */}
                 <div className="mt-12 text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-                    Need urgent assistance? <Link href="/contact" className="text-orange-500 hover:underline font-medium inline-flex items-center gap-1">Contact Support <Mail className="w-3 h-3"/></Link>
+                    Need urgent assistance? <Link href="/contact" className="text-orange-500 hover:underline font-medium inline-flex items-center gap-1">Contact Support <Mail className="w-3 h-3" /></Link>
                 </div>
             </div>
         </div>

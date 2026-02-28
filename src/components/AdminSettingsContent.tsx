@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Save, Loader2, Globe, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube, AlertTriangle, Edit } from "lucide-react";
+import { Save, Loader2, Globe, Phone, Facebook, Twitter, Instagram, Linkedin, Youtube, AlertTriangle, Edit } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";

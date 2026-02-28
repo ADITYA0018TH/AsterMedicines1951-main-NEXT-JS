@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Hammer, HardHat, Settings } from "lucide-react";
+import { Hammer, Settings } from "lucide-react";
 
 export default function MaintenancePage() {
     return (

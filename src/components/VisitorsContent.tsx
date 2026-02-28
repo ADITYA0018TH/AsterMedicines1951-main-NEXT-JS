@@ -3,12 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, Clock, Globe, Laptop, MapPin, Monitor, Trash2, Search, Download, RefreshCw, BarChart2 } from "lucide-react";
+import { ArrowLeft, Clock, Globe, Laptop, MapPin, Monitor, Trash2, Search, Download } from "lucide-react";
 import Link from "next/link";
 import StatsCards from "@/components/StatsCards";
 import AnalyticsCharts from "@/components/AnalyticsCharts";
 import VisitorMap from "@/components/VisitorMap";
-import { DateRange } from "react-day-picker";
+
 
 interface Visitor {
     _id: string;

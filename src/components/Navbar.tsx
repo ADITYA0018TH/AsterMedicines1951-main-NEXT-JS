@@ -5,14 +5,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion"; // Removed AnimatePresence as it was used for the old menu
 import {
-  ChevronRight,
   Home,
   Package,
   Info,
   Mail
 } from "lucide-react"; // Added icons for the bottom bar
 import ThemeToggle from "./ThemeToggle";
-import Button3D from "@/components/ui/Button3D";
 import GlassSurface from "@/components/ui/GlassSurface";
 import { cn } from "@/lib/utils";
 

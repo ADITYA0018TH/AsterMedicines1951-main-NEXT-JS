@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { Plus, Pencil, Trash2, MessageSquare, ArrowLeft, Download, Upload, ChevronLeft, ChevronRight, FileDown } from "lucide-react";
+import { Plus, Pencil, Trash2, MessageSquare, ArrowLeft, Download, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -237,7 +237,7 @@ const AdminProductsContent = () => {
 
                         {isLoading ? (
                             <div className="text-center py-12">Loading products...</div>
-                        ) : products && products.length > 0 ? (
+                        ) : products.length > 0 ? (
                             <div className="rounded-lg overflow-x-auto glass-card">
                                 <Table>
                                     <TableHeader>

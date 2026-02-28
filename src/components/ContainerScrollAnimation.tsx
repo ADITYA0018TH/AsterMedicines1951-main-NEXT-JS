@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import { useTransform, motion, MotionValue } from "framer-motion";
 
 interface ContainerScrollProps {

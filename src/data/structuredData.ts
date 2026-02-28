@@ -1,4 +1,4 @@
-import { products, categories } from "./products";
+import { products } from "./products";
 
 // ============================================================
 // ORGANIZATION - Accurate company details for brand searches

@@ -20,7 +20,7 @@ const VisitorTracker = () => {
 
         const reportVisit = async () => {
             const currentPath = pathname || window.location.pathname || '/';
-            if (!currentPath) return; // Should not happen with fallback, but safety first
+
 
             try {
                 const res = await fetch('/api/track-visit', {

@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ContainerScroll } from "@/components/ContainerScrollAnimation";
-import { Sparkles, Zap, Shield, ArrowRight, Droplets } from "lucide-react";
+import { Zap, Shield, ArrowRight, Droplets } from "lucide-react";
 
 const ImageShowcaseSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);

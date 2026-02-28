@@ -32,12 +32,12 @@ export async function GET(request: Request) {
       ];
     }
 
-    if (status && status !== 'All') {
+    if (status !== 'All') {
       query.status = status;
     }
 
     const skip = (page - 1) * limit;
-    
+
     const [messages, total] = await Promise.all([
       Contact.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
       Contact.countDocuments(query)
@@ -59,30 +59,30 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-    try {
-        await connectDB();
-        const body = await request.json();
-        const { id, status } = body;
+  try {
+    await connectDB();
+    const body = await request.json();
+    const { id, status } = body;
 
-        if (!id || !status) {
-            return NextResponse.json({ message: 'ID and status are required' }, { status: 400 });
-        }
-
-        const updatedContact = await Contact.findByIdAndUpdate(
-            id, 
-            { status }, 
-            { new: true }
-        );
-
-        if (!updatedContact) {
-            return NextResponse.json({ message: 'Contact not found' }, { status: 404 });
-        }
-
-        return NextResponse.json({ message: 'Status updated', contact: updatedContact });
-    } catch (error) {
-        console.error('Error updating contact status:', error);
-        return NextResponse.json({ message: 'Error updating status' }, { status: 500 });
+    if (!id || !status) {
+      return NextResponse.json({ message: 'ID and status are required' }, { status: 400 });
     }
+
+    const updatedContact = await Contact.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedContact) {
+      return NextResponse.json({ message: 'Contact not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Status updated', contact: updatedContact });
+  } catch (error) {
+    console.error('Error updating contact status:', error);
+    return NextResponse.json({ message: 'Error updating status' }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -101,11 +101,11 @@ export async function POST(request: Request) {
     const validationResult = contactSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { message: 'Validation Error', errors: validationResult.error.format() }, 
+        { message: 'Validation Error', errors: validationResult.error.format() },
         { status: 400 }
       );
     }
-    
+
     const { firstName, lastName, email, mobileNumber, subject, message } = validationResult.data;
 
     const newContact = await Contact.create({
@@ -117,9 +117,9 @@ export async function POST(request: Request) {
       message
     });
 
-    return NextResponse.json({ 
-      message: 'Message sent successfully', 
-      contact: newContact 
+    return NextResponse.json({
+      message: 'Message sent successfully',
+      contact: newContact
     }, { status: 201 });
 
   } catch (error) {

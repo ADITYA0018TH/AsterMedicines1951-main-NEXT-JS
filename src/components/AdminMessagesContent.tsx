@@ -202,7 +202,7 @@ const AdminMessagesContent = () => {
     }
 
     const handleExport = () => {
-        if (!messages || messages.length === 0) return;
+        if (messages.length === 0) return;
 
         const data = messages.map((msg) => ({
             Date: format(new Date(msg.createdAt), "yyyy-MM-dd HH:mm:ss"),
@@ -271,39 +271,7 @@ const AdminMessagesContent = () => {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div
-                className="min-h-screen flex flex-col bg-background"
-            >
 
-                <Navbar />
-                <main className="flex-grow flex items-center justify-center">
-                    <div className="glass-card p-8">
-                        <p className="text-gray-900 dark:text-gray-100">Loading messages...</p>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div
-                className="min-h-screen flex flex-col bg-background"
-            >
-
-                <Navbar />
-                <main className="flex-grow flex items-center justify-center">
-                    <div className="glass-card p-8">
-                        <p className="text-red-600 dark:text-red-400">Error loading messages</p>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
 
     return (
         <div
@@ -331,7 +299,7 @@ const AdminMessagesContent = () => {
                                     </Button>
                                     <Button
                                         onClick={handleExport}
-                                        disabled={!messages || messages.length === 0}
+                                        disabled={messages.length === 0}
                                         className="button-primary flex items-center justify-center gap-2 w-full sm:w-auto"
                                     >
                                         <Download className="h-4 w-4" />
@@ -391,7 +359,7 @@ const AdminMessagesContent = () => {
                             </div>
                         </div>
 
-                        {messages && messages.length > 0 ? (
+                        {messages.length > 0 ? (
                             <div className="rounded-lg overflow-x-auto glass-card">
                                 <Table>
                                     <TableHeader>
