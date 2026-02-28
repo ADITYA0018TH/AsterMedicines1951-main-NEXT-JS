@@ -1,268 +1,252 @@
 # 🏥 Aster Medicines
 
-> A modern, premium web application for **Aster Medicines Pvt Ltd**, a WHO-GMP certified pharmaceutical manufacturer based in Bihar, India.
+Production-ready Next.js platform for **Aster Medicines Pvt Ltd**, combining a premium public pharmaceutical website with a protected admin workspace for operations.
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-96%25-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-16+-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://mongoosejs.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
 ---
 
-## 📋 Table of Contents
+## 📌 Table of Contents
 
 - [Overview](#-overview)
-- [Tech Stack](#-tech-stack)
-- [Features](#-features)
+- [Business Use Cases](#-business-use-cases)
+- [Feature Matrix](#-feature-matrix)
+- [Technology Stack](#-technology-stack)
+- [System Architecture](#-system-architecture)
+- [Request Lifecycle](#-request-lifecycle)
 - [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
+- [Local Development Setup](#-local-development-setup)
 - [Environment Variables](#-environment-variables)
-- [Available Scripts](#-scripts)
-- [API Reference](#-api-reference)
-- [Database Models](#-database-models)
+- [Scripts](#-scripts)
+- [Routes & API Contracts](#-routes--api-contracts)
+- [Auth & Access Control](#-auth--access-control)
+- [Data Models](#-data-models)
+- [SEO & Discoverability](#-seo--discoverability)
+- [Security Notes](#-security-notes)
+- [Deployment Checklist](#-deployment-checklist)
+- [Operational Runbook](#-operational-runbook)
+- [Troubleshooting](#-troubleshooting)
 - [Contributing](#-contributing)
-- [License](#-license)
+- [Support](#-support)
 
 ---
 
 ## 📖 Overview
 
-Aster Medicines is a comprehensive digital platform for a pharmaceutical manufacturing company. It serves as both a public-facing product catalog and an internal admin dashboard for managing products, customer inquiries, and visitor analytics.
+This repository powers the official digital surface for Aster Medicines with two primary experiences:
 
-### Key Highlights
-- ⚡ **High Performance**: Built with Next.js 16+ App Router & Turbopack
-- 🎨 **Modern Design**: Glassmorphism, GSAP animations, and dark mode
-- 🔒 **Secure Admin**: NextAuth.js protected admin panel
-- 📱 **Responsive**: Mobile-first design with optimized views
-- 🌐 **SEO Optimized**: Structured data (JSON-LD), dynamic sitemap, and robots.txt
-- 📊 **Visitor Analytics**: Real-time visitor tracking with device detection
+1. **Public Experience**
+   - Product discovery and detail pages
+   - Inquiry/contact flow with optional image upload
+   - SEO-ready metadata and schema rendering
 
----
+2. **Internal Admin Experience**
+   - Protected dashboard and product management
+   - Message and visitor analytics monitoring
+   - Global settings control (including maintenance mode)
 
-## 🚀 Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **Next.js 16** | React framework with App Router |
-| **TypeScript** | Type-safe development |
-| **Tailwind CSS** | Utility-first styling |
-| **GSAP** | Scroll-triggered animations |
-| **Framer Motion** | Component animations |
-| **MongoDB + Mongoose** | Database & ODM |
-| **NextAuth.js** | Authentication |
-| **Nodemailer** | Email notifications |
-| **ua-parser-js** | Visitor device detection |
-| **Lucide React** | Icon library |
-| **Sonner** | Toast notifications |
+The application uses the **Next.js App Router**, API route handlers, and **MongoDB/Mongoose** persistence.
 
 ---
 
-## 🎨 Features
+## 🎯 Business Use Cases
 
-### Public Pages
-- **Home**: Hero section, product showcase, pharmaceutical highlights
-- **Products**: Searchable catalog with category filters
-- **Product Detail**: Specifications, related products, comparison tool
-- **About**: Company manifesto, leadership profile, facility showcase
-- **Contact**: Inquiry form with image upload support
+### Marketing & lead generation
+- Showcase formulations and product categories
+- Collect structured inquiries from buyers/distributors
+- Improve discovery via rich metadata and sitemap support
 
-### Admin Dashboard
-- **Dashboard**: Overview with quick stats
-- **Products Management**: CRUD operations for product catalog
-- **Messages**: View and manage customer inquiries
-- **Visitor Logs**: Analytics with device, location, and ISP tracking
-- **Password Recovery**: Self-service password reset via email
+### Operations & governance
+- Manage product records without redeploying
+- Monitor website traffic sources and behavior
+- Pause public traffic during maintenance windows while allowing admin access
 
-### Technical Features
-- 🌓 **Dark/Light Mode**: System-aware theme toggle
-- 🔍 **SEO**: Dynamic meta tags, JSON-LD structured data
-- 📧 **Email**: Password reset flow with secure tokens
-- 📈 **Analytics**: Visitor tracking with geo-location
+### Support & continuity
+- Reset admin credentials via email workflow
+- Preserve centralized settings and contact touchpoints
+
+---
+
+## 🧩 Feature Matrix
+
+| Area | Capability | Audience |
+|------|------------|----------|
+| Website | Home/About/Contact/Products pages | Public |
+| Catalog | Category filtering + product detail route | Public |
+| Inquiries | Form submissions with optional images | Public |
+| Tracking | Visit logging with device/location metadata | Public + Admin insight |
+| Auth | Credential-based session with NextAuth | Admin |
+| Dashboard | Product CRUD, messages, visitor logs | Admin |
+| Settings | Maintenance mode and site-level configurations | Admin |
+
+---
+
+## 🚀 Technology Stack
+
+| Layer | Technology |
+|------|------------|
+| Framework | Next.js 16 (App Router) |
+| Frontend | React 19 + Tailwind CSS + Radix UI |
+| Language | TypeScript |
+| Data | MongoDB + Mongoose |
+| Auth | NextAuth.js |
+| Validation/Form | Zod + React Hook Form |
+| Motion | GSAP + Framer Motion |
+| Notifications | Sonner |
+| Email | Nodemailer (SMTP) |
+| Uploads | Cloudinary |
+| Device Parsing | ua-parser-js |
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    U[User Browser] --> N[Next.js App Router]
+    N --> A[API Route Handlers]
+    A --> M[(MongoDB)]
+    A --> C[Cloudinary]
+    A --> S[SMTP Provider]
+    N --> X[NextAuth Session Layer]
+```
+
+### Key architectural characteristics
+- **Single codebase** serving both public and admin surfaces.
+- **Server-first routing** with API handlers under `src/app/api`.
+- **Model-driven persistence** through Mongoose schemas.
+- **External integration edges** for media upload and email delivery.
+
+---
+
+## 🔄 Request Lifecycle
+
+### Public browse flow
+1. User opens `/products`.
+2. Frontend fetches product listing from `/api/products`.
+3. API queries MongoDB and returns transformed product payload.
+4. User navigates to `/products/[id]` for detailed view.
+
+### Inquiry submission flow
+1. User fills contact form.
+2. Optional files are uploaded through `/api/upload`.
+3. Contact payload is submitted to `/api/contact`.
+4. Message is persisted and becomes visible in admin messages.
+
+### Admin login flow
+1. Admin opens obfuscated route `/7061452180`.
+2. Credentials are validated via NextAuth handlers.
+3. Session is established and protected admin routes unlock.
 
 ---
 
 ## 📂 Project Structure
 
-```
-AsterMedicines1951-main-NEXT-JS/
-│
-├── public/                         # Static assets
-│   ├── uploads/                    # Product images
-│   ├── og-image.webp               # Open Graph image
-│   ├── icon.png                    # Favicon source
-│   └── apple-touch-icon.png
-│
-├── src/
-│   ├── app/                        # Next.js App Router
-│   │   ├── layout.tsx              # Root layout with SEO metadata
-│   │   ├── page.tsx                # Home page
-│   │   ├── globals.css             # Global styles
-│   │   ├── not-found.tsx           # 404 page
-│   │   ├── loading.tsx             # Loading state
-│   │   ├── robots.ts               # Dynamic robots.txt
-│   │   ├── sitemap.ts              # Dynamic sitemap
-│   │   ├── manifest.ts             # PWA manifest
-│   │   │
-│   │   ├── about/                  # About page
-│   │   ├── contact/                # Contact page
-│   │   ├── products/               # Product catalog
-│   │   │   └── [slug]/             # Product detail (dynamic)
-│   │   │
-│   │   ├── 7061452180/             # Admin login (obfuscated URL)
-│   │   ├── forgot-password/        # Password reset request
-│   │   ├── reset-password/         # Password reset form
-│   │   │
-│   │   ├── admin/                  # Protected admin area
-│   │   │   ├── dashboard/
-│   │   │   ├── products/
-│   │   │   ├── messages/
-│   │   │   └── visitors/
-│   │   │
-│   │   └── api/                    # API Routes
-│   │       ├── auth/               # NextAuth endpoints
-│   │       │   ├── [...nextauth]/  # Auth handler
-│   │       │   ├── forgot-password/
-│   │       │   └── reset-password/
-│   │       ├── products/           # Product CRUD
-│   │       ├── categories/         # Category list
-│   │       ├── contact/            # Contact form submission
-│   │       ├── admin/              # Admin-only endpoints
-│   │       │   └── visitors/       # Visitor logs API
-│   │       ├── track-visit/        # Visitor tracking
-│   │       └── upload/             # File upload handler
-│   │
-│   ├── components/                 # React Components
-│   │   ├── ui/                     # Base UI components (22 files)
-│   │   │   ├── button.tsx, card.tsx, input.tsx, ...
-│   │   │   ├── Button3D.tsx        # 3D button effect
-│   │   │   ├── GlassSurface.tsx    # Glassmorphism component
-│   │   │   └── MagicBento.tsx      # Bento grid layout
-│   │   │
-│   │   ├── Navbar.tsx              # Main navigation
-│   │   ├── Footer.tsx              # Site footer
-│   │   ├── ThemeToggle.tsx         # Dark/Light mode switch
-│   │   │
-│   │   ├── HomeContent.tsx         # Home page content
-│   │   ├── AboutContent.tsx        # About page content
-│   │   ├── ContactContent.tsx      # Contact page content
-│   │   ├── ProductsContent.tsx     # Product catalog
-│   │   ├── ProductDetailContent.tsx# Product detail page
-│   │   ├── LoginContent.tsx        # Login form
-│   │   │
-│   │   ├── Hero.tsx                # Home hero section
-│   │   ├── Features.tsx            # Features grid
-│   │   ├── PharmaceuticalSection.tsx
-│   │   ├── ImageShowcaseSection.tsx
-│   │   ├── VideoShowcase.tsx
-│   │   ├── FAQSection.tsx
-│   │   ├── Newsletter.tsx
-│   │   ├── BulkInquiryForm.tsx
-│   │   │
-│   │   ├── AdminDashboardContent.tsx
-│   │   ├── AdminProductsContent.tsx
-│   │   ├── AdminProductForm.tsx
-│   │   ├── AdminMessagesContent.tsx
-│   │   ├── VisitorsContent.tsx     # Visitor analytics table
-│   │   ├── StatsCards.tsx          # Analytics stats
-│   │   │
-│   │   ├── VisitorTracker.tsx      # Client-side tracking
-│   │   ├── Providers.tsx           # App providers wrapper
-│   │   ├── JsonLd.tsx              # SEO structured data
-│   │   └── ScrollReveal.tsx        # Animation wrapper
-│   │
-│   ├── models/                     # Mongoose Schemas
-│   │   ├── Product.ts              # Product schema
-│   │   ├── Contact.ts              # Contact message schema
-│   │   ├── User.ts                 # Admin user schema
-│   │   └── Visitor.ts              # Visitor log schema
-│   │
-│   ├── lib/                        # Core libraries
-│   │   ├── db.ts                   # MongoDB connection
-│   │   └── utils.ts                # Utility functions
-│   │
-│   ├── hooks/                      # Custom React Hooks
-│   │   ├── use-mobile.tsx          # Mobile detection
-│   │   ├── use-toast.ts            # Toast notifications
-│   │   ├── useClickOutside.ts      # Click outside handler
-│   │   └── useRecentlyViewed.ts    # Product history
-│   │
-│   ├── services/                   # API Services
-│   │   └── api.ts                  # Fetch utilities
-│   │
-│   ├── types/                      # TypeScript Types
-│   │   └── [type definitions]
-│   │
-│   ├── utils/                      # Utilities
-│   │   ├── animations.ts           # Animation presets
-│   │   └── schemaGenerators.ts     # SEO schema helpers
-│   │
-│   └── proxy.ts                    # NextAuth middleware config
-│
-├── next.config.ts                  # Next.js configuration
-├── tailwind.config.ts              # Tailwind CSS config
-├── tsconfig.json                   # TypeScript config
-├── package.json                    # Dependencies
-└── .env                            # Environment variables
+```text
+src/
+├── app/                      # App Router pages + API handlers
+│   ├── api/                  # auth, products, contact, settings, upload, track-visit
+│   ├── admin/                # protected admin pages
+│   ├── products/             # list + dynamic detail route
+│   ├── maintenance/          # maintenance page
+│   └── layout.tsx            # root app layout + metadata base
+├── components/               # feature components and reusable UI
+│   └── ui/                   # shared primitives
+├── context/                  # global providers
+├── hooks/                    # custom hooks
+├── lib/                      # db, mail, shared server utilities
+├── models/                   # mongoose schemas
+├── services/                 # API client helper(s)
+├── types/                    # type declarations
+└── utils/                    # schema and animation helpers
 ```
 
 ---
 
-## 🛠️ Getting Started
+## 🛠️ Local Development Setup
 
 ### Prerequisites
-- Node.js 18.17+
-- npm or yarn
-- MongoDB Atlas account (or local MongoDB)
+- Node.js **18.17+** (latest LTS recommended)
+- npm
+- MongoDB Atlas project (or local MongoDB)
 
-### Installation
+### 1) Clone & install
 
 ```bash
-# Clone the repository
 git clone https://github.com/ADITYA0018TH/AsterMedicines1951-main-NEXT-JS.git
 cd AsterMedicines1951-main-NEXT-JS
-
-# Install dependencies
 npm install --legacy-peer-deps
+```
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
+### 2) Configure environment
 
-# Run development server
+Create `.env.local` at project root and add required values.
+
+### 3) Run development server
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open `http://localhost:3000`.
+
+### 4) Lint before PR
+
+```bash
+npm run lint
+```
 
 ---
 
 ## 🔐 Environment Variables
 
-Create a `.env` file in the root directory:
+### Complete reference
+
+| Variable | Required | Purpose |
+|---------|----------|---------|
+| `MONGODB_URI` | ✅ | Database connection URI |
+| `NEXTAUTH_SECRET` | ✅ (prod) | Auth/session encryption secret |
+| `NEXTAUTH_URL` | ✅ (prod) | Absolute app URL for NextAuth callbacks |
+| `JWT_SECRET` | Optional fallback | Secondary auth secret fallback |
+| `ADMIN_EMAIL` | ✅ | Admin credential email |
+| `ADMIN_PASSWORD` | ✅ | Admin credential password |
+| `SMTP_HOST` | ✅ (email flow) | SMTP server host |
+| `SMTP_PORT` | ✅ (email flow) | SMTP server port |
+| `SMTP_USER` | ✅ (email flow) | SMTP username |
+| `SMTP_PASSWORD` | ✅ (email flow) | SMTP password/app password |
+| `SMTP_FROM` | Optional | Outbound sender identity |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | ✅ (uploads) | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | ✅ (uploads) | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | ✅ (uploads) | Cloudinary API secret |
+| `NEXT_PUBLIC_APP_URL` | Optional | Public base URL helper |
+| `VERCEL_URL` | Auto | Runtime host on Vercel |
+
+### Example `.env.local`
 
 ```env
-# MongoDB
-MONGODB_URI=mongodb+srv://...
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/aster
 
-# NextAuth
-NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_SECRET=replace_with_long_random_secret
 NEXTAUTH_URL=http://localhost:3000
+JWT_SECRET=replace_with_another_random_secret
 
-# Admin Credentials
 ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=securepassword
+ADMIN_PASSWORD=change_this_now
 
-# JWT
-JWT_SECRET=your-jwt-secret
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=mailer@example.com
+SMTP_PASSWORD=app_password_here
+SMTP_FROM="Aster Medicines <mailer@example.com>"
 
-# Email (Nodemailer)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-EMAIL_FROM=noreply@astermedicines.com
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud
+CLOUDINARY_API_KEY=your_key
+CLOUDINARY_API_SECRET=your_secret
 
-# App URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
@@ -270,141 +254,224 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ## 📜 Scripts
 
-| Script | Command | Description |
-|--------|---------|-------------|
-| **dev** | `npm run dev` | Start development server (Turbopack) |
-| **build** | `npm run build` | Create production build |
-| **start** | `npm run start` | Run production server |
-| **lint** | `npm run lint` | Run ESLint |
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build production bundle |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint checks |
 
 ---
 
-## 🔌 API Reference
+## 🧭 Routes & API Contracts
 
-### Public Endpoints
+### App Routes
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/products` | List all products |
-| GET | `/api/products/[slug]` | Get product by slug |
-| GET | `/api/categories` | List all categories |
-| POST | `/api/contact` | Submit contact form |
-| POST | `/api/track-visit` | Log visitor data |
+| Route | Description |
+|------|-------------|
+| `/` | Home page |
+| `/about` | About page |
+| `/contact` | Contact/inquiry page |
+| `/products` | Product listing |
+| `/products/[id]` | Product detail |
+| `/7061452180` | Admin login |
+| `/admin/dashboard` | Admin overview |
+| `/admin/products` | Product management |
+| `/admin/messages` | Inquiry/message management |
+| `/admin/visitors` | Visitor analytics |
+| `/admin/settings` | Site settings |
+| `/forgot-password` | Reset request |
+| `/reset-password` | Reset completion |
+| `/maintenance` | Maintenance splash page |
 
-### Auth Endpoints
+### API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/callback/credentials` | Login |
-| GET | `/api/auth/session` | Get session |
-| POST | `/api/auth/forgot-password` | Request password reset |
-| POST | `/api/auth/reset-password` | Reset password |
+| Method | Endpoint | Purpose |
+|-------|----------|---------|
+| `GET` | `/api/products` | List products (supports `category`, `page`, `limit`) |
+| `POST` | `/api/products` | Create product (single or bulk) |
+| `GET` | `/api/products/[id]` | Fetch product by id |
+| `PUT` | `/api/products/[id]` | Update product |
+| `DELETE` | `/api/products/[id]` | Delete product |
+| `GET` | `/api/categories` | List categories |
+| `POST` | `/api/contact` | Save inquiry payload |
+| `POST` | `/api/track-visit` | Save visitor tracking event |
+| `POST` | `/api/upload` | Upload image assets |
+| `GET / PUT` | `/api/settings` | Fetch/update settings |
+| `GET / DELETE` | `/api/admin/visitors` | Fetch/delete visitor logs |
+| `POST` | `/api/auth/forgot-password` | Generate reset token and mail |
+| `POST` | `/api/auth/reset-password` | Reset password via token |
+| `GET / POST` | `/api/auth/*` | NextAuth endpoint surface |
 
-### Admin Endpoints (Protected)
+### API Examples
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/visitors` | Get visitor logs |
-| DELETE | `/api/admin/visitors` | Delete visitor logs |
-| POST | `/api/products` | Create product |
-| PUT | `/api/products/[id]` | Update product |
-| DELETE | `/api/products/[id]` | Delete product |
+### List products by category
 
----
+```http
+GET /api/products?category=Antibiotics&page=1&limit=20
+```
 
-## 🗃️ Database Models
+### Create product
 
-### Product
-```typescript
+```http
+POST /api/products
+Content-Type: application/json
+
 {
-  name: string;
-  slug: string;
-  category: string;
-  description: string;
-  composition: string;
-  packaging: string;
-  therapeutic: string[];
-  images: string[];
-  featured: boolean;
+  "name": "Azithromycin 500",
+  "description": "Macrolide antibiotic tablet",
+  "price": 120,
+  "category": "Antibiotics",
+  "images": ["https://..."],
+  "stock": 100,
+  "featured": true
 }
 ```
 
-### Visitor
-```typescript
-{
-  ip: string;
-  userAgent: string;
-  device: string;          // Parsed device name
-  path: string;
-  location: { city, country, region };
-  isp: string;
-  coordinates: { lat, lon };
-  screenResolution: string;
-  language: string;
-  visitedAt: Date;
-}
-```
+### Visitor analytics query
 
-### User
-```typescript
-{
-  email: string;
-  password: string;        // Hashed with bcrypt
-  role: 'admin';
-  resetPasswordToken?: string;
-  resetPasswordExpires?: Date;
-}
-```
-
-### Contact
-```typescript
-{
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  message: string;
-  images: string[];
-  createdAt: Date;
-}
+```http
+GET /api/admin/visitors?page=1&limit=50&excludeBots=true&search=india
 ```
 
 ---
 
-## 🔒 Security
+## 🔐 Auth & Access Control
 
-- ✅ Password hashing with bcrypt
-- ✅ JWT-based authentication
-- ✅ Protected admin routes via middleware
-- ✅ CSRF protection via NextAuth
-- ✅ Input validation
-- ✅ Obfuscated admin login URL
+### Roles
+- **Public**: can browse pages and submit inquiries.
+- **Admin**: authenticated user with access to `/admin/*` and admin APIs.
+
+### Access behavior summary
+- Admin entry point is intentionally non-obvious: `/7061452180`.
+- Session auth is managed with NextAuth credentials strategy.
+- Password reset uses token + expiry fields on user records.
+- Maintenance mode keeps admin/service routes usable while public routes redirect.
+
+---
+
+## 🗃️ Data Models
+
+Core models in `src/models`:
+
+- `Product`
+  - Commercial + content fields: name, category, description, images, price, stock
+  - Additional quality flags and detail attributes
+
+- `Contact`
+  - Inquiry metadata: name, email, phone, company, message, attachments
+
+- `User`
+  - Admin identity, hashed password, reset token/expiry lifecycle
+
+- `Visitor`
+  - Request metadata: path, ip, browser, os, location, timestamps, bot signals
+
+- `Settings`
+  - Site-level configuration including maintenance mode and contact config
+
+---
+
+## 🔎 SEO & Discoverability
+
+- Dynamic metadata from App Router page surfaces
+- Sitemap generation and robots route integration
+- JSON-LD schema helpers for richer search engine understanding
+- Product/detail route strategy designed for direct indexing
+
+---
+
+## 🔒 Security Notes
+
+- NextAuth credential flow for controlled admin access
+- `bcrypt` hashing for persisted passwords
+- Admin-only route/API segregation
+- Password reset token lifecycle with expiry
+- Sensitive credentials isolated in environment variables
+
+> Production recommendation: rotate secrets periodically and avoid weak defaults.
+
+---
+
+## ✅ Deployment Checklist
+
+- [ ] All required environment variables set in target environment
+- [ ] `NEXTAUTH_URL` matches final domain exactly
+- [ ] MongoDB network + user permissions restricted
+- [ ] SMTP validated with real mailbox test
+- [ ] Cloudinary credentials validated (if uploads enabled)
+- [ ] `npm run build` passes locally and in CI
+- [ ] Core smoke test complete: login, product CRUD, contact, visitor logging
+
+---
+
+## 🧰 Operational Runbook
+
+### Enable maintenance mode
+1. Sign in as admin.
+2. Open Settings page.
+3. Toggle maintenance mode ON.
+4. Validate public routes redirect to `/maintenance`.
+
+### Verify post-deploy health
+1. Open homepage and one product detail route.
+2. Submit a contact inquiry.
+3. Confirm message appears in admin.
+4. Open visitor analytics and verify fresh visit entry.
+
+### Recover admin access
+1. Use Forgot Password flow.
+2. Confirm reset email delivery.
+3. Complete token-based reset.
+4. Re-login and invalidate old sessions if needed.
+
+---
+
+## 🧯 Troubleshooting
+
+### Login/session issues
+- Validate `NEXTAUTH_SECRET` and `NEXTAUTH_URL`.
+- Confirm system/server clocks are accurate.
+- Clear browser cookies and re-authenticate.
+
+### Mongo connection failures
+- Re-check `MONGODB_URI` format and credentials.
+- Ensure IP allowlist and cluster access rules are correct.
+- Verify application user has read/write privileges.
+
+### Password reset emails not sent
+- Validate all `SMTP_*` values.
+- Check provider restrictions/rate limits.
+- For Gmail SMTP, ensure app password usage.
+
+### Upload failures
+- Confirm all Cloudinary variables are set and valid.
+- Verify server-side API key/secret pair in deployment environment.
+
+### Missing analytics rows
+- Ensure `/api/track-visit` calls are not blocked by middleware or ad blockers.
+- Confirm visitor records are not filtered out by current dashboard filters.
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Create a dedicated feature/fix branch.
+2. Keep changes scoped and production-safe.
+3. Run lint and basic manual checks.
+4. Update docs for behavior/schema/API changes.
+5. Open PR with summary + verification notes.
 
 ---
 
-## 📄 License
+## 📬 Support
 
-This project is licensed under the MIT License.
-
----
-
-## 📧 Contact
-
-- **Website**: [astermedicines.com](https://www.astermedicines.com)
-- **Email**: support@astermedicines.com
+- Website: https://www.astermedicines.com
+- Email: support@astermedicines.com
 
 ---
 
-**Made with ❤️ by Aster Medicines Team**
+## 📝 Notes
 
-*Last Updated: February 4, 2026*
+- README state synced with repository on **2026-02-28**.
+- If route contracts or env variables change, update this file in the same PR.
