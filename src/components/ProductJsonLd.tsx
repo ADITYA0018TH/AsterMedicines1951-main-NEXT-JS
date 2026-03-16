@@ -1,4 +1,5 @@
 import React from 'react';
+import { getProductPath } from '@/lib/productSlug';
 
 interface ProductJsonLdProps {
   product: {
@@ -22,6 +23,8 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
       ? product.image
       : `https://astermedicines.com${product.image.startsWith('/') ? product.image : '/' + product.image}`)
     : "https://astermedicines.com/og-image.webp";
+
+  const productUrl = `https://astermedicines.com${getProductPath(product)}`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -70,7 +73,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
 
     "offers": {
       "@type": "Offer",
-      "url": `https://astermedicines.com/products/${product.id}`,
+      "url": productUrl,
       "priceCurrency": "INR",
       "price": "0",
       "priceValidUntil": "2027-12-31",

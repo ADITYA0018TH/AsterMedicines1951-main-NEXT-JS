@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Product from '@/models/Product';
-import { getProduct } from '@/lib/products';
+import { generateUniqueProductSlug, getProduct } from '@/lib/products';
 import { z } from 'zod';
 import {
   isValidObjectId,
@@ -55,10 +55,6 @@ export async function GET(
   try {
     const { id } = await params;
 
-    if (!isValidObjectId(id)) {
-      return NextResponse.json({ message: 'Invalid product id' }, { status: 400 });
-    }
-
     const product = await getProduct(id);
 
     if (!product) {
@@ -93,9 +89,14 @@ export async function PUT(
       );
     }
 
+    const updatePayload: Record<string, unknown> = { ...parsedUpdates.data };
+    if (typeof parsedUpdates.data.name === 'string' && parsedUpdates.data.name) {
+      updatePayload.slug = await generateUniqueProductSlug(parsedUpdates.data.name, id);
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { $set: parsedUpdates.data },
+      { $set: updatePayload },
       { new: true, runValidators: true }
     );
 

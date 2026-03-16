@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Product from '@/models/Product';
+import { generateUniqueProductSlug } from '@/lib/products';
+import { getProductSlug } from '@/lib/productSlug';
 import { z } from 'zod';
 import {
   sanitizeAssetPath,
@@ -76,7 +78,8 @@ export async function GET(request: Request) {
 
     const transformedProducts = products.map(product => ({
       _id: product._id,
-      id: product._id,
+      id: product._id.toString(),
+      slug: getProductSlug({ name: product.name, slug: product.slug }),
       name: product.name,
       description: product.description,
       category: product.category,
@@ -140,7 +143,16 @@ export async function POST(request: Request) {
           );
         }
 
-        const newProducts = await Product.insertMany(parsedBulkProducts.data, { ordered: false });
+        const reservedSlugs = new Set<string>();
+        const productsWithSlugs = [];
+
+        for (const product of parsedBulkProducts.data) {
+          const slug = await generateUniqueProductSlug(product.name, undefined, reservedSlugs);
+          reservedSlugs.add(slug);
+          productsWithSlugs.push({ ...product, slug });
+        }
+
+        const newProducts = await Product.insertMany(productsWithSlugs, { ordered: false });
         return NextResponse.json({ message: 'Products created successfully', products: newProducts, count: newProducts.length }, { status: 201 });
     }
 
@@ -158,7 +170,10 @@ export async function POST(request: Request) {
       isQualityAssured, isGmpCertified, isWhoApproved,
     } = parsedProduct.data;
 
+    const slug = await generateUniqueProductSlug(name);
+
     const newProduct = await Product.create({
+      slug,
       name,
       description,
       price,

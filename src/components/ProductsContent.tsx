@@ -17,6 +17,7 @@ import {
 import { Product } from "@/data/products";
 import { fetchProducts, fetchCategories } from "@/services/api";
 import { cn } from "@/lib/utils";
+import { getProductPath } from "@/lib/productSlug";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import gsap from "gsap";
@@ -300,7 +301,7 @@ const ProductsContent = () => {
                                                 <div className="relative mb-4">
                                                     {/* Card Image Area */}
                                                     <Link
-                                                        href={`/products/${product.id}`}
+                                                        href={getProductPath(product)}
                                                         className="block aspect-[4/3] bg-white dark:bg-secondary/10 border border-border/60 rounded-xl overflow-hidden relative shadow-sm transition-all duration-500 hover:shadow-xl hover:border-brand-accent/30"
                                                     >
                                                         <ProductImage src={product.images?.[0] || ""} alt={product.name} />
@@ -340,7 +341,7 @@ const ProductsContent = () => {
                                                 {/* Card Content */}
                                                 <div className="px-1">
                                                     <div className="flex justify-between items-start mb-1">
-                                                        <Link href={`/products/${product.id}`} className="font-bold text-lg text-foreground hover:text-brand-accent transition-colors line-clamp-1">
+                                                        <Link href={getProductPath(product)} className="font-bold text-lg text-foreground hover:text-brand-accent transition-colors line-clamp-1">
                                                             {product.name}
                                                         </Link>
                                                     </div>

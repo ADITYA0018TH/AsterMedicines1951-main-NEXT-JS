@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/products";
+import { getProductPath } from "@/lib/productSlug";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://astermedicines.com";
@@ -18,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate product URLs
   const productUrls = dbProducts.map((product) => ({
-    url: `${baseUrl}/products/${product.id}`,
+    url: `${baseUrl}${getProductPath(product)}`,
     lastModified: product.updatedAt,
     changeFrequency: "weekly" as const,
     priority: 0.7,

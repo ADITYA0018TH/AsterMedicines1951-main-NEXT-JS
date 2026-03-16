@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ProductDetailContent from "@/components/ProductDetailContent";
 import { getProduct, getRelatedProducts } from "@/lib/products";
 import ProductJsonLd from "@/components/ProductJsonLd";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
+import { getProductPath, getProductSlug, normalizeProductRouteSegment } from "@/lib/productSlug";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -22,6 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const mainImage = product.images?.[0] || "/og-image.webp";
+  const productPath = getProductPath(product);
+  const productUrl = `https://astermedicines.com${productPath}`;
 
   // Build a comprehensive description pulling in every searchable field
   const descParts = [
@@ -59,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${product.name} — ${product.category} | Aster Medicines`,
       description: product.detailedDescription || product.description || `WHO-GMP Certified ${product.name} manufactured by Aster Medicines Pvt Ltd.`,
-      url: `https://astermedicines.com/products/${id}`,
+      url: productUrl,
       images: [
         {
           url: mainImage,
@@ -76,7 +79,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [mainImage],
     },
     alternates: {
-      canonical: `https://astermedicines.com/products/${id}`,
+      canonical: productUrl,
     },
   };
 }
@@ -87,6 +90,12 @@ export default async function ProductDetailPage({ params }: Props) {
 
   if (!product) {
     return notFound();
+  }
+
+  const routeSegment = normalizeProductRouteSegment(id);
+  const canonicalSegment = getProductSlug(product);
+  if (routeSegment !== canonicalSegment) {
+    redirect(getProductPath(product));
   }
 
   // Fetch related products for the section
@@ -112,7 +121,7 @@ export default async function ProductDetailPage({ params }: Props) {
           { name: "Home", item: "/" },
           { name: "Products", item: "/products" },
           { name: product.category, item: `/products?category=${encodeURIComponent(product.category)}` },
-          { name: product.name, item: `/products/${product.id}` },
+          { name: product.name, item: getProductPath(product) },
         ]}
       />
       <ProductDetailContent product={product} relatedProducts={relatedProducts} />

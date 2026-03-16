@@ -1,4 +1,5 @@
 import { products } from "./products";
+import { getProductPath } from "@/lib/productSlug";
 
 // ============================================================
 // ORGANIZATION - Accurate company details for brand searches
@@ -156,14 +157,14 @@ export const generateOrganizationData = (products: any[], categories: string[]) 
             "description": p.description,
             "image": p.images[0],
             "sku": String(p.id),
-            "url": `https://astermedicines.com/products/${p.id}`,
+            "url": `https://astermedicines.com${getProductPath(p)}`,
             "brand": {
               "@type": "Brand",
               "name": "Aster Medicines"
             },
             "offers": {
               "@type": "Offer",
-              "url": `https://astermedicines.com/products/${p.id}`,
+              "url": `https://astermedicines.com${getProductPath(p)}`,
               "availability": "https://schema.org/InStock",
               "priceCurrency": "INR",
               "price": "0",
@@ -224,7 +225,7 @@ export const generateProductCatalogData = (products: any[]) => ({
       "description": product.detailedDescription || product.description,
       "category": product.category,
       "image": product.images[0],
-      "url": `https://astermedicines.com/products/${product.id}`,
+      "url": `https://astermedicines.com${getProductPath(product)}`,
       "brand": {
         "@type": "Brand",
         "name": "Aster Medicines"
@@ -242,7 +243,7 @@ export const generateProductCatalogData = (products: any[]) => ({
       }),
       "offers": {
         "@type": "Offer",
-        "url": `https://astermedicines.com/products/${product.id}`,
+        "url": `https://astermedicines.com${getProductPath(product)}`,
         "priceCurrency": "INR",
         "price": "0",
         "priceValidUntil": "2027-12-31",

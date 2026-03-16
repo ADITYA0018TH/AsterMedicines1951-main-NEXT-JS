@@ -16,6 +16,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Product } from "@/types/product";
+import { getProductPath } from "@/lib/productSlug";
 
 interface ProductDetailContentProps {
     product: Product;
@@ -303,7 +304,7 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {relatedProducts.map((relatedProduct) => (
                             <Link
-                                href={`/products/${relatedProduct.id}`}
+                                href={getProductPath(relatedProduct)}
                                 key={relatedProduct.id}
                                 className="group block bg-slate-50 dark:bg-neutral-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-brand-accent/50 dark:hover:border-brand-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-brand-accent/5"
                             >
