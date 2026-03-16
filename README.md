@@ -232,7 +232,7 @@ MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/aster
 
 NEXTAUTH_SECRET=replace_with_long_random_secret
 NEXTAUTH_URL=http://localhost:3000
-JWT_SECRET=replace_with_another_random_secret
+JWT_SECRET=replace_with_another_random_secrett
 
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=change_this_now
