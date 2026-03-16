@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Visitor from '@/models/Visitor';
 import { UAParser } from 'ua-parser-js';
+import { z } from 'zod';
+import {
+    isValidObjectId,
+    normalizeString,
+    sanitizeIp,
+    sanitizePath,
+    sanitizeTextForStorage,
+    sanitizeUrl,
+} from '@/lib/inputSecurity';
 
 // Common bot patterns to check against User-Agent
 const BOT_PATTERNS = [
@@ -15,14 +24,34 @@ function isBot(userAgent: string): boolean {
   return BOT_PATTERNS.some(pattern => pattern.test(userAgent));
 }
 
+const trackVisitSchema = z.object({
+    path: z.string().min(1).max(512).transform((value) => sanitizePath(value)),
+    referrer: z.string().max(2048).optional().transform((value) => {
+        if (typeof value !== 'string') {
+            return undefined;
+        }
+
+        const sanitized = sanitizeUrl(value, 2048);
+        return sanitized || undefined;
+    }),
+    screenResolution: z.string().regex(/^\d{2,5}x\d{2,5}$/, 'Invalid resolution format').optional(),
+    language: z.string().regex(/^[a-zA-Z-]{2,15}$/, 'Invalid language format').optional(),
+}).strict();
+
+const updateVisitDurationSchema = z.object({
+    id: z.string().refine((value) => isValidObjectId(value), 'Invalid visitor id'),
+    timeSpent: z.preprocess((value) => Number(value), z.number().finite().min(0).max(86400)),
+}).strict();
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    const body = await req.json();
-    const { path, referrer, screenResolution, language } = body;
-    if (!path) {
-        return NextResponse.json({ error: 'Path is required' }, { status: 400 });
+        const parsedBody = trackVisitSchema.safeParse(await req.json());
+        if (!parsedBody.success) {
+            return NextResponse.json({ error: 'Validation failed', details: parsedBody.error.format() }, { status: 400 });
     }
+
+        const { path, referrer, screenResolution, language } = parsedBody.data;
 
     // Get IP address
     let ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');
@@ -30,12 +59,14 @@ export async function POST(req: NextRequest) {
     if (ip && ip.includes(',')) {
         ip = ip.split(',')[0].trim();
     }
+
+    ip = sanitizeIp(ip);
     
     if (!ip || ip === '::1') {
         ip = '127.0.0.1';
     }
 
-    const userAgent = req.headers.get('user-agent') || 'Unknown';
+    const userAgent = normalizeString(req.headers.get('user-agent') || 'Unknown', 512) || 'Unknown';
     
     // Parse User Agent
     const parser = new UAParser(userAgent);
@@ -69,15 +100,15 @@ export async function POST(req: NextRequest) {
     
     if (ip !== '127.0.0.1' && ip !== 'localhost') {
         try {
-            const locRes = await fetch(`http://ip-api.com/json/${ip}`);
+            const locRes = await fetch(`http://ip-api.com/json/${encodeURIComponent(ip)}`);
             const locData = await locRes.json();
             if (locData.status === 'success') {
                 location = {
-                    city: locData.city,
-                    country: locData.country,
-                    region: locData.regionName
+                    city: sanitizeTextForStorage(locData.city, 120),
+                    country: sanitizeTextForStorage(locData.country, 120),
+                    region: sanitizeTextForStorage(locData.regionName, 120)
                 };
-                isp = locData.isp;
+                isp = sanitizeTextForStorage(locData.isp, 200);
                 coordinates = {
                     lat: locData.lat,
                     lon: locData.lon
@@ -127,15 +158,15 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         await connectDB();
-        const body = await req.json();
-        const { id, timeSpent } = body;
-
-        if (!id || typeof timeSpent !== 'number') {
-             return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+        const parsedBody = updateVisitDurationSchema.safeParse(await req.json());
+        if (!parsedBody.success) {
+             return NextResponse.json({ error: 'Validation failed', details: parsedBody.error.format() }, { status: 400 });
         }
 
+        const { id, timeSpent } = parsedBody.data;
+
         await Visitor.findByIdAndUpdate(id, {
-            $inc: { timeSpent: timeSpent } // Increment existing time
+            $inc: { timeSpent: Math.trunc(timeSpent) } // Increment existing time
         });
 
         return NextResponse.json({ success: true });

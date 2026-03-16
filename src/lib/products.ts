@@ -2,6 +2,7 @@ import connectDB from '@/lib/db';
 import ProductModel from '@/models/Product';
 import { Product } from '@/types/product';
 import { products as staticProducts } from '@/data/products';
+import { isValidObjectId } from '@/lib/inputSecurity';
 
 
 function transformProduct(product: any): Product {
@@ -38,6 +39,10 @@ function transformProduct(product: any): Product {
 
 export async function getProduct(id: string): Promise<Product | null> {
   try {
+    if (!isValidObjectId(id)) {
+      return null;
+    }
+
     await connectDB();
     const product = await ProductModel.findById(id);
 
@@ -68,9 +73,13 @@ export async function getRelatedProducts(category: string, currentProductId: str
 
   try {
     await connectDB();
+    const query: Record<string, unknown> = { category };
+    if (isValidObjectId(currentProductId)) {
+      query._id = { $ne: currentProductId };
+    }
+
     const products = await ProductModel.find({
-      category,
-      _id: { $ne: currentProductId }
+      ...query,
     }).limit(limit);
 
     const dbRelated = products.map(product => ({

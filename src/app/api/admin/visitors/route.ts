@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Visitor from '@/models/Visitor';
+import {
+    escapeRegex,
+    isValidObjectId,
+    sanitizeSearchTerm,
+    toSafeInt,
+} from '@/lib/inputSecurity';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,11 +16,11 @@ export async function GET(req: NextRequest) {
     
     // Parse query params
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const page = toSafeInt(searchParams.get('page'), 1, 1, 10000);
+    const limit = toSafeInt(searchParams.get('limit'), 50, 1, 200);
     const skip = (page - 1) * limit;
 
-    const search = searchParams.get('search') || '';
+    const search = sanitizeSearchTerm(searchParams.get('search') || '', 100);
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
     const excludeBots = searchParams.get('excludeBots') === 'true';
@@ -28,12 +34,24 @@ export async function GET(req: NextRequest) {
 
     if (startDate || endDate) {
         matchQuery.visitedAt = {};
-        if (startDate) matchQuery.visitedAt.$gte = new Date(startDate);
-        if (endDate) matchQuery.visitedAt.$lte = new Date(endDate);
+        if (startDate) {
+            const parsedStartDate = new Date(startDate);
+            if (Number.isNaN(parsedStartDate.getTime())) {
+                return NextResponse.json({ error: 'Invalid startDate format' }, { status: 400 });
+            }
+            matchQuery.visitedAt.$gte = parsedStartDate;
+        }
+        if (endDate) {
+            const parsedEndDate = new Date(endDate);
+            if (Number.isNaN(parsedEndDate.getTime())) {
+                return NextResponse.json({ error: 'Invalid endDate format' }, { status: 400 });
+            }
+            matchQuery.visitedAt.$lte = parsedEndDate;
+        }
     }
 
     if (search) {
-        const searchRegex = { $regex: search, $options: 'i' };
+        const searchRegex = new RegExp(escapeRegex(search), 'i');
         matchQuery.$or = [
             { ip: searchRegex },
             { path: searchRegex },
@@ -156,6 +174,9 @@ export async function DELETE(req: NextRequest) {
         }
 
         if (id) {
+            if (!isValidObjectId(id)) {
+                return NextResponse.json({ error: 'Invalid visitor id' }, { status: 400 });
+            }
             await Visitor.findByIdAndDelete(id);
             return NextResponse.json({ success: true, message: 'Visitor deleted' });
         }

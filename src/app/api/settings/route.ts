@@ -1,6 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Settings from '@/models/Settings';
+import { z } from 'zod';
+import {
+  sanitizeAssetPath,
+  sanitizeEmail,
+  sanitizeTextForStorage,
+  sanitizeUrl,
+} from '@/lib/inputSecurity';
+
+const optionalText = (maxLength: number) =>
+  z.string().max(maxLength).optional().transform((value) => {
+    if (typeof value !== 'string') {
+      return undefined;
+    }
+    const sanitized = sanitizeTextForStorage(value, maxLength);
+    return sanitized || undefined;
+  });
+
+const optionalUrl = z.string().max(2048).optional().transform((value) => {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  const sanitized = sanitizeUrl(value, 2048);
+  return sanitized || undefined;
+});
+
+const optionalEmail = z.string().email('Invalid email address').optional().transform((value) => {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const sanitized = sanitizeEmail(value);
+  return sanitized || undefined;
+});
+
+const optionalAssetPath = z.string().max(255).optional().transform((value) => {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const assetPath = sanitizeAssetPath(value, 255);
+  const remoteUrl = sanitizeUrl(value, 255);
+  return assetPath || remoteUrl || undefined;
+});
+
+const settingsUpdateSchema = z.object({
+  contact: z.object({
+    phone: optionalText(32),
+    email: optionalEmail,
+    address: optionalText(500),
+    mapLink: optionalUrl,
+    supportEmail: optionalEmail,
+    hrEmail: optionalEmail,
+  }).partial().optional(),
+  social: z.object({
+    facebook: optionalUrl,
+    twitter: optionalUrl,
+    instagram: optionalUrl,
+    linkedin: optionalUrl,
+    youtube: optionalUrl,
+  }).partial().optional(),
+  maintenanceMode: z.boolean().optional(),
+  about: z.object({
+    founderImage: optionalAssetPath,
+  }).partial().optional(),
+  meta: z.object({
+    title: optionalText(180),
+    description: optionalText(500),
+  }).partial().optional(),
+}).strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required for update');
 
 export async function GET() {
   try {
@@ -41,10 +110,17 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   try {
     await connectDB();
-    const body = await req.json();
+    const parsedBody = settingsUpdateSchema.safeParse(await req.json());
+
+    if (!parsedBody.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsedBody.error.format() },
+        { status: 400 }
+      );
+    }
 
     // Update the single settings document (upsert ensures it's created if missing, though GET handles creation mainly)
-    const settings = await Settings.findOneAndUpdate({}, body, { 
+    const settings = await Settings.findOneAndUpdate({}, { $set: parsedBody.data }, {
       new: true, 
       upsert: true,
       setDefaultsOnInsert: true 

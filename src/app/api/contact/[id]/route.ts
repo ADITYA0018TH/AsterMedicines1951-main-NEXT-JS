@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Contact from '@/models/Contact';
+import { isValidObjectId } from '@/lib/inputSecurity';
 
 export async function DELETE(
   request: Request,
@@ -9,6 +10,13 @@ export async function DELETE(
   try {
     await connectDB();
     const { id } = await params;
+
+    if (!isValidObjectId(id)) {
+      return NextResponse.json(
+        { message: 'Invalid message id' },
+        { status: 400 }
+      );
+    }
 
     const deletedContact = await Contact.findByIdAndDelete(id);
 

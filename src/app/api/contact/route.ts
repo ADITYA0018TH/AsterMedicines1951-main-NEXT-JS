@@ -2,33 +2,59 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Contact from '@/models/Contact';
 import { z } from 'zod';
+import {
+  escapeRegex,
+  isValidObjectId,
+  sanitizeEmail,
+  sanitizeSearchTerm,
+  sanitizeTextForStorage,
+  toSafeInt,
+} from '@/lib/inputSecurity';
 
-const contactSchema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  mobileNumber: z.string().regex(/^\d+$/, "Mobile number must contain only digits").min(10, "Mobile number must be at least 10 digits"),
-  subject: z.string().optional(),
-  message: z.string().min(1, "Message is required"),
+const contactCreateSchema = z.object({
+  firstName: z.string().min(1, 'First Name is required').max(100).transform((value) => sanitizeTextForStorage(value, 100)),
+  lastName: z.string().max(100).optional().transform((value) => {
+    const sanitized = sanitizeTextForStorage(value, 100);
+    return sanitized || undefined;
+  }),
+  email: z.string().email('Invalid email address').transform((value) => sanitizeEmail(value)),
+  mobileNumber: z.string().regex(/^\d+$/, 'Mobile number must contain only digits').min(10, 'Mobile number must be at least 10 digits').max(15),
+  subject: z.string().max(200).optional().transform((value) => {
+    const sanitized = sanitizeTextForStorage(value, 200);
+    return sanitized || undefined;
+  }),
+  message: z.string().min(1, 'Message is required').max(5000).transform((value) => sanitizeTextForStorage(value, 5000)),
 });
+
+const contactPatchSchema = z.object({
+  id: z.string().refine((value) => isValidObjectId(value), 'Invalid contact id'),
+  status: z.enum(['New', 'Read', 'Replied']),
+});
+
+const allowedStatuses = new Set(['New', 'Read', 'Replied']);
 
 export async function GET(request: Request) {
   try {
     await connectDB();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const search = searchParams.get('search') || '';
-    const status = searchParams.get('status') || 'All';
+    const page = toSafeInt(searchParams.get('page'), 1, 1, 10000);
+    const limit = toSafeInt(searchParams.get('limit'), 10, 1, 100);
+    const search = sanitizeSearchTerm(searchParams.get('search') || '', 100);
+    const status = sanitizeSearchTerm(searchParams.get('status') || 'All', 20);
 
-    const query: any = {};
+    if (status !== 'All' && !allowedStatuses.has(status)) {
+      return NextResponse.json({ message: 'Invalid status filter' }, { status: 400 });
+    }
+
+    const query: Record<string, unknown> = {};
 
     if (search) {
+      const safeSearchRegex = new RegExp(escapeRegex(search), 'i');
       query.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { subject: { $regex: search, $options: 'i' } },
+        { firstName: safeSearchRegex },
+        { lastName: safeSearchRegex },
+        { email: safeSearchRegex },
+        { subject: safeSearchRegex },
       ];
     }
 
@@ -61,12 +87,13 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
   try {
     await connectDB();
-    const body = await request.json();
-    const { id, status } = body;
+    const parsedBody = contactPatchSchema.safeParse(await request.json());
 
-    if (!id || !status) {
-      return NextResponse.json({ message: 'ID and status are required' }, { status: 400 });
+    if (!parsedBody.success) {
+      return NextResponse.json({ message: 'Validation failed', errors: parsedBody.error.format() }, { status: 400 });
     }
+
+    const { id, status } = parsedBody.data;
 
     const updatedContact = await Contact.findByIdAndUpdate(
       id,
@@ -95,10 +122,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Database Service Unavailable' }, { status: 503 });
     }
 
-    const body = await request.json();
-
     // 2. Validation
-    const validationResult = contactSchema.safeParse(body);
+    const validationResult = contactCreateSchema.safeParse(await request.json());
     if (!validationResult.success) {
       return NextResponse.json(
         { message: 'Validation Error', errors: validationResult.error.format() },

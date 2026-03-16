@@ -4,17 +4,24 @@ import bcrypt from 'bcrypt';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
+import { z } from 'zod';
+import { sanitizeEmail } from '@/lib/inputSecurity';
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Invalid email address').transform((value) => sanitizeEmail(value)),
+}).strict();
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
-
-    if (!email) {
+    const parsedBody = forgotPasswordSchema.safeParse(await request.json());
+    if (!parsedBody.success) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: 'Validation failed', details: parsedBody.error.format() },
         { status: 400 }
       );
     }
+
+    const { email } = parsedBody.data;
 
     const normalizedEmail = email.toLowerCase();
     await connectDB();
