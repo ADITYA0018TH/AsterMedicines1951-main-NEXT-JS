@@ -223,6 +223,7 @@ npm run lint
 | `CLOUDINARY_API_KEY` | ✅ (uploads) | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | ✅ (uploads) | Cloudinary API secret |
 | `NEXT_PUBLIC_APP_URL` | Optional | Public base URL helper |
+| `PRODUCT_SLUG_BACKFILL_SECRET` | Optional (recommended) | Secret key required for slug backfill maintenance endpoint |
 | `VERCEL_URL` | Auto | Runtime host on Vercel |
 
 ### Example `.env.local`
@@ -248,6 +249,7 @@ CLOUDINARY_API_KEY=your_key
 CLOUDINARY_API_SECRET=your_secret
 
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+PRODUCT_SLUG_BACKFILL_SECRET=replace_with_long_random_secret
 ```
 
 ---
@@ -273,7 +275,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 | `/about` | About page |
 | `/contact` | Contact/inquiry page |
 | `/products` | Product listing |
-| `/products/[id]` | Product detail |
+| `/products/[slug]` | Product detail (legacy id routes still supported via redirect) |
 | `/7061452180` | Admin login |
 | `/admin/dashboard` | Admin overview |
 | `/admin/products` | Product management |
@@ -290,7 +292,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 |-------|----------|---------|
 | `GET` | `/api/products` | List products (supports `category`, `page`, `limit`) |
 | `POST` | `/api/products` | Create product (single or bulk) |
-| `GET` | `/api/products/[id]` | Fetch product by id |
+| `GET` | `/api/products/[id]` | Fetch product by slug (legacy id and slug-id also supported) |
 | `PUT` | `/api/products/[id]` | Update product |
 | `DELETE` | `/api/products/[id]` | Delete product |
 | `GET` | `/api/categories` | List categories |
@@ -299,6 +301,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 | `POST` | `/api/upload` | Upload image assets |
 | `GET / PUT` | `/api/settings` | Fetch/update settings |
 | `GET / DELETE` | `/api/admin/visitors` | Fetch/delete visitor logs |
+| `POST` | `/api/admin/products/backfill-slugs` | Backfill canonical product slugs (admin session or `x-maintenance-key`) |
 | `POST` | `/api/auth/forgot-password` | Generate reset token and mail |
 | `POST` | `/api/auth/reset-password` | Reset password via token |
 | `GET / POST` | `/api/auth/*` | NextAuth endpoint surface |
@@ -424,6 +427,27 @@ Core models in `src/models`:
 2. Confirm reset email delivery.
 3. Complete token-based reset.
 4. Re-login and invalidate old sessions if needed.
+
+### Backfill product slugs
+1. Sign in as admin and run it from Admin Settings (Slug Maintenance card), or use API for scripted runs.
+2. For scripted runs, ensure `PRODUCT_SLUG_BACKFILL_SECRET` is configured on the server.
+3. Run a dry run first:
+
+```bash
+curl -X POST http://localhost:3000/api/admin/products/backfill-slugs \
+  -H "Content-Type: application/json" \
+  -H "x-maintenance-key: $PRODUCT_SLUG_BACKFILL_SECRET" \
+  -d '{"dryRun": true, "limit": 500}'
+```
+
+4. Execute real backfill after reviewing response:
+
+```bash
+curl -X POST http://localhost:3000/api/admin/products/backfill-slugs \
+  -H "Content-Type: application/json" \
+  -H "x-maintenance-key: $PRODUCT_SLUG_BACKFILL_SECRET" \
+  -d '{"dryRun": false}'
+```
 
 ---
 

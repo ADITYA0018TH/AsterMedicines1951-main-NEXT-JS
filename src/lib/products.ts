@@ -127,8 +127,6 @@ export async function generateUniqueProductSlug(
   excludeProductId?: string,
   reservedSlugs: Set<string> = new Set(),
 ): Promise<string> {
-  await connectDB();
-
   const baseSlug = slugifyProductName(name);
   const queryBase: Record<string, unknown> = {};
   if (excludeProductId && isValidObjectId(excludeProductId)) {
@@ -160,6 +158,97 @@ export async function generateUniqueProductSlug(
   }
 
   throw new Error('Unable to generate a unique product slug');
+}
+
+export type ProductSlugBackfillResult = {
+  dryRun: boolean;
+  scanned: number;
+  updated: number;
+  unchanged: number;
+  failed: number;
+  updates: Array<{
+    id: string;
+    name: string;
+    previousSlug: string | null;
+    nextSlug: string;
+  }>;
+  failures: Array<{
+    id: string;
+    name: string;
+    reason: string;
+  }>;
+};
+
+export async function backfillProductSlugs(options?: {
+  dryRun?: boolean;
+  limit?: number;
+}): Promise<ProductSlugBackfillResult> {
+  const dryRun = options?.dryRun === true;
+  const limit = options?.limit && options.limit > 0 ? Math.floor(options.limit) : 0;
+
+  await connectDB();
+
+  const query = ProductModel.find({}, '_id name slug').sort({ _id: 1 });
+  if (limit > 0) {
+    query.limit(limit);
+  }
+
+  const products = await query;
+  const reservedSlugs = new Set(staticSlugs);
+
+  const result: ProductSlugBackfillResult = {
+    dryRun,
+    scanned: products.length,
+    updated: 0,
+    unchanged: 0,
+    failed: 0,
+    updates: [],
+    failures: [],
+  };
+
+  for (const product of products) {
+    const record = toProductRecord(product);
+    const id = record._id.toString();
+    const previousSlug = typeof record.slug === 'string' && record.slug ? record.slug : null;
+
+    try {
+      const canonicalSlug = getProductSlug({ name: record.name, slug: record.slug });
+      const currentSlug = previousSlug ? previousSlug.trim().toLowerCase() : '';
+
+      const isNormalized = Boolean(currentSlug) && currentSlug === canonicalSlug;
+      const isCollision = reservedSlugs.has(canonicalSlug);
+
+      if (isNormalized && !isCollision) {
+        reservedSlugs.add(canonicalSlug);
+        result.unchanged += 1;
+        continue;
+      }
+
+      const nextSlug = await generateUniqueProductSlug(record.name, id, reservedSlugs);
+      reservedSlugs.add(nextSlug);
+
+      if (!dryRun) {
+        await ProductModel.updateOne({ _id: record._id }, { $set: { slug: nextSlug } });
+      }
+
+      result.updated += 1;
+      result.updates.push({
+        id,
+        name: record.name,
+        previousSlug,
+        nextSlug,
+      });
+    } catch (error) {
+      result.failed += 1;
+      result.failures.push({
+        id,
+        name: record.name,
+        reason: error instanceof Error ? error.message : 'Unknown error during slug backfill',
+      });
+    }
+  }
+
+  return result;
 }
 
 async function ensureDbProductSlug(product: ProductRecord): Promise<string> {

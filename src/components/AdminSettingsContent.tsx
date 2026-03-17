@@ -19,6 +19,8 @@ import {
     ExternalLink,
     RotateCcw,
     Copy,
+    Database,
+    Play,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -56,6 +58,25 @@ interface SettingsData {
     about?: {
         founderImage: string;
     };
+}
+
+interface SlugBackfillResult {
+    dryRun: boolean;
+    scanned: number;
+    updated: number;
+    unchanged: number;
+    failed: number;
+    updates: Array<{
+        id: string;
+        name: string;
+        previousSlug: string | null;
+        nextSlug: string;
+    }>;
+    failures: Array<{
+        id: string;
+        name: string;
+        reason: string;
+    }>;
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
@@ -186,6 +207,9 @@ const AdminSettingsContent = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [lastSavedAt, setLastSavedAt] = useState("");
+    const [slugBackfillLimit, setSlugBackfillLimit] = useState("500");
+    const [slugBackfillRunning, setSlugBackfillRunning] = useState<"dry-run" | "apply" | null>(null);
+    const [slugBackfillResult, setSlugBackfillResult] = useState<SlugBackfillResult | null>(null);
 
     const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
     const [initialSettings, setInitialSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
@@ -388,6 +412,47 @@ const AdminSettingsContent = () => {
         }
     };
 
+    const handleSlugBackfill = async (dryRun: boolean) => {
+        const parsedLimit = Number.parseInt(slugBackfillLimit, 10);
+        const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
+
+        setSlugBackfillRunning(dryRun ? "dry-run" : "apply");
+        try {
+            const response = await fetch("/api/admin/products/backfill-slugs", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ dryRun, limit }),
+            });
+
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const message = typeof payload?.message === "string"
+                    ? payload.message
+                    : "Backfill request failed";
+                toast.error(message);
+                return;
+            }
+
+            const result = payload?.result as SlugBackfillResult;
+            if (result && typeof result === "object") {
+                setSlugBackfillResult(result);
+                const modeLabel = dryRun ? "Dry run" : "Backfill";
+                toast.success(
+                    `${modeLabel} complete: ${result.updated} updated, ${result.unchanged} unchanged, ${result.failed} failed`
+                );
+            } else {
+                toast.success(dryRun ? "Dry run completed" : "Slug backfill completed");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error while running slug backfill");
+        } finally {
+            setSlugBackfillRunning(null);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex h-screen items-center justify-center bg-background">
@@ -534,6 +599,83 @@ const AdminSettingsContent = () => {
                                     <p className="text-xs text-muted-foreground">
                                         Optional links filled: {completion.optionalLinks}
                                     </p>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <Database className="h-5 w-5 text-primary" />
+                                        Slug Maintenance
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Dry-run and backfill canonical product slugs for all database records.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                                        <div className="space-y-2 md:col-span-1">
+                                            <Label>Scan Limit</Label>
+                                            <Input
+                                                type="number"
+                                                min={1}
+                                                max={50000}
+                                                value={slugBackfillLimit}
+                                                onChange={(e) => setSlugBackfillLimit(e.target.value)}
+                                                placeholder="500"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 md:col-span-2">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="gap-2"
+                                                disabled={slugBackfillRunning !== null}
+                                                onClick={() => handleSlugBackfill(true)}
+                                            >
+                                                {slugBackfillRunning === "dry-run" ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : (
+                                                    <Play className="h-4 w-4" />
+                                                )}
+                                                Dry Run
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                className="gap-2"
+                                                disabled={slugBackfillRunning !== null}
+                                                onClick={() => handleSlugBackfill(false)}
+                                            >
+                                                {slugBackfillRunning === "apply" ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : (
+                                                    <Database className="h-4 w-4" />
+                                                )}
+                                                Run Backfill
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {slugBackfillResult && (
+                                        <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2 text-sm">
+                                            <p className="font-medium text-foreground">
+                                                Last run: {slugBackfillResult.dryRun ? "Dry run" : "Applied"}
+                                            </p>
+                                            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-muted-foreground">
+                                                <span>Scanned: {slugBackfillResult.scanned}</span>
+                                                <span>Updated: {slugBackfillResult.updated}</span>
+                                                <span>Unchanged: {slugBackfillResult.unchanged}</span>
+                                                <span>Failed: {slugBackfillResult.failed}</span>
+                                                <span>Changes: {slugBackfillResult.updates.length}</span>
+                                            </div>
+                                            {slugBackfillResult.failures.length > 0 && (
+                                                <p className="text-destructive text-xs">
+                                                    Failures detected. Check server logs for details.
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
 
@@ -697,7 +839,7 @@ const AdminSettingsContent = () => {
                                     <div className="space-y-0.5">
                                         <Label className="text-base">Maintenance Mode</Label>
                                         <p className="text-sm text-muted-foreground">
-                                            Enable to show a "Under Maintenance" page to all non-admin visitors.
+                                            Enable to show a &quot;Under Maintenance&quot; page to all non-admin visitors.
                                         </p>
                                     </div>
                                     <Switch
