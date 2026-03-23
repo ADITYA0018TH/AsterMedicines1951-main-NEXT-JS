@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import connectDB from '@/lib/db';
 import ProductModel from '@/models/Product';
 import { Product } from '@/types/product';
@@ -130,7 +131,7 @@ export async function generateUniqueProductSlug(
   const baseSlug = slugifyProductName(name);
   const queryBase: Record<string, unknown> = {};
   if (excludeProductId && isValidObjectId(excludeProductId)) {
-    queryBase._id = { $ne: excludeProductId };
+    queryBase._id = { $ne: new mongoose.Types.ObjectId(excludeProductId) };
   }
 
   for (let suffix = 1; suffix <= 10000; suffix += 1) {
@@ -350,7 +351,7 @@ export async function getRelatedProducts(category: string, currentProductId: str
     await connectDB();
     const query: Record<string, unknown> = { category };
     if (isValidObjectId(currentProductId)) {
-      query._id = { $ne: currentProductId };
+      query._id = { $ne: new mongoose.Types.ObjectId(currentProductId) };
     }
 
     const products = await ProductModel.find({
