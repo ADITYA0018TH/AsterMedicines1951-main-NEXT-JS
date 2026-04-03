@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
     Activity,
     ArrowRight,
+    BarChart3,
     Bell,
     Box,
     LogOut,
@@ -66,6 +67,13 @@ const AdminDashboardContent = () => {
                 description: "Track website traffic and view visitor details.",
                 icon: Users,
                 countLabel: `${stats.visitors} visits`,
+            },
+            {
+                href: "/admin/analytics",
+                title: "Product Analytics",
+                description: "View most viewed products and traffic insights.",
+                icon: BarChart3,
+                countLabel: "View insights",
             },
             {
                 href: "/admin/settings",

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -107,9 +108,44 @@ const FilterSidebar = ({
 
 // --- Main Component ---
 const ProductsContent = () => {
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const [searchQuery, setSearchQuery] = useState("");
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    // Initialize state from URL params
+    const initialQuery = searchParams.get("q") || "";
+    const initialCategory = searchParams.get("category") || "All";
+
+    const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+    // Sync URL with state changes
+    const updateURL = useCallback((query: string, category: string) => {
+        const params = new URLSearchParams();
+        if (query) params.set("q", query);
+        if (category && category !== "All") params.set("category", category);
+        
+        const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+        router.replace(newUrl, { scroll: false });
+    }, [pathname, router]);
+
+    // Update URL when search or category changes
+    useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            updateURL(searchQuery, selectedCategory);
+        }, 300);
+        return () => clearTimeout(debounceTimer);
+    }, [searchQuery, selectedCategory, updateURL]);
+
+    // Sync state from URL when navigating
+    useEffect(() => {
+        const urlQuery = searchParams.get("q") || "";
+        const urlCategory = searchParams.get("category") || "All";
+        if (urlQuery !== searchQuery) setSearchQuery(urlQuery);
+        if (urlCategory !== selectedCategory) setSelectedCategory(urlCategory);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
 
     // Fallback Data
     const dummyProducts: Product[] = [
@@ -159,7 +195,7 @@ const ProductsContent = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         // 1. Grid Entry Animation
-        if (filteredProducts.length > 0) {
+        if (!isLoadingProducts && filteredProducts.length > 0) {
             gsap.fromTo(".product-card",
                 { opacity: 0, y: 50 },
                 {
@@ -174,7 +210,7 @@ const ProductsContent = () => {
                 }
             );
         }
-    }, [filteredProducts]);
+    }, [filteredProducts, isLoadingProducts]);
 
     return (
         <div className="min-h-screen bg-background text-foreground">

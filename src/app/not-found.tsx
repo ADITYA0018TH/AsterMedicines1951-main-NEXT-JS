@@ -2,17 +2,40 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import { Home, Search, Mail } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import { Home, Search, Mail, ArrowRight, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { products } from "@/data/products";
+import { findSimilarProducts, FuzzyMatchResult } from "@/lib/fuzzyMatch";
+import { getProductPath } from "@/lib/productSlug";
 
 const NotFound = () => {
     const pathname = usePathname();
+    const [suggestions, setSuggestions] = useState<FuzzyMatchResult | null>(null);
+
+    // Extract potential product slug from pathname
+    const potentialSlug = useMemo(() => {
+        if (pathname.startsWith("/products/")) {
+            return pathname.replace("/products/", "").split("/")[0];
+        }
+        // Also check for any path that might be a product
+        const lastSegment = pathname.split("/").filter(Boolean).pop();
+        return lastSegment || "";
+    }, [pathname]);
 
     useEffect(() => {
-        // Optional: Log 404 errors to your analytics service here
+        // Log 404 errors
         console.log(`404 Error: User attempted to access ${pathname}`);
-    }, [pathname]);
+
+        // Find similar products if we have a potential slug
+        if (potentialSlug) {
+            const matches = findSimilarProducts(potentialSlug, products, 4);
+            setSuggestions(matches);
+        }
+    }, [pathname, potentialSlug]);
+
+    const hasSuggestions = suggestions && (suggestions.exactMatch || suggestions.suggestions.length > 0);
+    const isProductRoute = pathname.startsWith("/products/");
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background text-foreground selection:bg-orange-500 selection:text-white">
@@ -37,12 +60,59 @@ const NotFound = () => {
                 </div>
 
                 <h2 className="text-2xl md:text-4xl font-bold mb-4 font-display">
-                    Out of Stock?
+                    {isProductRoute ? "Product Not Found" : "Out of Stock?"}
                 </h2>
 
-                <p className="text-lg text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
-                    The page you are looking for seems to have been discontinued or moved.
+                <p className="text-lg text-muted-foreground mb-6 max-w-md mx-auto leading-relaxed">
+                    {isProductRoute 
+                        ? "We couldn't find the product you're looking for. It may have been discontinued or moved."
+                        : "The page you are looking for seems to have been discontinued or moved."
+                    }
                 </p>
+
+                {/* Did You Mean Section */}
+                {hasSuggestions && (
+                    <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <p className="text-sm text-muted-foreground mb-4 font-medium">
+                            Did you mean one of these products?
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+                            {suggestions.exactMatch && (
+                                <Link 
+                                    href={getProductPath({ name: suggestions.exactMatch.name, slug: suggestions.exactMatch.slug })}
+                                    className="col-span-full"
+                                >
+                                    <div className="flex items-center gap-3 p-4 rounded-xl bg-orange-500/10 border border-orange-500/30 hover:bg-orange-500/20 transition-all group">
+                                        <Package className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                                        <div className="text-left flex-1 min-w-0">
+                                            <p className="font-semibold text-foreground truncate group-hover:text-orange-500 transition-colors">
+                                                {suggestions.exactMatch.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">{suggestions.exactMatch.category}</p>
+                                        </div>
+                                        <ArrowRight className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                </Link>
+                            )}
+                            {suggestions.suggestions.map((product) => (
+                                <Link 
+                                    key={product.id}
+                                    href={getProductPath({ name: product.name, slug: product.slug })}
+                                >
+                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50 border border-border hover:bg-secondary hover:border-orange-500/30 transition-all group">
+                                        <Package className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                        <div className="text-left flex-1 min-w-0">
+                                            <p className="font-medium text-sm text-foreground truncate group-hover:text-orange-500 transition-colors">
+                                                {product.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">{product.category}</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Smart Recovery Links */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">

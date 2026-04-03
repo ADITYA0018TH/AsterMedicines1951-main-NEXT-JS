@@ -1,22 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, CheckCircle2, Shield, AlertTriangle, ShieldCheck, Microscope, FlaskConical, Stethoscope, FileText, ArrowRight, Award } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Shield, AlertTriangle, ShieldCheck, Microscope, FlaskConical, Stethoscope, FileText, ArrowRight, Award, Download, Loader2, ZoomIn } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Product } from "@/types/product";
-import { getProductPath } from "@/lib/productSlug";
+import { getProductPath, getProductSlug } from "@/lib/productSlug";
+import { toast } from "sonner";
+import dynamic from "next/dynamic";
+import { useTrackProductView } from "@/hooks/useTrackProductView";
+
+const ImageLightbox = dynamic(() => import("@/components/ImageLightbox"), { ssr: false });
 
 interface ProductDetailContentProps {
     product: Product;
@@ -24,6 +28,42 @@ interface ProductDetailContentProps {
 }
 
 const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContentProps) => {
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
+
+    // Track product view for analytics
+    const productViewData = useMemo(() => ({
+        productId: product.id,
+        productSlug: product.slug || getProductSlug({ name: product.name }),
+        productName: product.name,
+        category: product.category,
+    }), [product]);
+    
+    useTrackProductView(productViewData);
+
+    const handleDownloadPDF = useCallback(async () => {
+        setIsGeneratingPDF(true);
+        try {
+            const { generateProductPDF } = await import("@/lib/generateProductPDF");
+            await generateProductPDF(product);
+            toast.success("PDF Downloaded", {
+                description: "Product specification sheet has been generated.",
+            });
+        } catch (error) {
+            console.error("PDF generation failed:", error);
+            toast.error("Download Failed", {
+                description: "Unable to generate PDF. Please try again.",
+            });
+        } finally {
+            setIsGeneratingPDF(false);
+        }
+    }, [product]);
+
+    const openLightbox = useCallback((index: number) => {
+        setLightboxIndex(index);
+        setLightboxOpen(true);
+    }, []);
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -69,7 +109,10 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                     <CarouselContent>
                                         {(product.images && product.images.length > 0 ? product.images : ["/placeholder.png"]).map((img, index) => (
                                             <CarouselItem key={index}>
-                                                <div className="aspect-square flex items-center justify-center p-4 sm:p-8 lg:p-12">
+                                                <button
+                                                    onClick={() => openLightbox(index)}
+                                                    className="aspect-square flex items-center justify-center p-4 sm:p-8 lg:p-12 w-full cursor-zoom-in"
+                                                >
                                                     <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-105">
                                                         <Image
                                                             src={img}
@@ -79,8 +122,13 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                                             priority={index === 0}
                                                             sizes="(max-width: 768px) 100vw, 50vw"
                                                         />
+                                                        {/* Zoom indicator */}
+                                                        <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                                                            <ZoomIn className="w-3 h-3" />
+                                                            Click to zoom
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </button>
                                             </CarouselItem>
                                         ))}
                                     </CarouselContent>
@@ -266,13 +314,28 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                     <p className="text-sm font-bold text-slate-900 dark:text-white">Bulk orders available</p>
                                 </div>
                                 <div className="flex w-full sm:w-auto gap-2 sm:gap-3">
-                                    <Link href="/contact" className="w-full sm:w-auto">
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        onClick={handleDownloadPDF}
+                                        disabled={isGeneratingPDF}
+                                        className="border-slate-300 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl"
+                                    >
+                                        {isGeneratingPDF ? (
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        ) : (
+                                            <Download className="w-4 h-4 mr-2" />
+                                        )}
+                                        <span className="hidden sm:inline">Spec Sheet</span>
+                                        <span className="sm:hidden">PDF</span>
+                                    </Button>
+                                    <Link href="/contact" className="flex-1 sm:flex-none">
                                         <Button size="lg" className="w-full sm:w-auto bg-brand-accent hover:bg-brand-accent/90 text-white shadow-lg shadow-brand-accent/25 rounded-xl">
                                             Enquire Now <ArrowRight className="w-4 h-4 ml-2" />
                                         </Button>
                                     </Link>
-                                    <Link href="/contact" className="w-full sm:w-auto">
-                                        <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl">
+                                    <Link href="/contact" className="hidden md:block">
+                                        <Button variant="outline" size="lg" className="border-slate-300 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl">
                                             Request Sample
                                         </Button>
                                     </Link>
@@ -345,6 +408,15 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                     </Link>
                 </div>
             </section>
+
+            {/* Image Lightbox */}
+            <ImageLightbox
+                images={product.images && product.images.length > 0 ? product.images : ["/placeholder.png"]}
+                initialIndex={lightboxIndex}
+                isOpen={lightboxOpen}
+                onClose={() => setLightboxOpen(false)}
+                alt={product.name}
+            />
         </div>
     );
 };
