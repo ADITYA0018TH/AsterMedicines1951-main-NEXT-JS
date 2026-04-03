@@ -112,9 +112,15 @@ function findStaticProduct(routeSegment: string): Product | null {
     return transformStaticProduct(slugMatch);
   }
 
+  // Only use extracted numeric IDs when they match the legacy slug format (name-id).
+  // Do NOT blindly extract trailing numbers from arbitrary slugs, as slugs like
+  // "dextrose-injection-i-p-50-2" would falsely extract "2" and match product id=2.
   const extractedId = extractIdentifierFromProductSegment(routeSegment);
   if (extractedId && /^\d+$/.test(extractedId)) {
-    const idMatch = staticProducts.find((product) => product.id.toString() === extractedId);
+    const idMatch = staticProducts.find((product) => {
+      const legacySlug = getLegacyProductSlug(product.name, product.id);
+      return product.id.toString() === extractedId && routeSegment === legacySlug;
+    });
     if (idMatch) {
       return transformStaticProduct(idMatch);
     }
@@ -122,6 +128,7 @@ function findStaticProduct(routeSegment: string): Product | null {
 
   return null;
 }
+
 
 export async function generateUniqueProductSlug(
   name: string,
