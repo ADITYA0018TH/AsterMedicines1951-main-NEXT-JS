@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
     ],
     optimizeCss: true,
   },
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

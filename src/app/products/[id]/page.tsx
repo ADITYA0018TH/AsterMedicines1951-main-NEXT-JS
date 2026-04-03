@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import ProductDetailContent from "@/components/ProductDetailContent";
-import { getProduct, getRelatedProducts } from "@/lib/products";
+import { getProduct, getRelatedProducts, getAllProducts } from "@/lib/products";
 import ProductJsonLd from "@/components/ProductJsonLd";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import { getProductPath, getProductSlug, normalizeProductRouteSegment } from "@/lib/productSlug";
+
+// Revalidate product pages every 1 hour (ISR)
+export const revalidate = 3600;
+
+// Pre-render known product pages at build time
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((p) => ({ id: getProductSlug(p) }));
+}
 
 type Props = {
   params: Promise<{ id: string }>;
