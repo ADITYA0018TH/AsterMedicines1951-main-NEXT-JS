@@ -20,7 +20,15 @@ import {
     Smartphone,
     Sparkles,
     Trash2,
+    ArrowUpDown,
+    Check,
 } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import StatsCards from "@/components/StatsCards";
 import AnalyticsCharts from "@/components/AnalyticsCharts";
@@ -527,15 +535,25 @@ const VisitorsContent = () => {
                                 ))}
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortBy)}
-                                    className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-200"
-                                >
-                                    <option value="recent">Sort: Most Recent</option>
-                                    <option value="oldest">Sort: Oldest First</option>
-                                    <option value="duration">Sort: Longest Duration</option>
-                                </select>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                                        <ArrowUpDown className="w-3.5 h-3.5 opacity-60" />
+                                        {sortBy === "recent" ? "Most Recent" : sortBy === "oldest" ? "Oldest First" : "Longest Duration"}
+                                        <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        {(["recent", "oldest", "duration"] as const).map((option) => (
+                                            <DropdownMenuItem
+                                                key={option}
+                                                onClick={() => setSortBy(option)}
+                                                className="flex items-center justify-between gap-6 cursor-pointer"
+                                            >
+                                                <span>{option === "recent" ? "Most Recent" : option === "oldest" ? "Oldest First" : "Longest Duration"}</span>
+                                                {sortBy === option && <Check className="w-3.5 h-3.5 text-brand-accent" />}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                                 <button
                                     onClick={resetFilters}
                                     className="rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
