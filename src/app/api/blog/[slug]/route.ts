@@ -16,6 +16,7 @@ const updateSchema = z.object({
   tags: z.array(z.string().max(50)).max(10).optional(),
   author: z.string().max(100).optional(),
   published: z.boolean().optional(),
+  scheduledPublishAt: z.string().datetime().optional().nullable(),
   metaTitle: z.string().max(70).optional(),
   metaDescription: z.string().max(160).optional(),
 });
@@ -51,6 +52,11 @@ export async function PUT(
     }
 
     const updateData: Record<string, unknown> = { ...parsed.data };
+    if (parsed.data.scheduledPublishAt !== undefined) {
+      updateData.scheduledPublishAt = parsed.data.scheduledPublishAt
+        ? new Date(parsed.data.scheduledPublishAt)
+        : null;
+    }
     if (parsed.data.published === true) {
       const existing = await BlogPost.findOne({ slug });
       if (existing && !existing.publishedAt) {

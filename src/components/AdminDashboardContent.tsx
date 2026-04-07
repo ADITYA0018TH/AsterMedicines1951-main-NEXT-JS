@@ -10,6 +10,7 @@ import {
     Box,
     LogOut,
     MessageSquare,
+    Newspaper,
     RefreshCw,
     Settings,
     ShieldCheck,
@@ -81,6 +82,13 @@ const AdminDashboardContent = () => {
                 description: "Manage contact info, social links, and maintenance mode.",
                 icon: Settings,
                 countLabel: stats.maintenanceMode ? "Maintenance On" : "Maintenance Off",
+            },
+            {
+                href: "/admin/blog",
+                title: "Blog Manager",
+                description: "Write, edit, publish and manage knowledge hub articles.",
+                icon: Newspaper,
+                countLabel: "Manage posts",
             },
         ],
         [stats]

@@ -22,8 +22,40 @@ interface BlogPost {
 }
 
 export default function BlogPostContent({ post }: { post: BlogPost }) {
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage ? [post.coverImage] : ['https://astermedicines.com/og-image.webp'],
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.publishedAt || post.createdAt,
+    author: {
+      '@type': 'Organization',
+      name: post.author,
+      url: 'https://astermedicines.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Aster Medicines Pvt Ltd',
+      url: 'https://astermedicines.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://astermedicines.com/uploads/logo.webp',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://astermedicines.com/blog/${post.slug}`,
+    },
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Navbar />
       <main className="flex-grow pt-28 pb-20">
         <div className="container mx-auto px-4 lg:px-6 max-w-3xl">

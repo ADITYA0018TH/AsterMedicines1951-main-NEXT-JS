@@ -11,6 +11,8 @@ export interface IBlogPost extends Document {
   author: string;
   published: boolean;
   publishedAt?: Date;
+  /** If set, a cron job will auto-publish at this time */
+  scheduledPublishAt?: Date;
   metaTitle?: string;
   metaDescription?: string;
   createdAt: Date;
@@ -29,6 +31,7 @@ const BlogPostSchema: Schema = new Schema(
     author: { type: String, default: 'Aster Medicines Team' },
     published: { type: Boolean, default: false, index: true },
     publishedAt: { type: Date },
+    scheduledPublishAt: { type: Date, index: true },
     metaTitle: { type: String, maxlength: 70 },
     metaDescription: { type: String, maxlength: 160 },
   },

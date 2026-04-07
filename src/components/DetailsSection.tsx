@@ -2,7 +2,13 @@
 
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Building2, FlaskConical, Users, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Building2, FlaskConical, Users, CheckCircle2, ChevronDown, Check } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const DetailsSection = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +21,10 @@ const DetailsSection = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleServiceChange = (value: string) => {
+    setFormData({ ...formData, service: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,18 +112,24 @@ const DetailsSection = () => {
                 {/* Service Selection Dropdown (Critical for B2B) */}
                 <div>
                   <label htmlFor="service" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">I am interested in</label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 dark:bg-black border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all"
-                  >
-                    <option>Third Party Manufacturing</option>
-                    <option>PCD Pharma Franchise</option>
-                    <option>Government Tender Supply</option>
-                    <option>Export Inquiry</option>
-                  </select>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="w-full flex items-center justify-between bg-slate-50 dark:bg-black border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all cursor-pointer text-sm">
+                      <span>{formData.service}</span>
+                      <ChevronDown className="w-4 h-4 opacity-50 shrink-0" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                      {["Third Party Manufacturing", "PCD Pharma Franchise", "Government Tender Supply", "Export Inquiry"].map((option) => (
+                        <DropdownMenuItem
+                          key={option}
+                          onClick={() => handleServiceChange(option)}
+                          className="flex items-center justify-between cursor-pointer"
+                        >
+                          {option}
+                          {formData.service === option && <Check className="w-3.5 h-3.5 text-brand-accent" />}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

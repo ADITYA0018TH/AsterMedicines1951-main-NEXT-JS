@@ -17,6 +17,7 @@ const blogPostSchema = z.object({
   tags: z.array(z.string().max(50)).max(10).optional().default([]),
   author: z.string().max(100).optional().default('Aster Medicines Team'),
   published: z.boolean().optional().default(false),
+  scheduledPublishAt: z.string().datetime().optional().nullable(),
   metaTitle: z.string().max(70).optional(),
   metaDescription: z.string().max(160).optional(),
 });
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
     const post = await BlogPost.create({
       ...data,
       publishedAt: data.published ? new Date() : undefined,
+      scheduledPublishAt: data.scheduledPublishAt ? new Date(data.scheduledPublishAt) : undefined,
     });
 
     await logAudit({
