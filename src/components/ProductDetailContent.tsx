@@ -233,14 +233,30 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                                             <span className="text-slate-500 dark:text-slate-400">Dosage Form</span>
                                                             <span className="font-medium">{product.dosage}</span>
                                                         </div>
-                                                        <div className="flex justify-between border-b border-slate-200 dark:border-white/10 pb-2">
-                                                            <span className="text-slate-500 dark:text-slate-400">Administration</span>
-                                                            <span className="font-medium">Oral / Injection</span>
-                                                        </div>
-                                                        <div className="flex justify-between pb-2">
-                                                            <span className="text-slate-500 dark:text-slate-400">Shelf Life</span>
-                                                            <span className="font-medium">24 - 36 Months</span>
-                                                        </div>
+                                                        {product.shelfLife && (
+                                                            <div className="flex justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+                                                                <span className="text-slate-500 dark:text-slate-400">Shelf Life</span>
+                                                                <span className="font-medium">{product.shelfLife}</span>
+                                                            </div>
+                                                        )}
+                                                        {product.storageConditions && (
+                                                            <div className="flex justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+                                                                <span className="text-slate-500 dark:text-slate-400">Storage</span>
+                                                                <span className="font-medium text-right max-w-[55%]">{product.storageConditions}</span>
+                                                            </div>
+                                                        )}
+                                                        {product.strengthVariants && product.strengthVariants.length > 0 && (
+                                                            <div className="flex justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+                                                                <span className="text-slate-500 dark:text-slate-400">Strengths</span>
+                                                                <span className="font-medium text-right">{product.strengthVariants.join(", ")}</span>
+                                                            </div>
+                                                        )}
+                                                        {product.packagingOptions && product.packagingOptions.length > 0 && (
+                                                            <div className="flex justify-between pb-2">
+                                                                <span className="text-slate-500 dark:text-slate-400">Packaging</span>
+                                                                <span className="font-medium text-right">{product.packagingOptions.join(", ")}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Product from '@/models/Product';
 import { generateUniqueProductSlug, getProduct } from '@/lib/products';
+import { logAudit } from '@/lib/audit';
+import { getClientIp } from '@/lib/rateLimit';
 import { z } from 'zod';
 import {
   isValidObjectId,
@@ -46,6 +48,10 @@ const productUpdateSchema = z.object({
   isQualityAssured: z.any().optional().transform((value) => value === undefined ? undefined : toSafeBoolean(value)),
   isGmpCertified: z.any().optional().transform((value) => value === undefined ? undefined : toSafeBoolean(value)),
   isWhoApproved: z.any().optional().transform((value) => value === undefined ? undefined : toSafeBoolean(value)),
+  strengthVariants: z.array(z.string().max(100)).max(20).optional(),
+  packagingOptions: z.array(z.string().max(200)).max(20).optional(),
+  storageConditions: optionalTextField(500),
+  shelfLife: optionalTextField(100),
 }).strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required for update');
 
 export async function GET(
@@ -104,6 +110,16 @@ export async function PUT(
       return NextResponse.json({ message: 'Product not found' }, { status: 404 });
     }
 
+    await logAudit({
+      action: 'product.update',
+      summary: `Updated product "${updatedProduct.name}"`,
+      entity: 'Product',
+      entityId: id,
+      diff: parsedUpdates.data as Record<string, unknown>,
+      performedBy: 'admin',
+      ip: getClientIp(request),
+    });
+
     return NextResponse.json({ message: 'Product updated successfully', product: updatedProduct });
   } catch (error) {
     console.error('Error updating product:', error);
@@ -128,6 +144,15 @@ export async function DELETE(
     if (!deletedProduct) {
       return NextResponse.json({ message: 'Product not found' }, { status: 404 });
     }
+
+    await logAudit({
+      action: 'product.delete',
+      summary: `Deleted product "${deletedProduct.name}"`,
+      entity: 'Product',
+      entityId: id,
+      performedBy: 'admin',
+      ip: getClientIp(request),
+    });
 
     return NextResponse.json({ message: 'Product deleted successfully' });
   } catch (error) {

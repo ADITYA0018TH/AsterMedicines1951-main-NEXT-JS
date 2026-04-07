@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+export type PipelineStage = 'New' | 'Contacted' | 'Quoted' | 'Converted' | 'Lost';
+
 export interface IContact extends Document {
   firstName: string;
   lastName?: string;
@@ -8,6 +10,10 @@ export interface IContact extends Document {
   subject?: string;
   message: string;
   status: 'New' | 'Read' | 'Replied';
+  /** CRM pipeline stage */
+  pipelineStage: PipelineStage;
+  /** Internal admin notes */
+  notes?: string;
   createdAt: Date;
 }
 
@@ -38,6 +44,16 @@ const ContactSchema: Schema = new Schema({
     type: String,
     enum: ['New', 'Read', 'Replied'],
     default: 'New',
+  },
+  pipelineStage: {
+    type: String,
+    enum: ['New', 'Contacted', 'Quoted', 'Converted', 'Lost'],
+    default: 'New',
+    index: true,
+  },
+  notes: {
+    type: String,
+    maxlength: 5000,
   },
   createdAt: {
     type: Date,

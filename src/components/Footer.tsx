@@ -35,6 +35,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
     { label: "Products", href: "/products" },
+    { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ]
 

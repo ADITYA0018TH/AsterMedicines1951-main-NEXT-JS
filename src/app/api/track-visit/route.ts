@@ -3,6 +3,7 @@ import connectDB from '@/lib/db';
 import Visitor from '@/models/Visitor';
 import { UAParser } from 'ua-parser-js';
 import { z } from 'zod';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 import {
     isValidObjectId,
     normalizeString,
@@ -44,6 +45,13 @@ const updateVisitDurationSchema = z.object({
 }).strict();
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 60 visits per IP per minute (prevents tracking spam)
+  const ip = getClientIp(req);
+  const rl = rateLimit(ip, { limit: 60, windowSec: 60 });
+  if (!rl.success) {
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  }
+
   try {
     await connectDB();
         const parsedBody = trackVisitSchema.safeParse(await req.json());

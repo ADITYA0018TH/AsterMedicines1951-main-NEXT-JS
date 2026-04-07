@@ -3,6 +3,8 @@ import connectDB from '@/lib/db';
 import Product from '@/models/Product';
 import { generateUniqueProductSlug } from '@/lib/products';
 import { getProductSlug } from '@/lib/productSlug';
+import { logAudit } from '@/lib/audit';
+import { getClientIp } from '@/lib/rateLimit';
 import { z } from 'zod';
 import {
   sanitizeAssetPath,
@@ -48,6 +50,10 @@ const productCreateSchema = z.object({
   isQualityAssured: z.any().optional().transform((value) => toSafeBoolean(value)),
   isGmpCertified: z.any().optional().transform((value) => toSafeBoolean(value)),
   isWhoApproved: z.any().optional().transform((value) => toSafeBoolean(value)),
+  strengthVariants: z.array(z.string().max(100)).max(20).optional().default([]),
+  packagingOptions: z.array(z.string().max(200)).max(20).optional().default([]),
+  storageConditions: optionalTextField(500),
+  shelfLife: optionalTextField(100),
 }).strict();
 
 export async function GET(request: Request) {
@@ -105,7 +111,11 @@ export async function GET(request: Request) {
       precautions: product.precautions || 'Keep out of reach of children. Store in a cool, dry place.',
       isQualityAssured: product.isQualityAssured || false,
       isGmpCertified: product.isGmpCertified || false,
-      isWhoApproved: product.isWhoApproved || false
+      isWhoApproved: product.isWhoApproved || false,
+      strengthVariants: product.strengthVariants || [],
+      packagingOptions: product.packagingOptions || [],
+      storageConditions: product.storageConditions || 'Store below 25°C in a dry place, away from direct sunlight.',
+      shelfLife: product.shelfLife || '24 months',
     }));
 
     if (page && limit) {
@@ -168,6 +178,7 @@ export async function POST(request: Request) {
       name, description, price, category, images, stock, featured,
       composition, dosageInstructions, indications, sideEffects, precautions,
       isQualityAssured, isGmpCertified, isWhoApproved,
+      strengthVariants, packagingOptions, storageConditions, shelfLife,
     } = parsedProduct.data;
 
     const slug = await generateUniqueProductSlug(name);
@@ -189,6 +200,19 @@ export async function POST(request: Request) {
       isQualityAssured: isQualityAssured || false,
       isGmpCertified: isGmpCertified || false,
       isWhoApproved: isWhoApproved || false,
+      strengthVariants: strengthVariants || [],
+      packagingOptions: packagingOptions || [],
+      storageConditions,
+      shelfLife,
+    });
+
+    await logAudit({
+      action: 'product.create',
+      summary: `Created product "${name}"`,
+      entity: 'Product',
+      entityId: newProduct._id.toString(),
+      performedBy: 'admin',
+      ip: getClientIp(request),
     });
 
     return NextResponse.json({ message: 'Product created successfully', product: newProduct }, { status: 201 });

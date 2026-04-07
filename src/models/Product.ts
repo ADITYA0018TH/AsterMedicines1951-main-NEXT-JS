@@ -17,6 +17,14 @@ export interface IProduct extends Document {
   isQualityAssured?: boolean;
   isGmpCertified?: boolean;
   isWhoApproved?: boolean;
+  /** e.g. ["1g Vial", "500mg Vial"] */
+  strengthVariants?: string[];
+  /** e.g. ["10 vials/box", "1 vial/box"] */
+  packagingOptions?: string[];
+  /** e.g. "Store below 25°C, away from light" */
+  storageConditions?: string;
+  /** e.g. "24 months" */
+  shelfLife?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,6 +98,22 @@ const ProductSchema: Schema = new Schema({
   isWhoApproved: {
     type: Boolean,
     default: false,
+  },
+  strengthVariants: {
+    type: [String],
+    default: [],
+  },
+  packagingOptions: {
+    type: [String],
+    default: [],
+  },
+  storageConditions: {
+    type: String,
+    required: false,
+  },
+  shelfLife: {
+    type: String,
+    required: false,
   },
 }, {
   timestamps: true,

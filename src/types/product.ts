@@ -20,4 +20,12 @@ export interface Product {
     isWhoApproved?: boolean;
     stock?: number;
     featured?: boolean;
+    /** e.g. ["1g Vial", "500mg Vial"] */
+    strengthVariants?: string[];
+    /** e.g. ["10 vials/box", "1 vial/box"] */
+    packagingOptions?: string[];
+    /** e.g. "Store below 25°C, away from light" */
+    storageConditions?: string;
+    /** e.g. "24 months" */
+    shelfLife?: string;
 }

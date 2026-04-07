@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Contact from '@/models/Contact';
 import { z } from 'zod';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 import {
   escapeRegex,
   isValidObjectId,
@@ -28,8 +29,10 @@ const contactCreateSchema = z.object({
 
 const contactPatchSchema = z.object({
   id: z.string().refine((value) => isValidObjectId(value), 'Invalid contact id'),
-  status: z.enum(['New', 'Read', 'Replied']),
-});
+  status: z.enum(['New', 'Read', 'Replied']).optional(),
+  pipelineStage: z.enum(['New', 'Contacted', 'Quoted', 'Converted', 'Lost']).optional(),
+  notes: z.string().max(5000).optional().transform((v) => v ? sanitizeTextForStorage(v, 5000) : undefined),
+}).refine((d) => d.status || d.pipelineStage || d.notes !== undefined, 'At least one field required');
 
 const allowedStatuses = new Set(['New', 'Read', 'Replied']);
 
@@ -93,11 +96,16 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: 'Validation failed', errors: parsedBody.error.format() }, { status: 400 });
     }
 
-    const { id, status } = parsedBody.data;
+    const { id, status, pipelineStage, notes } = parsedBody.data;
+
+    const updateFields: Record<string, unknown> = {};
+    if (status) updateFields.status = status;
+    if (pipelineStage) updateFields.pipelineStage = pipelineStage;
+    if (notes !== undefined) updateFields.notes = notes;
 
     const updatedContact = await Contact.findByIdAndUpdate(
       id,
-      { status },
+      updateFields,
       { new: true }
     );
 
@@ -113,6 +121,19 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
+  // Rate limit: 5 submissions per IP per 10 minutes
+  const ip = getClientIp(request);
+  const rl = rateLimit(ip, { limit: 5, windowSec: 600 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { message: 'Too many requests. Please try again later.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+      }
+    );
+  }
+
   try {
     // 1. Connection check
     try {

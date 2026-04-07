@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
 import VisitorTracker from "@/components/VisitorTracker";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({
@@ -158,14 +159,7 @@ export const metadata: Metadata = {
     },
   },
 
-  // verification: {
-  //   google: "YOUR_GOOGLE_VERIFICATION_CODE", // Add your Google Search Console verification code here
-  //   yandex: "yandex",
-  //   yahoo: "yahoo",
-  //   other: {
-  //     me: ["my-email", "my-link"],
-  //   },
-  // },
+  // DNS verification already done — no meta tag needed for Google Search Console
 
   category: 'pharmaceutical',
 
@@ -199,6 +193,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${robotoSlab.variable} ${sairaStencil.variable}`}>
       <body suppressHydrationWarning>
+        <GoogleAnalytics />
         <JsonLd />
         <Providers>
           <LanguageProvider>

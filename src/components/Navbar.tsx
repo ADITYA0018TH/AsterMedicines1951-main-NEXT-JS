@@ -8,7 +8,8 @@ import {
   Home,
   Package,
   Info,
-  Mail
+  Mail,
+  BookOpen
 } from "lucide-react"; // Added icons for the bottom bar
 import ThemeToggle from "./ThemeToggle";
 import GlassSurface from "@/components/ui/GlassSurface";
@@ -44,6 +45,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "/", icon: Home },
     { name: "Products", href: "/products", icon: Package },
+    { name: "Blog", href: "/blog", icon: BookOpen },
     { name: "About", href: "/about", icon: Info },
     { name: "Contact", href: "/contact", icon: Mail },
   ];
