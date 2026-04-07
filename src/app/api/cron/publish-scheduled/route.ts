@@ -5,7 +5,7 @@ import BlogPost from '@/models/BlogPost';
 /**
  * Scheduled publish cron endpoint.
  *
- * Call this every 5–15 minutes via an external cron service:
+ * Call this every 5-15 minutes via an external cron service:
  *   - Vercel Cron (vercel.json)
  *   - cron-job.org (free)
  *   - GitHub Actions schedule
@@ -13,9 +13,7 @@ import BlogPost from '@/models/BlogPost';
  * Protect with CRON_SECRET env var so only your cron service can trigger it.
  *
  * Example vercel.json:
- * {
- *   "crons": [{ "path": "/api/cron/publish-scheduled", "schedule": "*/10 * * * *" }]
- * }
+ *   "crons": [{ "path": "/api/cron/publish-scheduled", "schedule": "0,10,20,30,40,50 * * * *" }]
  */
 export async function GET(request: Request) {
   const secret = request.headers.get('x-cron-secret') || new URL(request.url).searchParams.get('secret');
