@@ -118,7 +118,7 @@ const ProductAnalyticsContent = () => {
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <Link href="/admin">
+                            <Link href="/admin/dashboard">
                                 <Button variant="ghost" size="sm" className="mb-2 -ml-2 text-muted-foreground hover:text-foreground">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Back to Dashboard
