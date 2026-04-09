@@ -68,9 +68,9 @@ const PharmaceuticalSection = () => {
       id: 5,
       title: "Global Reach",
       subtitle: "Export & PAN India",
-      description: "Connecting healthcare providers across Bihar, West Bengal, and beyond. We are rapidly expanding our pharmaceutical supply network.",
+      description: "Connecting healthcare providers across India with an efficient online distributor network. We ensure urgent medicine delivery for critical care across Bihar, West Bengal, and beyond.",
       icon: <Globe className="w-8 h-8 text-cyan-600 dark:text-cyan-500" />,
-      stats: ["Pan-India Supply", "Export Ready"],
+      stats: ["Pan-India Supply", "Export Quality"],
       color: "from-cyan-500/10 to-cyan-600/5 dark:from-cyan-500/20 dark:to-cyan-600/5",
     }
   ];

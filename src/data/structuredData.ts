@@ -269,6 +269,30 @@ export const faqStructuredData = {
   "mainEntity": [
     {
       "@type": "Question",
+      "name": "How to buy Aster Medicines injections and syrups online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To buy Aster Medicines products online, search for our brands like NEXOMER, NOBICEF, or Aster AD Baby Oil on verified online pharmacy platforms or medical distribution websites. For high-volume hospital supplies, you can order directly through our authorized regional distributors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I buy medicine online from Aster Medicines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aster Medicines products are available through our nationwide network of pharmaceutical distributors and can be found on major online medical marketplaces. We ensure that our critical care injections are accessible to healthcare providers and patients across India through both digital and offline channels."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Aster Medicines provide urgent medicine delivery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Aster Medicines prioritizes urgent medicine delivery for critical care requirements. Our strategic distribution centers in Patna and Hajipur, Bihar, are equipped for rapid dispatch of life-saving injections like Adrenaline, Meropenem, and Ceftriaxone to hospitals and pharmacies."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "What is Aster Medicines Pvt Ltd?",
       "acceptedAnswer": {
         "@type": "Answer",

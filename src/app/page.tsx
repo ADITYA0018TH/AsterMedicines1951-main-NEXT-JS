@@ -51,7 +51,10 @@ export const metadata: Metadata = {
     "Government Tender Pharma Supplier Bihar",
     "Beta Lactam Injection Manufacturer",
     "Non Beta Lactam Injection Manufacturer",
-    "Critical Care Injection Manufacturer India"
+    "Critical Care Injection Manufacturer India",
+    "where to buy medicine online",
+    "how to buy medicine online",
+    "urgent medicine delivery near me"
   ],
 
   // 4. CANONICAL

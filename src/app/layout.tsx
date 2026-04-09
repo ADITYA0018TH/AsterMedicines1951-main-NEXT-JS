@@ -93,7 +93,10 @@ export const metadata: Metadata = {
     "Non Beta Lactam Injection Manufacturer",
     "Critical Care Injection Manufacturer India",
     "Contract Manufacturing Pharma India",
-    "Injection Manufacturer Bihar"
+    "Injection Manufacturer Bihar",
+    "where to buy medicine online",
+    "how to buy medicine online",
+    "urgent medicine delivery near me"
   ],
 
   authors: [{ name: "Aster Medicines Pvt Ltd", url: "https://astermedicines.com" }],
