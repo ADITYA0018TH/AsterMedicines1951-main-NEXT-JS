@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Microscope, ChevronRight, MapPin } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
+import { DiaTextReveal } from "@/components/ui/dia-text-reveal";
+
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
@@ -106,9 +108,10 @@ const Hero = () => {
 
             {/* OPTIMIZED H1 TAG: Includes Brand + Core Service + Location */}
             <h1 className="font-display font-medium tracking-tight text-slate-900 dark:text-white leading-[0.9]">
-              <span className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-saira-stencil text-slate-900 dark:text-white leading-none mb-2 -ml-1">
-                {t('hero.title_start')}
-              </span>{' '}
+              <DiaTextReveal
+                text={t('hero.title_start')}
+                className="block text-[3.5rem] sm:text-[5rem] lg:text-[7rem] 3xl:text-[8rem] 4xl:text-[9.5rem] font-bold font-saira-stencil leading-none mb-2 -ml-1"
+              />{' '}
               <span className="block text-3xl sm:text-4xl lg:text-5xl 3xl:text-6xl 4xl:text-[4.5rem] font-medium text-transparent bg-clip-text bg-gradient-to-r from-pulse-500 to-orange-400 animate-gradient-x mt-2">
                 {t('hero.title_highlight')}
               </span>{' '}
