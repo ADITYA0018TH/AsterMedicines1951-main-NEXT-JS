@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff,
   RefreshCw, Search, Globe, FileText, X, Save, Clock,
+  Upload, ImageIcon,
 } from "lucide-react";
 
 interface BlogPost {
@@ -62,6 +64,59 @@ export default function AdminBlogContent() {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadImage = useCallback(async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("images", file);
+      formData.append("folder", "aster-medicines/uploads");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Upload failed");
+      }
+
+      const data = await res.json();
+      const url = data.images?.[0];
+      if (url) {
+        setForm((f) => ({ ...f, coverImage: url }));
+        toast.success("Cover image uploaded!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to upload image");
+    } finally {
+      setIsUploading(false);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadImage(file);
+  }, [uploadImage]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["admin-blog"],
@@ -407,11 +462,85 @@ export default function AdminBlogContent() {
               </div>
 
               <div className="space-y-1.5">
-                <Label>Cover Image URL</Label>
-                <Input
-                  placeholder="https://res.cloudinary.com/..."
-                  value={form.coverImage}
-                  onChange={(e) => setForm((f) => ({ ...f, coverImage: e.target.value }))}
+                <Label>Cover Image</Label>
+
+                {form.coverImage ? (
+                  <div className="relative group rounded-xl overflow-hidden border border-border">
+                    <Image
+                      src={form.coverImage}
+                      alt="Cover preview"
+                      width={600}
+                      height={300}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="h-4 w-4 mr-2" /> Replace
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-red-400/50 text-red-300 hover:bg-red-500/20"
+                        onClick={() => setForm((f) => ({ ...f, coverImage: "" }))}
+                      >
+                        <X className="h-4 w-4 mr-2" /> Remove
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onClick={() => !isUploading && fileInputRef.current?.click()}
+                    className={`
+                      relative flex flex-col items-center justify-center gap-3 p-8
+                      rounded-xl border-2 border-dashed transition-colors cursor-pointer
+                      ${isUploading
+                        ? "border-brand-accent/50 bg-brand-accent/5"
+                        : "border-border hover:border-brand-accent/40 hover:bg-muted/30"
+                      }
+                    `}
+                  >
+                    {isUploading ? (
+                      <>
+                        <RefreshCw className="h-8 w-8 text-brand-accent animate-spin" />
+                        <p className="text-sm text-brand-accent font-medium">Uploading...</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="p-3 rounded-full bg-muted/50">
+                          <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-foreground">
+                            Drag & drop your image here
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            or click to browse · JPG, PNG, WebP, GIF · Max 5MB
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) uploadImage(file);
+                    e.target.value = "";
+                  }}
                 />
               </div>
 
