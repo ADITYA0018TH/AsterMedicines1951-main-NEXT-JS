@@ -6,6 +6,7 @@ export interface IBlogPost extends Document {
   excerpt: string;
   content: string;
   coverImage?: string;
+  downloadImage?: string;
   category: string;
   tags: string[];
   author: string;
@@ -27,6 +28,7 @@ const BlogPostSchema: Schema = new Schema(
     excerpt: { type: String, required: true, maxlength: 500 },
     content: { type: String, required: true },
     coverImage: { type: String },
+    downloadImage: { type: String },
     category: { type: String, required: true, index: true },
     tags: { type: [String], default: [] },
     author: { type: String, default: 'Aster Medicines Team' },

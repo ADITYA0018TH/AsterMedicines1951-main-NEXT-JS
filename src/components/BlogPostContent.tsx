@@ -16,6 +16,7 @@ interface BlogPost {
   excerpt: string;
   content: string;
   coverImage?: string;
+  downloadImage?: string;
   allowImageDownload?: boolean;
   category: string;
   tags: string[];
@@ -28,10 +29,11 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownloadPhoto = async () => {
-    if (!post.coverImage) return;
+    const targetUrl = post.downloadImage || post.coverImage;
+    if (!targetUrl) return;
     setIsDownloading(true);
     try {
-      const res = await fetch(post.coverImage);
+      const res = await fetch(targetUrl);
       if (!res.ok) throw new Error("Failed to fetch image");
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
@@ -42,7 +44,7 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
       else if (blob.type.includes("webp")) ext = "webp";
       else if (blob.type.includes("gif")) ext = "gif";
       else {
-        const urlExt = post.coverImage.split(".").pop()?.split("?")[0]?.toLowerCase();
+        const urlExt = targetUrl.split(".").pop()?.split("?")[0]?.toLowerCase();
         if (urlExt && ["jpg", "jpeg", "png", "webp", "gif"].includes(urlExt)) {
           ext = urlExt;
         }
@@ -54,7 +56,7 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
       window.URL.revokeObjectURL(url);
       toast.success("Photo downloaded successfully");
     } catch {
-      window.open(post.coverImage, "_blank");
+      window.open(targetUrl, "_blank");
     } finally {
       setIsDownloading(false);
     }

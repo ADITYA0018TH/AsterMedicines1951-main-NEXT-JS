@@ -18,6 +18,7 @@ interface BlogPost {
   title: string;
   excerpt: string;
   coverImage?: string;
+  downloadImage?: string;
   allowImageDownload?: boolean;
   category: string;
   tags: string[];
@@ -161,10 +162,10 @@ export default function BlogListContent() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-0 transition-opacity duration-700" />
 
                       {/* Download Button on picture */}
-                      {post.allowImageDownload !== false && (
+                      {post.allowImageDownload !== false && (post.downloadImage || post.coverImage) && (
                         <button
                           type="button"
-                          onClick={(e) => handleDownloadPhoto(e, post.coverImage!, post.slug)}
+                          onClick={(e) => handleDownloadPhoto(e, (post.downloadImage || post.coverImage)!, post.slug)}
                           disabled={downloadingSlug === post.slug}
                           className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-black/75 hover:bg-black/95 text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
                           title="Download photo"

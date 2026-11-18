@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff,
   RefreshCw, Search, Globe, FileText, X, Save, Clock,
-  Upload, ImageIcon,
+  Upload, ImageIcon, Download,
 } from "lucide-react";
 
 interface BlogPost {
@@ -26,6 +26,7 @@ interface BlogPost {
   excerpt: string;
   content: string;
   coverImage?: string;
+  downloadImage?: string;
   allowImageDownload?: boolean;
   category: string;
   tags: string[];
@@ -43,6 +44,7 @@ const EMPTY_FORM = {
   excerpt: "",
   content: "",
   coverImage: "",
+  downloadImage: "",
   allowImageDownload: true,
   category: "Manufacturing",
   tags: "",
@@ -67,7 +69,55 @@ export default function AdminBlogContent() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingDownload, setIsUploadingDownload] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const downloadFileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadDownloadImage = useCallback(async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+
+    setIsUploadingDownload(true);
+    try {
+      const formData = new FormData();
+      formData.append("images", file);
+      formData.append("folder", "aster-medicines/uploads");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Upload failed");
+      }
+
+      const data = await res.json();
+      const url = data.images?.[0];
+      if (url) {
+        setForm((f) => ({ ...f, downloadImage: url }));
+        toast.success("Separate download image uploaded!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to upload download image");
+    } finally {
+      setIsUploadingDownload(false);
+    }
+  }, []);
+
+  const handleDownloadDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadDownloadImage(file);
+  }, [uploadDownloadImage]);
 
   const uploadImage = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -174,6 +224,7 @@ export default function AdminBlogContent() {
       excerpt: post.excerpt,
       content: post.content,
       coverImage: post.coverImage || "",
+      downloadImage: (post as any).downloadImage || "",
       allowImageDownload: (post as any).allowImageDownload ?? true,
       category: post.category,
       tags: post.tags.join(", "),
@@ -562,6 +613,100 @@ export default function AdminBlogContent() {
                     </span>
                   </Label>
                 </div>
+
+                {/* Separate Download Image Section */}
+                {form.allowImageDownload && (
+                  <div className="space-y-3 p-4 rounded-xl border border-border/80 bg-muted/20">
+                    <div>
+                      <Label className="text-sm font-semibold flex items-center gap-2">
+                        <Download className="w-4 h-4 text-brand-accent" />
+                        Separate Downloadable Image / File (Optional)
+                      </Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Upload a separate image specifically for visitors to download. If left empty, visitors will download the Cover Image by default.
+                      </p>
+                    </div>
+
+                    {form.downloadImage ? (
+                      <div className="relative group rounded-xl overflow-hidden border border-border">
+                        <Image
+                          src={form.downloadImage}
+                          alt="Downloadable preview"
+                          width={600}
+                          height={200}
+                          className="w-full h-36 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                            onClick={() => downloadFileInputRef.current?.click()}
+                          >
+                            <Upload className="h-4 w-4 mr-2" /> Replace
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/10 border-red-400/50 text-red-300 hover:bg-red-500/20"
+                            onClick={() => setForm((f) => ({ ...f, downloadImage: "" }))}
+                          >
+                            <X className="h-4 w-4 mr-2" /> Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        onDrop={handleDownloadDrop}
+                        onDragOver={handleDragOver}
+                        onClick={() => !isUploadingDownload && downloadFileInputRef.current?.click()}
+                        className={`
+                          relative flex flex-col items-center justify-center gap-2 p-6
+                          rounded-xl border-2 border-dashed transition-colors cursor-pointer
+                          ${isUploadingDownload
+                            ? "border-brand-accent/50 bg-brand-accent/5"
+                            : "border-border hover:border-brand-accent/40 hover:bg-muted/30"
+                          }
+                        `}
+                      >
+                        {isUploadingDownload ? (
+                          <>
+                            <RefreshCw className="h-6 w-6 text-brand-accent animate-spin" />
+                            <p className="text-xs text-brand-accent font-medium">Uploading download photo...</p>
+                          </>
+                        ) : (
+                          <>
+                            <div className="p-2 rounded-full bg-muted/60">
+                              <Download className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs font-medium text-foreground">
+                                Drag &amp; drop separate image for download here
+                              </p>
+                              <p className="text-[11px] text-muted-foreground mt-0.5">
+                                or click to browse · JPG, PNG, WebP, GIF · Max 5MB
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    <input
+                      ref={downloadFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadDownloadImage(file);
+                        e.target.value = "";
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="border-t border-border pt-4 space-y-4">
