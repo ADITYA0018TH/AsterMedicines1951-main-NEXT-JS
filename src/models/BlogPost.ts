@@ -33,7 +33,7 @@ const BlogPostSchema: Schema = new Schema(
     published: { type: Boolean, default: false, index: true },
     publishedAt: { type: Date },
     scheduledPublishAt: { type: Date, index: true },
-    allowImageDownload: { type: Boolean, default: false },
+    allowImageDownload: { type: Boolean, default: true },
     metaTitle: { type: String, maxlength: 70 },
     metaDescription: { type: String, maxlength: 160 },
   },

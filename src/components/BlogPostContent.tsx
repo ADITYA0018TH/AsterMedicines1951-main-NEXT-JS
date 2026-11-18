@@ -106,7 +106,7 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
           {post.coverImage && (
             <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8 border border-border group">
               <Image src={post.coverImage} alt={post.title} fill className="object-cover" priority />
-              {post.allowImageDownload && (
+              {post.allowImageDownload !== false && (
                 <div className="absolute bottom-3 right-3 z-10">
                   <button
                     onClick={handleDownloadPhoto}

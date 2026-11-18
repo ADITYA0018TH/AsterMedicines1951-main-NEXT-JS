@@ -8,8 +8,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Calendar, ArrowRight, BookOpen } from "lucide-react";
+import { Search, Calendar, ArrowRight, BookOpen, Download, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 interface BlogPost {
   _id: string;
@@ -30,6 +31,42 @@ const CATEGORIES = ["All", "Manufacturing", "PCD Franchise", "Drug Profiles", "R
 export default function BlogListContent() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [downloadingSlug, setDownloadingSlug] = useState<string | null>(null);
+
+  const handleDownloadPhoto = async (e: React.MouseEvent, imageUrl: string, slug: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!imageUrl) return;
+    setDownloadingSlug(slug);
+    try {
+      const res = await fetch(imageUrl);
+      if (!res.ok) throw new Error("Failed to fetch image");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      let ext = "jpg";
+      if (blob.type.includes("png")) ext = "png";
+      else if (blob.type.includes("webp")) ext = "webp";
+      else if (blob.type.includes("gif")) ext = "gif";
+      else {
+        const urlExt = imageUrl.split(".").pop()?.split("?")[0]?.toLowerCase();
+        if (urlExt && ["jpg", "jpeg", "png", "webp", "gif"].includes(urlExt)) {
+          ext = urlExt;
+        }
+      }
+      a.download = `${slug || "blog-photo"}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Photo downloaded successfully");
+    } catch {
+      window.open(imageUrl, "_blank");
+    } finally {
+      setDownloadingSlug(null);
+    }
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["blog-posts", category],
@@ -122,6 +159,24 @@ export default function BlogListContent() {
                       />
                       {/* Pixelated overlay that fades out on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-0 transition-opacity duration-700" />
+
+                      {/* Download Button on picture */}
+                      {post.allowImageDownload !== false && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleDownloadPhoto(e, post.coverImage!, post.slug)}
+                          disabled={downloadingSlug === post.slug}
+                          className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-black/75 hover:bg-black/95 text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                          title="Download photo"
+                        >
+                          {downloadingSlug === post.slug ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-accent" />
+                          ) : (
+                            <Download className="w-3.5 h-3.5 text-brand-accent" />
+                          )}
+                          <span className="text-[11px] font-semibold">Download</span>
+                        </button>
+                      )}
                     </div>
                   ) : (
                     <div className="h-48 bg-gradient-to-br from-brand-accent/10 to-orange-100/20 dark:to-orange-900/10 flex items-center justify-center">
