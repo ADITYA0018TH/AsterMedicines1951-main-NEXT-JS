@@ -29,7 +29,6 @@ const nextConfig: NextConfig = {
       "@react-three/fiber",
       "lottie-react",
       "gsap",
-      "advanced-liquid-glass-ui",
       "react-ios-liquid-glass",
       "liquid-glass-react",
       "algui",
