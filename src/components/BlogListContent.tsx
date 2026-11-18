@@ -116,9 +116,11 @@ export default function BlogListContent() {
                         src={post.coverImage}
                         alt={post.title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="object-cover transition-all duration-700 ease-out filter blur-[6px] scale-105 group-hover:blur-0 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
+                      {/* Pixelated overlay that fades out on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-0 transition-opacity duration-700" />
                     </div>
                   ) : (
                     <div className="h-48 bg-gradient-to-br from-brand-accent/10 to-orange-100/20 dark:to-orange-900/10 flex items-center justify-center">
