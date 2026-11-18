@@ -113,15 +113,17 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
                   <button
                     onClick={handleDownloadPhoto}
                     disabled={isDownloading}
-                    className="group/btn flex items-center justify-center h-9 min-w-9 max-w-9 hover:max-w-[150px] rounded-full bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 px-2.5 overflow-hidden hover:scale-105 active:scale-95"
+                    className="group/btn flex items-center h-10 w-10 hover:w-[155px] rounded-full bg-black/85 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 p-0 hover:px-3 overflow-hidden hover:scale-105 active:scale-95"
                     title="Download Photo"
                   >
-                    {isDownloading ? (
-                      <Loader2 className="w-4 h-4 shrink-0 animate-spin text-brand-accent" />
-                    ) : (
-                      <Download className="w-4 h-4 shrink-0 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
-                    )}
-                    <span className="max-w-0 opacity-0 group-hover/btn:max-w-[110px] group-hover/btn:opacity-100 group-hover/btn:ml-1.5 transition-all duration-300 ease-out whitespace-nowrap text-xs font-semibold overflow-hidden">
+                    <div className="flex items-center justify-center w-10 h-10 shrink-0">
+                      {isDownloading ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-brand-accent" />
+                      ) : (
+                        <Download className="w-4 h-4 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
+                      )}
+                    </div>
+                    <span className="max-w-0 opacity-0 group-hover/btn:max-w-[110px] group-hover/btn:opacity-100 transition-all duration-300 ease-out whitespace-nowrap text-xs font-semibold overflow-hidden">
                       Download Photo
                     </span>
                   </button>

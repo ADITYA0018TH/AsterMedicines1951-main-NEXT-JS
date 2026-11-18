@@ -181,15 +181,17 @@ export default function BlogListContent() {
                           type="button"
                           onClick={(e) => handleDownloadPhoto(e, (post.downloadImage || post.coverImage)!, post.slug)}
                           disabled={downloadingSlug === post.slug}
-                          className="group/btn absolute top-3 right-3 z-20 flex items-center justify-center h-8.5 min-w-8.5 max-w-8.5 hover:max-w-[110px] rounded-full bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 px-2 overflow-hidden hover:scale-105 active:scale-95"
+                          className="group/btn absolute top-3 right-3 z-20 flex items-center h-9 w-9 hover:w-[105px] rounded-full bg-black/85 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 p-0 hover:px-2.5 overflow-hidden hover:scale-105 active:scale-95"
                           title="Download photo"
                         >
-                          {downloadingSlug === post.slug ? (
-                            <Loader2 className="w-4 h-4 shrink-0 animate-spin text-brand-accent" />
-                          ) : (
-                            <Download className="w-4 h-4 shrink-0 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
-                          )}
-                          <span className="max-w-0 opacity-0 group-hover/btn:max-w-[65px] group-hover/btn:opacity-100 group-hover/btn:ml-1.5 transition-all duration-300 ease-out whitespace-nowrap text-[11px] font-semibold overflow-hidden">
+                          <div className="flex items-center justify-center w-9 h-9 shrink-0">
+                            {downloadingSlug === post.slug ? (
+                              <Loader2 className="w-4 h-4 animate-spin text-brand-accent" />
+                            ) : (
+                              <Download className="w-4 h-4 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
+                            )}
+                          </div>
+                          <span className="max-w-0 opacity-0 group-hover/btn:max-w-[65px] group-hover/btn:opacity-100 transition-all duration-300 ease-out whitespace-nowrap text-[11px] font-semibold overflow-hidden">
                             Download
                           </span>
                         </button>
