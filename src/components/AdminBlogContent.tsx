@@ -26,6 +26,7 @@ interface BlogPost {
   excerpt: string;
   content: string;
   coverImage?: string;
+  allowImageDownload?: boolean;
   category: string;
   tags: string[];
   author: string;
@@ -42,6 +43,7 @@ const EMPTY_FORM = {
   excerpt: "",
   content: "",
   coverImage: "",
+  allowImageDownload: false,
   category: "Manufacturing",
   tags: "",
   author: "Aster Medicines Team",
@@ -172,6 +174,7 @@ export default function AdminBlogContent() {
       excerpt: post.excerpt,
       content: post.content,
       coverImage: post.coverImage || "",
+      allowImageDownload: (post as any).allowImageDownload ?? false,
       category: post.category,
       tags: post.tags.join(", "),
       author: post.author,
@@ -542,6 +545,23 @@ export default function AdminBlogContent() {
                     e.target.value = "";
                   }}
                 />
+
+                {/* Photo Download Tick Option */}
+                <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-card/60 hover:bg-card/90 transition-colors">
+                  <input
+                    type="checkbox"
+                    id="allowImageDownload"
+                    checked={form.allowImageDownload}
+                    onChange={(e) => setForm((f) => ({ ...f, allowImageDownload: e.target.checked }))}
+                    className="w-4 h-4 mt-0.5 accent-brand-accent rounded cursor-pointer"
+                  />
+                  <Label htmlFor="allowImageDownload" className="cursor-pointer text-sm font-medium">
+                    Enable photo download option
+                    <span className="block text-xs text-muted-foreground font-normal mt-0.5">
+                      When ticked, visitors will see a &quot;Download Photo&quot; button on this blog post to download the image.
+                    </span>
+                  </Label>
+                </div>
               </div>
 
               <div className="border-t border-border pt-4 space-y-4">

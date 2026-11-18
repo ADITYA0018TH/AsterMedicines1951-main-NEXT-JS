@@ -17,6 +17,7 @@ interface BlogPost {
   title: string;
   excerpt: string;
   coverImage?: string;
+  allowImageDownload?: boolean;
   category: string;
   tags: string[];
   author: string;

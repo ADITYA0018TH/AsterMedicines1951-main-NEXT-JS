@@ -17,6 +17,7 @@ const updateSchema = z.object({
   author: z.string().max(100).optional(),
   published: z.boolean().optional(),
   scheduledPublishAt: z.string().datetime().optional().nullable(),
+  allowImageDownload: z.boolean().optional(),
   metaTitle: z.string().max(70).optional(),
   metaDescription: z.string().max(160).optional(),
 });

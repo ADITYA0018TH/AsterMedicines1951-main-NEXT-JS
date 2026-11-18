@@ -13,6 +13,7 @@ export interface IBlogPost extends Document {
   publishedAt?: Date;
   /** If set, a cron job will auto-publish at this time */
   scheduledPublishAt?: Date;
+  allowImageDownload?: boolean;
   metaTitle?: string;
   metaDescription?: string;
   createdAt: Date;
@@ -32,6 +33,7 @@ const BlogPostSchema: Schema = new Schema(
     published: { type: Boolean, default: false, index: true },
     publishedAt: { type: Date },
     scheduledPublishAt: { type: Date, index: true },
+    allowImageDownload: { type: Boolean, default: false },
     metaTitle: { type: String, maxlength: 70 },
     metaDescription: { type: String, maxlength: 160 },
   },

@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, User, Tag, Download, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 interface BlogPost {
   slug: string;
@@ -14,6 +16,7 @@ interface BlogPost {
   excerpt: string;
   content: string;
   coverImage?: string;
+  allowImageDownload?: boolean;
   category: string;
   tags: string[];
   author: string;
@@ -22,6 +25,40 @@ interface BlogPost {
 }
 
 export default function BlogPostContent({ post }: { post: BlogPost }) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadPhoto = async () => {
+    if (!post.coverImage) return;
+    setIsDownloading(true);
+    try {
+      const res = await fetch(post.coverImage);
+      if (!res.ok) throw new Error("Failed to fetch image");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      let ext = "jpg";
+      if (blob.type.includes("png")) ext = "png";
+      else if (blob.type.includes("webp")) ext = "webp";
+      else if (blob.type.includes("gif")) ext = "gif";
+      else {
+        const urlExt = post.coverImage.split(".").pop()?.split("?")[0]?.toLowerCase();
+        if (urlExt && ["jpg", "jpeg", "png", "webp", "gif"].includes(urlExt)) {
+          ext = urlExt;
+        }
+      }
+      a.download = `${post.slug || "blog-photo"}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Photo downloaded successfully");
+    } catch {
+      window.open(post.coverImage, "_blank");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -67,8 +104,25 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
 
           {/* Cover Image */}
           {post.coverImage && (
-            <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8">
+            <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8 border border-border group">
               <Image src={post.coverImage} alt={post.title} fill className="object-cover" priority />
+              {post.allowImageDownload && (
+                <div className="absolute bottom-3 right-3 z-10">
+                  <button
+                    onClick={handleDownloadPhoto}
+                    disabled={isDownloading}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-black/75 hover:bg-black/95 text-white backdrop-blur-md border border-white/20 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                    title="Download Photo"
+                  >
+                    {isDownloading ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-accent" />
+                    ) : (
+                      <Download className="w-3.5 h-3.5 text-brand-accent" />
+                    )}
+                    <span>{isDownloading ? "Downloading..." : "Download Photo"}</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

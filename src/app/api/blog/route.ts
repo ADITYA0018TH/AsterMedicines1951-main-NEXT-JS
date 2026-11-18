@@ -18,6 +18,7 @@ const blogPostSchema = z.object({
   author: z.string().max(100).optional().default('Aster Medicines Team'),
   published: z.boolean().optional().default(false),
   scheduledPublishAt: z.string().datetime().optional().nullable(),
+  allowImageDownload: z.boolean().optional().default(false),
   metaTitle: z.string().max(70).optional(),
   metaDescription: z.string().max(160).optional(),
 });
