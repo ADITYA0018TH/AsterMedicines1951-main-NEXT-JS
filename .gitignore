@@ -137,3 +137,5 @@ dist
 .agent
 .gemini
 .github
+.vercel
+.env*
