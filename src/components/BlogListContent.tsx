@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Calendar, ArrowRight, BookOpen, Download, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import GradientASCII from "@/components/ui/GradientASCII";
 
 interface BlogPost {
   _id: string;
@@ -150,16 +151,29 @@ export default function BlogListContent() {
                   className="group block bg-card border border-border rounded-2xl overflow-hidden hover:border-brand-accent/50 hover:shadow-xl transition-all duration-300"
                 >
                   {post.coverImage ? (
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-48 overflow-hidden bg-black">
+                      {/* Blurred image - remains blurred even on hover */}
                       <Image
                         src={post.coverImage}
                         alt={post.title}
                         fill
-                        className="object-cover transition-all duration-700 ease-out filter blur-[6px] scale-105 group-hover:blur-0 group-hover:scale-105"
+                        className="object-cover filter blur-[10px] scale-110 pointer-events-none transition-none"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
-                      {/* Pixelated overlay that fades out on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-0 transition-opacity duration-700" />
+
+                      {/* Gradient ASCII overlay covering the image */}
+                      <div className="absolute inset-0 z-10 pointer-events-none opacity-85 mix-blend-screen overflow-hidden">
+                        <GradientASCII
+                          shape="horizon"
+                          colors={['#ea580c', '#f97316', '#38bdf8', '#1e3fd8']}
+                          mouseInteraction={true}
+                          speed={0.4}
+                          gradientOpacity={0.8}
+                        />
+                      </div>
+
+                      {/* Dark overlay for contrast */}
+                      <div className="absolute inset-0 z-10 bg-black/25 pointer-events-none" />
 
                       {/* Download Button on picture */}
                       {post.allowImageDownload !== false && (post.downloadImage || post.coverImage) && (
@@ -167,7 +181,7 @@ export default function BlogListContent() {
                           type="button"
                           onClick={(e) => handleDownloadPhoto(e, (post.downloadImage || post.coverImage)!, post.slug)}
                           disabled={downloadingSlug === post.slug}
-                          className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-black/75 hover:bg-black/95 text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                          className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
                           title="Download photo"
                         >
                           {downloadingSlug === post.slug ? (
