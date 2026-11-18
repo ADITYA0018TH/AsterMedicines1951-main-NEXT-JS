@@ -181,15 +181,17 @@ export default function BlogListContent() {
                           type="button"
                           onClick={(e) => handleDownloadPhoto(e, (post.downloadImage || post.coverImage)!, post.slug)}
                           disabled={downloadingSlug === post.slug}
-                          className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                          className="group/btn absolute top-3 right-3 z-20 flex items-center justify-center h-8.5 min-w-8.5 max-w-8.5 hover:max-w-[110px] rounded-full bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 px-2 overflow-hidden hover:scale-105 active:scale-95"
                           title="Download photo"
                         >
                           {downloadingSlug === post.slug ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-accent" />
+                            <Loader2 className="w-4 h-4 shrink-0 animate-spin text-brand-accent" />
                           ) : (
-                            <Download className="w-3.5 h-3.5 text-brand-accent" />
+                            <Download className="w-4 h-4 shrink-0 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
                           )}
-                          <span className="text-[11px] font-semibold">Download</span>
+                          <span className="max-w-0 opacity-0 group-hover/btn:max-w-[65px] group-hover/btn:opacity-100 group-hover/btn:ml-1.5 transition-all duration-300 ease-out whitespace-nowrap text-[11px] font-semibold overflow-hidden">
+                            Download
+                          </span>
                         </button>
                       )}
                     </div>

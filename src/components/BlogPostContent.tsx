@@ -113,15 +113,17 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
                   <button
                     onClick={handleDownloadPhoto}
                     disabled={isDownloading}
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-black/75 hover:bg-black/95 text-white backdrop-blur-md border border-white/20 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                    className="group/btn flex items-center justify-center h-9 min-w-9 max-w-9 hover:max-w-[150px] rounded-full bg-black/80 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 ease-out cursor-pointer disabled:opacity-70 px-2.5 overflow-hidden hover:scale-105 active:scale-95"
                     title="Download Photo"
                   >
                     {isDownloading ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-accent" />
+                      <Loader2 className="w-4 h-4 shrink-0 animate-spin text-brand-accent" />
                     ) : (
-                      <Download className="w-3.5 h-3.5 text-brand-accent" />
+                      <Download className="w-4 h-4 shrink-0 text-brand-accent transition-transform duration-200 group-hover/btn:translate-y-0.5" />
                     )}
-                    <span>{isDownloading ? "Downloading..." : "Download Photo"}</span>
+                    <span className="max-w-0 opacity-0 group-hover/btn:max-w-[110px] group-hover/btn:opacity-100 group-hover/btn:ml-1.5 transition-all duration-300 ease-out whitespace-nowrap text-xs font-semibold overflow-hidden">
+                      Download Photo
+                    </span>
                   </button>
                 </div>
               )}
