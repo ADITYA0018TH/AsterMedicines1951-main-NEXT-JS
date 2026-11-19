@@ -224,7 +224,18 @@ export async function generateProductPDF(product: Product): Promise<void> {
   // Sanitize & Decode strings
   const name = decodeHtmlEntities(product.name);
   const category = decodeHtmlEntities(product.category) || "Pharmaceutical Formulation";
-  const dosage = decodeHtmlEntities(product.dosage) || "As directed by physician";
+
+  // Smartly format dosage/strength (avoiding "100 units available" stock mixup)
+  let dosage = decodeHtmlEntities(product.dosage);
+  if (!dosage || dosage.toLowerCase().includes("available") || dosage.toLowerCase().includes("unit")) {
+    const strengthMatch = name.match(/(\d+(?:\.\d+)?\s*(?:gm|g|mg|mcg|ml|%)\b)/i);
+    if (strengthMatch) {
+      dosage = strengthMatch[0];
+    } else {
+      dosage = "As directed by physician";
+    }
+  }
+
   const composition = decodeHtmlEntities(product.composition);
   const description = decodeHtmlEntities(product.detailedDescription || product.description);
   const indications = decodeHtmlEntities(product.indications);
@@ -244,7 +255,6 @@ export async function generateProductPDF(product: Product): Promise<void> {
   // Pre-load images concurrently
   const imagePromises: Promise<LoadedImage | null>[] = [];
   if (product.images && product.images.length > 0) {
-    // Primary image + up to 3 secondary images
     for (let i = 0; i < Math.min(product.images.length, 4); i++) {
       imagePromises.push(loadImageAsDataUrl(product.images[i], 4500));
     }
@@ -270,7 +280,6 @@ export async function generateProductPDF(product: Product): Promise<void> {
     try {
       doc.addImage(LOGO_BASE64, "PNG", margin, 7.5, 36, 21);
     } catch {
-      // Fallback text if logo fails
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
       doc.setTextColor(...brandOrange);
@@ -326,6 +335,19 @@ export async function generateProductPDF(product: Product): Promise<void> {
     doc.line(margin, 30.5, pageWidth - margin, 30.5);
   };
 
+  // Helper for Section Titles
+  const drawSectionHeader = (title: string, y: number) => {
+    doc.setFillColor(...brandOrange);
+    doc.rect(margin, y, 2.2, 4.2, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.5);
+    doc.setTextColor(...brandNavy);
+    doc.text(title.toUpperCase(), margin + 4.5, y + 3.4);
+
+    return y + 6.5;
+  };
+
   // ==========================================
   // PAGE 1: HERO SHOWCASE & PRIMARY SPECS
   // ==========================================
@@ -333,7 +355,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
 
   // Hero Card Container (Two Columns)
   const heroY = 34;
-  const heroH = 76;
+  const heroH = 82;
   doc.setFillColor(...bgCard);
   doc.setDrawColor(...borderLight);
   doc.setLineWidth(0.4);
@@ -343,7 +365,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
   const imgFrameX = margin + 4;
   const imgFrameY = heroY + 4;
   const imgFrameW = 68;
-  const imgFrameH = heroH - 8; // 68mm
+  const imgFrameH = heroH - 8; // 74mm
 
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(...borderCard);
@@ -360,45 +382,45 @@ export async function generateProductPDF(product: Product): Promise<void> {
       align: "center",
     });
   } else {
-    // Elegant fallback card
+    // Fallback card
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(...brandOrange);
-    doc.text("ASTER MEDICINES", imgFrameX + imgFrameW / 2, imgFrameY + 30, { align: "center" });
+    doc.text("ASTER MEDICINES", imgFrameX + imgFrameW / 2, imgFrameY + 32, { align: "center" });
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...textMuted);
-    doc.text("Standard Formulation Packaging", imgFrameX + imgFrameW / 2, imgFrameY + 38, { align: "center" });
-    doc.text("Pharmaceutical Grade Product", imgFrameX + imgFrameW / 2, imgFrameY + 44, { align: "center" });
+    doc.text("Standard Formulation Packaging", imgFrameX + imgFrameW / 2, imgFrameY + 40, { align: "center" });
+    doc.text("Pharmaceutical Grade Product", imgFrameX + imgFrameW / 2, imgFrameY + 46, { align: "center" });
   }
 
   // --- Right Column: Product Title & Quick Specs ---
   const detailsX = margin + 76;
   const detailsW = contentWidth - 80; // 102mm
-  let rightY = heroY + 5;
 
-  // Category Pill Badge
+  // 1. Category Pill Badge
+  let rightY = heroY + 4;
   const catText = category.toUpperCase();
   doc.setFont("helvetica", "bold");
   doc.setFontSize(6.8);
   const catWidth = Math.min(doc.getTextWidth(catText) + 8, detailsW);
   doc.setFillColor(255, 247, 237); // #FFF7ED
   doc.setDrawColor(254, 215, 170); // #FED7AA
-  doc.roundedRect(detailsX, rightY, catWidth, 5.5, 1.5, 1.5, "FD");
+  doc.setLineWidth(0.3);
+  doc.roundedRect(detailsX, rightY, catWidth, 5.2, 1.5, 1.5, "FD");
   doc.setTextColor(194, 65, 12); // #C2410C
-  doc.text(catText, detailsX + 4, rightY + 3.8);
+  doc.text(catText, detailsX + 4, rightY + 3.6);
 
-  rightY += 9;
-
-  // Product Name Title
+  // 2. Product Name Title
+  rightY += 8;
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(13);
+  doc.setFontSize(12.5);
   doc.setTextColor(...brandNavy);
   const nameLines = doc.splitTextToSize(name, detailsW);
-  doc.text(nameLines, detailsX, rightY);
-  rightY += nameLines.length * 5 + 3;
+  doc.text(nameLines, detailsX, rightY + 3.5);
+  rightY += nameLines.length * 4.8 + 2.5;
 
-  // Verification Badges Strip
+  // 3. Verification Badges Strip (with crisp vector dots instead of glitched unicode)
   const badgeLabels = ["GMP Certified", "Quality Assured"];
   if (product.isWhoApproved) badgeLabels.push("WHO Approved");
 
@@ -406,21 +428,33 @@ export async function generateProductPDF(product: Product): Promise<void> {
   badgeLabels.forEach((label) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
-    const labelW = doc.getTextWidth(`✓ ${label}`) + 6;
+    const textW = doc.getTextWidth(label);
+    const pillW = textW + 9;
+    const pillH = 4.8;
+
     doc.setFillColor(236, 253, 245); // #ECFDF5
     doc.setDrawColor(167, 243, 208); // #A7F3D0
-    doc.roundedRect(badgeX, rightY, labelW, 4.5, 1.2, 1.2, "FD");
+    doc.setLineWidth(0.3);
+    doc.roundedRect(badgeX, rightY, pillW, pillH, 1.4, 1.4, "FD");
+
+    // Clean green dot indicator
+    doc.setFillColor(...brandGreen);
+    doc.circle(badgeX + 2.8, rightY + pillH / 2, 0.75, "F");
+
+    // Badge label
     doc.setTextColor(...brandGreen);
-    doc.text(`✓ ${label}`, badgeX + 3, rightY + 3.2);
-    badgeX += labelW + 3;
+    doc.text(label, badgeX + 4.8, rightY + 3.4);
+
+    badgeX += pillW + 3.5;
   });
 
   rightY += 8;
 
-  // Quick Specifications 4-Row Card
-  const specTableH = 34;
+  // 4. Quick Specifications 4-Row Card
+  const specTableH = 32;
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(...borderLight);
+  doc.setLineWidth(0.3);
   doc.roundedRect(detailsX, rightY, detailsW, specTableH, 2, 2, "FD");
 
   const specRows = [
@@ -430,7 +464,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
     { label: "Shelf Life / Expiry:", val: shelfLife },
   ];
 
-  let specRowY = rightY + 5;
+  let specRowY = rightY + 4.5;
   specRows.forEach((row, idx) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7);
@@ -440,19 +474,19 @@ export async function generateProductPDF(product: Product): Promise<void> {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     doc.setTextColor(...textDark);
-    const valText = doc.splitTextToSize(row.val, detailsW - 38);
-    doc.text(valText[0] || "", detailsX + 36, specRowY);
+    const valText = doc.splitTextToSize(row.val, detailsW - 40);
+    doc.text(valText[0] || "", detailsX + 38, specRowY);
 
     if (idx < specRows.length - 1) {
       doc.setDrawColor(241, 245, 249);
       doc.line(detailsX + 3.5, specRowY + 2.5, detailsX + detailsW - 3.5, specRowY + 2.5);
     }
-    specRowY += 7.5;
+    specRowY += 7.2;
   });
 
   // --- Highlights 4-Metrics Ribbon ---
-  const ribbonY = heroY + heroH + 3.5;
-  const ribbonH = 12;
+  const ribbonY = heroY + heroH + 4;
+  const ribbonH = 11.5;
   const cardW = (contentWidth - 9) / 4; // ~43.25mm
 
   const metricCards = [
@@ -466,93 +500,82 @@ export async function generateProductPDF(product: Product): Promise<void> {
     const cardX = margin + idx * (cardW + 3);
     doc.setFillColor(...bgCard);
     doc.setDrawColor(...borderLight);
+    doc.setLineWidth(0.3);
     doc.roundedRect(cardX, ribbonY, cardW, ribbonH, 2, 2, "FD");
 
-    // Top Orange Mini Stripe
+    // Top Orange Mini Accent
     doc.setFillColor(...brandOrange);
-    doc.rect(cardX + 2, ribbonY, cardW - 4, 0.8, "F");
+    doc.rect(cardX + 2, ribbonY, cardW - 4, 0.7, "F");
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...brandOrange);
-    doc.text(c.title, cardX + 3, ribbonY + 4.5);
+    doc.text(c.title, cardX + 3, ribbonY + 4.4);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6.5);
     doc.setTextColor(...textDark);
-    doc.text(c.subtitle, cardX + 3, ribbonY + 8.5);
+    doc.text(c.subtitle, cardX + 3, ribbonY + 8.4);
   });
 
   // --- Clinical Sections Flow on Page 1 ---
   let curY = ribbonY + ribbonH + 6;
 
-  // Helper for Section Titles
-  const drawSectionHeader = (title: string, y: number) => {
-    doc.setFillColor(...brandOrange);
-    doc.rect(margin, y, 2.5, 5, "F");
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(...brandNavy);
-    doc.text(title.toUpperCase(), margin + 5, y + 4);
-
-    return y + 7.5;
-  };
-
   // Section 1: Active Composition Card
   if (composition) {
     curY = drawSectionHeader("Active Pharmaceutical Composition", curY);
     const compLines = doc.splitTextToSize(composition, contentWidth - 8);
-    const compCardH = Math.max(compLines.length * 4.2 + 6, 12);
+    const compCardH = Math.max(compLines.length * 3.8 + 7, 13);
 
     doc.setFillColor(241, 245, 249); // #F1F5F9
     doc.setDrawColor(...borderLight);
+    doc.setLineWidth(0.3);
     doc.roundedRect(margin, curY, contentWidth, compCardH, 2, 2, "FD");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...brandOrange);
     doc.text("FORMULA / ACTIVE INGREDIENTS:", margin + 4, curY + 4.5);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...textDark);
     doc.text(compLines, margin + 4, curY + 9);
 
-    curY += compCardH + 5;
+    curY += compCardH + 5.5;
   }
 
   // Section 2: Product Overview & Description
   if (description) {
     curY = drawSectionHeader("Product Overview & Clinical Profile", curY);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.6);
     doc.setTextColor(...textBody);
     const descLines = doc.splitTextToSize(description, contentWidth);
     doc.text(descLines, margin, curY);
-    curY += descLines.length * 4 + 5;
+    curY += descLines.length * 3.8 + 5.5;
   }
 
   // Section 3: Indications & Therapeutic Usage
   if (indications && curY < 235) {
     curY = drawSectionHeader("Therapeutic Indications & Clinical Usage", curY);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.6);
     doc.setTextColor(...textBody);
     const indLines = doc.splitTextToSize(indications, contentWidth);
     doc.text(indLines, margin, curY);
-    curY += indLines.length * 4 + 5;
+    curY += indLines.length * 3.8 + 5.5;
   }
 
   // Section 4: Dosage & Administration Guidelines
   if (dosageInstructions && curY < 255) {
     curY = drawSectionHeader("Dosage & Administration Guidelines", curY);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.6);
     doc.setTextColor(...textBody);
     const doseLines = doc.splitTextToSize(dosageInstructions, contentWidth);
     doc.text(doseLines, margin, curY);
-    curY += doseLines.length * 4 + 5;
+    curY += doseLines.length * 3.8 + 5.5;
   }
 
   // ==========================================
@@ -564,21 +587,13 @@ export async function generateProductPDF(product: Product): Promise<void> {
   let page2Y = 35;
 
   // --- Uploaded Images Gallery Strip ---
-  // If multiple images exist, render secondary images side-by-side!
   if (secondaryImages.length > 0) {
-    doc.setFillColor(...brandOrange);
-    doc.rect(margin, page2Y, 2.5, 5, "F");
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(...brandNavy);
-    doc.text("APPROVED PACKAGING & PRODUCT GALLERY", margin + 5, page2Y + 4);
-    page2Y += 7.5;
+    page2Y = drawSectionHeader("Approved Packaging & Product Gallery", page2Y);
 
     const galleryCount = Math.min(secondaryImages.length, 3);
     const galGap = 4;
     const galCardW = (contentWidth - galGap * (galleryCount - 1)) / galleryCount;
-    const galCardH = 46;
+    const galCardH = 44;
 
     for (let i = 0; i < galleryCount; i++) {
       const gImg = secondaryImages[i];
@@ -591,13 +606,13 @@ export async function generateProductPDF(product: Product): Promise<void> {
       doc.roundedRect(gX, page2Y, galCardW, galCardH, 2, 2, "FD");
 
       // Draw image
-      drawImageContained(doc, gImg, gX + 2, page2Y + 2, galCardW - 4, galCardH - 9);
+      drawImageContained(doc, gImg, gX + 2, page2Y + 2, galCardW - 4, galCardH - 8);
 
       // Micro caption
       doc.setFont("helvetica", "bold");
       doc.setFontSize(6);
       doc.setTextColor(...textMuted);
-      doc.text(`View ${i + 2}: Packaging & Detail`, gX + galCardW / 2, page2Y + galCardH - 3, {
+      doc.text(`View ${i + 2}: Packaging & Detail`, gX + galCardW / 2, page2Y + galCardH - 2.5, {
         align: "center",
       });
     }
@@ -609,9 +624,8 @@ export async function generateProductPDF(product: Product): Promise<void> {
   if (precautions) {
     const alertBoxW = contentWidth;
     const precLines = doc.splitTextToSize(precautions, alertBoxW - 14);
-    const alertBoxH = Math.max(precLines.length * 4 + 11, 20);
+    const alertBoxH = Math.max(precLines.length * 3.8 + 10, 18);
 
-    // Box container
     doc.setFillColor(255, 251, 235); // #FFFBEB (amber-50)
     doc.setDrawColor(253, 230, 138); // #FDE68A
     doc.setLineWidth(0.4);
@@ -622,27 +636,27 @@ export async function generateProductPDF(product: Product): Promise<void> {
     doc.rect(margin, page2Y, 2.5, alertBoxH, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8);
+    doc.setFontSize(7.8);
     doc.setTextColor(180, 83, 9); // #B45309
-    doc.text("PRESCRIPTION SCHEDULE & SAFETY PRECAUTIONS", margin + 6, page2Y + 5.5);
+    doc.text("PRESCRIPTION SCHEDULE H1 & SAFETY PRECAUTIONS", margin + 6, page2Y + 5);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...textDark);
-    doc.text(precLines, margin + 6, page2Y + 10);
+    doc.text(precLines, margin + 6, page2Y + 9.5);
 
-    page2Y += alertBoxH + 5;
+    page2Y += alertBoxH + 5.5;
   }
 
   // Adverse Reactions / Side Effects
   if (sideEffects) {
     page2Y = drawSectionHeader("Adverse Reactions & Clinical Safety Profile", page2Y);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.6);
     doc.setTextColor(...textBody);
     const sideLines = doc.splitTextToSize(sideEffects, contentWidth);
     doc.text(sideLines, margin, page2Y);
-    page2Y += sideLines.length * 4 + 5;
+    page2Y += sideLines.length * 3.8 + 5.5;
   }
 
   // Key Product Features & Formulation Advantages
@@ -654,7 +668,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
       .map((f) => decodeHtmlEntities(f));
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.6);
+    doc.setFontSize(7.4);
     doc.setTextColor(...textDark);
 
     // Two column bullet layout
@@ -662,18 +676,18 @@ export async function generateProductPDF(product: Product): Promise<void> {
     validFeatures.forEach((feat, idx) => {
       const isRightCol = idx % 2 === 1;
       const fX = isRightCol ? margin + colW + 6 : margin;
-      const fY = page2Y + Math.floor(idx / 2) * 5;
+      const fY = page2Y + Math.floor(idx / 2) * 4.8;
 
       doc.setFillColor(...brandGreen);
-      doc.circle(fX + 1.5, fY - 1, 1, "F");
+      doc.circle(fX + 1.5, fY - 1, 0.75, "F");
       doc.text(feat, fX + 4.5, fY);
     });
 
-    page2Y += Math.ceil(validFeatures.length / 2) * 5 + 6;
+    page2Y += Math.ceil(validFeatures.length / 2) * 4.8 + 6;
   }
 
   // Quality Assurance Statement Box
-  const qaCardH = 26;
+  const qaCardH = 25;
   doc.setFillColor(...bgCard);
   doc.setDrawColor(...borderLight);
   doc.setLineWidth(0.4);
@@ -684,45 +698,46 @@ export async function generateProductPDF(product: Product): Promise<void> {
   doc.rect(margin, page2Y, 2.5, qaCardH, "F");
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
+  doc.setFontSize(7.8);
   doc.setTextColor(...brandGreen);
-  doc.text("MANUFACTURED UNDER STRICT SCHEDULE M / GMP COMPLIANCE", margin + 6, page2Y + 5.5);
+  doc.text("MANUFACTURED UNDER STRICT SCHEDULE M / GMP COMPLIANCE", margin + 6, page2Y + 5);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.2);
+  doc.setFontSize(7.0);
   doc.setTextColor(...textDark);
   const certText =
     "Aster Medicines Pvt. Ltd. certifies that this drug formulation complies with current Good Manufacturing Practices (cGMP) and pharmacopoeial specifications (IP/BP/USP). Every batch undergoes mandatory physical, chemical, and microbiological assay testing prior to clinical distribution.";
   const certLines = doc.splitTextToSize(certText, contentWidth - 12);
-  doc.text(certLines, margin + 6, page2Y + 10.5);
+  doc.text(certLines, margin + 6, page2Y + 9.5);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(6.8);
   doc.setTextColor(...brandNavy);
-  doc.text("Certified Quality Assurance Division · Aster Medicines Pvt. Ltd.", margin + 6, page2Y + 22);
+  doc.text("Certified Quality Assurance Division · Aster Medicines Pvt. Ltd.", margin + 6, page2Y + 21);
 
   page2Y += qaCardH + 5;
 
   // Commercial & Order Desk Information Card
-  const commCardH = 24;
+  const commCardH = 23;
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(...borderCard);
+  doc.setLineWidth(0.3);
   doc.roundedRect(margin, page2Y, contentWidth, commCardH, 2.5, 2.5, "FD");
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
+  doc.setFontSize(7.8);
   doc.setTextColor(...brandOrange);
-  doc.text("COMMERCIAL INQUIRIES & INSTITUTIONAL SUPPLY", margin + 6, page2Y + 5.5);
+  doc.text("COMMERCIAL INQUIRIES & INSTITUTIONAL SUPPLY", margin + 6, page2Y + 5);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.2);
+  doc.setFontSize(7.0);
   doc.setTextColor(...textDark);
-  doc.text("Company: Aster Medicines Private Limited", margin + 6, page2Y + 10.5);
-  doc.text("Corporate Office: Govind Mitra Road, Patna - 800004, Bihar, India", margin + 6, page2Y + 15);
-  doc.text("Institutional Order Desk: +91 7061452180 | Email: contact@astermedicines.com | Web: www.astermedicines.com", margin + 6, page2Y + 19.5);
+  doc.text("Company: Aster Medicines Private Limited", margin + 6, page2Y + 9.5);
+  doc.text("Corporate Office: Govind Mitra Road, Patna - 800004, Bihar, India", margin + 6, page2Y + 14);
+  doc.text("Institutional Order Desk: +91 7061452180 · Email: contact@astermedicines.com · Web: www.astermedicines.com", margin + 6, page2Y + 18.5);
 
   // ==========================================
-  // FOOTER ON ALL PAGES
+  // FOOTER ON ALL PAGES (CLEAN & NON-OVERLAPPING)
   // ==========================================
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
@@ -734,15 +749,13 @@ export async function generateProductPDF(product: Product): Promise<void> {
     doc.line(margin, footerY - 3, pageWidth - margin, footerY - 3);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setTextColor(...textMuted);
     doc.text(
-      "Aster Medicines Pvt. Ltd. | www.astermedicines.com | Confidential Technical Specification",
+      "Aster Medicines Pvt. Ltd. · Official Specification Sheet · www.astermedicines.com",
       margin,
       footerY + 1
     );
-
-    doc.text("GMP Certified · Batch Inspected", pageWidth / 2, footerY + 1, { align: "center" });
 
     doc.setFont("helvetica", "bold");
     doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin, footerY + 1, { align: "right" });
