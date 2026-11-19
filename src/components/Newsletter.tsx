@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText } from "lucide-react";
+import { FileSpreadsheet, Download } from "lucide-react";
 import ScrollFloat from "@/components/ScrollFloat";
 
 const Newsletter = () => {
@@ -20,7 +20,7 @@ const Newsletter = () => {
             
             {/* Icon Badge */}
             <div className="w-16 h-16 mx-auto bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center mb-8 shadow-lg border border-slate-100 dark:border-white/10 text-orange-500">
-               <FileText size={32} />
+               <FileSpreadsheet size={32} />
             </div>
 
             <ScrollFloat
@@ -38,8 +38,13 @@ const Newsletter = () => {
             <p className="text-slate-600 dark:text-slate-400 text-lg mb-10 leading-relaxed">
               Download the Aster Medicines catalogue for your purchasing team.
             </p>
-            <a href="/catalogue" download className="inline-flex rounded-full bg-orange-700 px-6 py-3 font-semibold text-white hover:bg-orange-800">
-              Download product list (CSV)
+            <a
+              href="/catalogue"
+              download="aster-medicines-products.xlsx"
+              className="inline-flex items-center gap-2 rounded-full bg-orange-700 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-orange-800 hover:scale-105 active:scale-95"
+            >
+              <Download size={18} />
+              <span>Download product list (Excel)</span>
             </a>
 
           </div>
