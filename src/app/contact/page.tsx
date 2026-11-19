@@ -37,7 +37,10 @@ export const metadata: Metadata = {
     },
 };
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+    const { product, request } = await searchParams;
+    const prefix = request === "sample" ? "Request a sample of " : request === "enquiry" ? "Enquiry about " : "";
+    const subject = prefix && typeof product === "string" && product.trim() ? (prefix + product.trim()).slice(0, 200) : "";
     return (
         <>
             <script
@@ -50,7 +53,7 @@ export default function ContactPage() {
                     { name: "Contact Us", item: "/contact" },
                 ]}
             />
-            <ContactContent />
+            <ContactContent key={subject} initialSubject={subject} />
         </>
     );
 }

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/morphing-dialog";
 import { CheckCircle, Mail, User, Phone, Building, MessageSquare, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { submitContactForm } from "@/services/api";
 import { z } from "zod";
 
 interface BulkInquiryFormProps {
@@ -24,6 +25,9 @@ interface BulkInquiryFormProps {
   triggerClassName?: string;
   triggerStyle?: React.CSSProperties;
 }
+
+const configuredNumber = process.env.NEXT_PUBLIC_SALES_WHATSAPP_NUMBER || "";
+const whatsappNumber = /^[1-9]\d{7,14}$/.test(configuredNumber) ? configuredNumber : "";
 
 const inquirySchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -58,44 +62,34 @@ const BulkInquiryContentInner: React.FC<{ selectedProducts: Product[] }> = ({ se
       const productList = selectedProducts.map((p) => `- ${p.name} (${p.category})`).join("\n");
       const fullMessage = `Products of Interest:\n${productList}\n\nMessage:\n${formData.message}`;
 
-      // Create WhatsApp message
-      const whatsappMessage = encodeURIComponent(
-        `*Bulk Inquiry from ${formData.name}*\n\n` +
-        `Email: ${formData.email}\n` +
-        `Phone: ${formData.phone}\n` +
-        `${formData.company ? `Company: ${formData.company}\n` : ''}` +
-        `\n${fullMessage}`
-      );
+      if (whatsappNumber) {
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+          [formData.name, formData.company, formData.email, formData.phone, fullMessage].filter(Boolean).join("\n")
+        )}`, "_blank", "noopener,noreferrer");
+        return;
+      }
 
-      // Open WhatsApp (replace with your WhatsApp business number)
-      const whatsappNumber = "919876543210"; // Replace with actual number
-      window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank");
-
-      toast.success("Inquiry submitted successfully! Redirecting to WhatsApp...");
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        message: "",
+      await submitContactForm({
+        firstName: formData.name.trim(),
+        email: formData.email.trim(),
+        mobileNumber: formData.phone.trim(),
+        subject: "Bulk product enquiry",
+        message: [formData.company, fullMessage].filter(Boolean).join("\n"),
       });
-
-      setTimeout(() => {
-        setIsOpen(false);
-      }, 1000);
+      toast.success("Bulk enquiry received.");
+      setIsOpen(false);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).errors.forEach((err: any) => {
+        error.issues.forEach((err) => {
           if (err.path[0]) {
             newErrors[err.path[0].toString()] = err.message;
           }
         });
         setErrors(newErrors);
         toast.error("Please fix the errors in the form");
+      } else {
+        toast.error(error instanceof Error ? error.message : "Could not send enquiry. Please try again.");
       }
     } finally {
       setIsSubmitting(false);
@@ -256,7 +250,7 @@ const BulkInquiryContentInner: React.FC<{ selectedProducts: Product[] }> = ({ se
                 </>
               ) : (
                 <>
-                  Submit Inquiry
+                  {whatsappNumber ? "Continue to WhatsApp" : "Send bulk enquiry"}
                   <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </>
               )}

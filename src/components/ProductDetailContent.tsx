@@ -329,7 +329,7 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                     <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Interested in this product?</p>
                                     <p className="text-sm font-bold text-slate-900 dark:text-white">Bulk orders available</p>
                                 </div>
-                                <div className="flex w-full sm:w-auto gap-2 sm:gap-3">
+                                <div className="flex flex-wrap w-full sm:w-auto gap-2 sm:gap-3">
                                     <Button
                                         variant="outline"
                                         size="lg"
@@ -345,12 +345,12 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                         <span className="hidden sm:inline">Spec Sheet</span>
                                         <span className="sm:hidden">PDF</span>
                                     </Button>
-                                    <Link href="/contact" className="flex-1 sm:flex-none">
+                                    <Link href={{ pathname: "/contact", query: { product: product.name, request: "enquiry" }, hash: "contact-form" }} className="flex-1 sm:flex-none">
                                         <Button size="lg" className="w-full sm:w-auto bg-brand-accent hover:bg-brand-accent/90 text-white shadow-lg shadow-brand-accent/25 rounded-xl">
                                             Enquire Now <ArrowRight className="w-4 h-4 ml-2" />
                                         </Button>
                                     </Link>
-                                    <Link href="/contact" className="hidden md:block">
+                                    <Link href={{ pathname: "/contact", query: { product: product.name, request: "sample" }, hash: "contact-form" }} className="flex-1 sm:flex-none">
                                         <Button variant="outline" size="lg" className="border-slate-300 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl">
                                             Request Sample
                                         </Button>

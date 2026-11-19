@@ -13,7 +13,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 
-const ContactContent = () => {
+const ContactContent = ({ initialSubject = "" }: { initialSubject?: string }) => {
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -31,7 +31,7 @@ const ContactContent = () => {
         lastName: "",
         email: "",
         mobileNumber: "",
-        subject: "",
+        subject: initialSubject,
         message: ""
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,7 +56,7 @@ const ContactContent = () => {
             loading: 'Sending message...',
             success: () => {
                 setFormData({
-                    firstName: "", lastName: "", email: "", mobileNumber: "", subject: "", message: ""
+                    firstName: "", lastName: "", email: "", mobileNumber: "", subject: initialSubject, message: ""
                 });
                 return 'Message sent successfully! We will get back to you soon.';
             },
@@ -210,11 +210,11 @@ const ContactContent = () => {
                         {/* Right Column: Contact Form */}
                         <div className="lg:col-span-1 hidden lg:block" /> {/* Spacer */}
 
-                        <div ref={formRef} className="lg:col-span-6 w-full">
+                        <div id="contact-form" ref={formRef} className="scroll-mt-24 lg:col-span-6 w-full">
                             <div className="relative p-6 md:p-10 rounded-3xl bg-white dark:bg-neutral-900/60 border border-slate-200 dark:border-white/10 shadow-2xl backdrop-blur-xl">
 
                                 <div className="mb-8">
-                                    <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Send a Message</h2>
+                                    <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">{initialSubject || "Send a Message"}</h2>
                                     <p className="text-slate-500 dark:text-neutral-400 text-sm md:text-base">Fill in the form below and our team will get back to you within 24 hours.</p>
                                 </div>
 
