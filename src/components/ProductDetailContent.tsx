@@ -19,6 +19,7 @@ import { getProductPath, getProductSlug } from "@/lib/productSlug";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import { useTrackProductView } from "@/hooks/useTrackProductView";
+import { decodeHtmlEntities } from "@/lib/generateProductPDF";
 
 const ImageLightbox = dynamic(() => import("@/components/ImageLightbox"), { ssr: false });
 
@@ -32,13 +33,15 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
 
+    const cleanCategory = useMemo(() => decodeHtmlEntities(product.category), [product.category]);
+
     // Track product view for analytics
     const productViewData = useMemo(() => ({
         productId: product.id,
         productSlug: product.slug || getProductSlug({ name: product.name }),
         productName: product.name,
-        category: product.category,
-    }), [product]);
+        category: cleanCategory,
+    }), [product, cleanCategory]);
     
     useTrackProductView(productViewData);
 
@@ -164,7 +167,7 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                             <div>
                                 <div className="flex items-center gap-3 mb-4">
                                     <Badge variant="outline" className="text-brand-accent border-brand-accent/30 bg-brand-accent/5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
-                                        {product.category}
+                                        {cleanCategory}
                                     </Badge>
                                     {product.availability === "In Stock" && (
                                         <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-0 px-3 py-1 rounded-full text-xs">
@@ -338,12 +341,16 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                         className="border-slate-300 dark:border-white/20 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl"
                                     >
                                         {isGeneratingPDF ? (
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-accent" />
                                         ) : (
                                             <Download className="w-4 h-4 mr-2" />
                                         )}
-                                        <span className="hidden sm:inline">Spec Sheet</span>
-                                        <span className="sm:hidden">PDF</span>
+                                        <span className="hidden sm:inline">
+                                            {isGeneratingPDF ? "Generating PDF..." : "Spec Sheet"}
+                                        </span>
+                                        <span className="sm:hidden">
+                                            {isGeneratingPDF ? "..." : "PDF"}
+                                        </span>
                                     </Button>
                                     <Link href={{ pathname: "/contact", query: { product: product.name, request: "enquiry" }, hash: "contact-form" }} className="flex-1 sm:flex-none">
                                         <Button size="lg" className="w-full sm:w-auto bg-brand-accent hover:bg-brand-accent/90 text-white shadow-lg shadow-brand-accent/25 rounded-xl">
@@ -372,7 +379,7 @@ const ProductDetailContent = ({ product, relatedProducts }: ProductDetailContent
                                 Related Products
                             </h2>
                             <p className="text-slate-600 dark:text-slate-400">
-                                More {product.category} solutions from our catalog
+                                More {cleanCategory} solutions from our catalog
                             </p>
                         </div>
                         <Link href="/products" className="hidden md:flex items-center text-brand-accent font-semibold hover:underline">
