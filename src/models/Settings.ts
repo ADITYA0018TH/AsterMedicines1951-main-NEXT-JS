@@ -1,9 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
-
 import type { HomepageImages } from "@/data/homepageImages";
 
 export interface ISettings extends Document {
-    homepageImages?: HomepageImages;
+  homepageImages?: HomepageImages;
   contact: {
     phone: string;
     email: string;
