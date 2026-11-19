@@ -34,7 +34,12 @@ import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+import { homepageImage, type HomepageSlot } from "@/data/homepageImages";
+import { useSettings } from "@/context/SettingsContext";
+import type { HomepageImages } from "@/data/homepageImages";
+
 interface SettingsData {
+    homepageImages?: HomepageImages;
     contact: {
         phone: string;
         email: string;
@@ -118,6 +123,7 @@ const SOCIAL_FIELDS: Array<{
 ];
 
 const normalizeSettings = (data?: Partial<SettingsData>): SettingsData => ({
+    homepageImages: data?.homepageImages || {},
     contact: {
         ...DEFAULT_SETTINGS.contact,
         ...(data?.contact || {}),
@@ -201,6 +207,7 @@ const validateSettings = (settings: SettingsData) => {
 };
 
 const AdminSettingsContent = () => {
+    const { refreshSettings } = useSettings();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [importing, setImporting] = useState(false);
@@ -282,6 +289,10 @@ const AdminSettingsContent = () => {
     };
 
     const handleSave = async () => {
+        if (Object.values(settings.homepageImages || {}).some(photo => photo.src && !photo.alt.trim())) {
+            toast.error("Add alt text for each uploaded homepage image");
+            return;
+        }
         const validationErrors = validateSettings(settings);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -308,6 +319,7 @@ const AdminSettingsContent = () => {
             setErrors({});
             setIsEditing(false);
             setLastSavedAt(new Date().toISOString());
+            await refreshSettings();
             toast.success("Settings saved successfully");
         } catch (error) {
             console.error(error);
@@ -794,6 +806,32 @@ const AdminSettingsContent = () => {
                                             );
                                         })}
                                     </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader><CardTitle>Homepage images</CardTitle></CardHeader>
+                                <CardContent className="grid gap-8 lg:grid-cols-2">
+                                    {(["hero", "manufacturing"] as HomepageSlot[]).map(slot => {
+                                        const custom = settings.homepageImages?.[slot];
+                                        const preview = homepageImage(settings.homepageImages, slot);
+                                        const update = (src: string, alt: string) => setSettings(prev => ({
+                                            ...prev, homepageImages: { ...prev.homepageImages, [slot]: { src, alt } },
+                                        }));
+                                        return <fieldset key={slot} className="min-w-0 space-y-3">
+                                            <legend className="font-semibold">{slot === "hero" ? "Homepage hero" : "Manufacturing section"}</legend>
+                                            <ImageUpload folder="aster-medicines/homepage" value={custom?.src} disabled={!isEditing} onChange={src => update(src, "")}/>
+                                            <Label htmlFor={slot + "-alt"}>Image description (alt text)</Label>
+                                            <Input id={slot + "-alt"} value={preview.alt} maxLength={250} disabled={!isEditing || !custom?.src} onChange={e => update(custom?.src || "", e.target.value)}/>
+                                            <div className="flex items-end gap-3">
+                                                {["Desktop","Mobile"].map(device => <figure key={device} className={device === "Mobile" ? "w-1/3" : "w-2/3"}>
+                                                    <img src={preview.src} alt={preview.alt} className={`w-full rounded-lg object-cover ${slot === "hero" ? "aspect-[4/3]" : device === "Mobile" ? "aspect-[350/268]" : "aspect-[628/464]"}`}/>
+                                                    <figcaption className="text-sm text-muted-foreground">{device} preview</figcaption>
+                                                </figure>)}
+                                            </div>
+                                            <Button type="button" variant="outline" disabled={!isEditing || !custom?.src} onClick={() => update("", "")}>Restore default</Button>
+                                        </fieldset>;
+                                    })}
                                 </CardContent>
                             </Card>
 

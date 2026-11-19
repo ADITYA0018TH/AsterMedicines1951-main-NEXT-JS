@@ -1,6 +1,9 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+import type { HomepageImages } from "@/data/homepageImages";
+
 export interface ISettings extends Document {
+    homepageImages?: HomepageImages;
   contact: {
     phone: string;
     email: string;
@@ -26,7 +29,10 @@ export interface ISettings extends Document {
   };
 }
 
+const homepagePhoto = new Schema({ src: String, alt: String }, { _id: false });
+
 const SettingsSchema: Schema = new Schema({
+  homepageImages: { hero: homepagePhoto, manufacturing: homepagePhoto },
   contact: {
     phone: { type: String, default: '' },
     email: { type: String, default: '' },

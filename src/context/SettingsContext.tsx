@@ -2,7 +2,10 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+import type { HomepageImages } from "@/data/homepageImages";
+
 interface SettingsData {
+    homepageImages?: HomepageImages;
     contact: {
         phone: string;
         email: string;

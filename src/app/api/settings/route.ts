@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Settings from '@/models/Settings';
@@ -26,7 +28,7 @@ const optionalUrl = z.string().max(2048).optional().transform((value) => {
   return sanitized || undefined;
 });
 
-const optionalEmail = z.string().email('Invalid email address').optional().transform((value) => {
+const optionalEmail = z.string().email('Invalid email address').or(z.literal('')).optional().transform((value) => {
   if (typeof value !== 'string') {
     return undefined;
   }
@@ -45,7 +47,13 @@ const optionalAssetPath = z.string().max(255).optional().transform((value) => {
   return assetPath || remoteUrl || undefined;
 });
 
+const homepagePhoto = z.object({
+  src: z.string().max(2048).refine(src => src === "" || /^https:\/\/res\.cloudinary\.com\//.test(src) || /^\/uploads\/[a-zA-Z0-9._/-]+$/.test(src) && !src.includes("..")),
+  alt: z.string().trim().max(250),
+}).refine(photo => !photo.src || !!photo.alt, "Describe the uploaded image");
+
 const settingsUpdateSchema = z.object({
+  homepageImages: z.object({ hero: homepagePhoto.optional(), manufacturing: homepagePhoto.optional() }).optional(),
   contact: z.object({
     phone: optionalText(32),
     email: optionalEmail,
@@ -108,6 +116,10 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || !("role" in session.user) || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Administrator access required" }, { status: 403 });
+  }
   try {
     await connectDB();
     const parsedBody = settingsUpdateSchema.safeParse(await req.json());

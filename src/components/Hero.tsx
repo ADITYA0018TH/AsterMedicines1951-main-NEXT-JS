@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { homepageImage } from "@/data/homepageImages";
+import { useSettings } from "@/context/SettingsContext";
 import Image from "next/image";
 import { Microscope, ChevronRight, MapPin } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -8,6 +10,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { DiaTextReveal } from "@/components/ui/dia-text-reveal";
 
 const Hero = () => {
+  const { settings } = useSettings();
+  const photo = homepageImage(settings.homepageImages, "hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
   const imageRef = useRef<HTMLImageElement>(null);
@@ -145,8 +149,8 @@ const Hero = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-pulse-500/10 group aspect-[4/3] 3xl:aspect-[5/4]">
                 <Image
                   ref={imageRef as any}
-                  src="https://res.cloudinary.com/diszdorz0/image/upload/v1770127433/aster-medicines/products/AD_OIL_NEW_BOX.webp"
-                  alt="Aster Medicines Injection Manufacturing Plant Hajipur"
+                  src={photo.src}
+                  alt={photo.alt}
                   fill
                   sizes="(max-width: 1024px) 100vw, (min-width: 1800px) 50vw, 42vw"
                   className="object-cover transform transition-transform duration-700 group-hover:scale-105"
