@@ -46,6 +46,13 @@ interface AdminProductFormProps {
     triggerStyle?: React.CSSProperties;
 }
 
+function validationMessage(body: { message?: string; errors?: Record<string, { _errors?: string[] } | string[]> }, fallback: string) {
+    const details = Object.entries(body.errors || {}).flatMap(([field, value]) =>
+        Array.isArray(value) ? value : (value._errors || []).map(message => field + ": " + message)
+    );
+    return details.join(" · ") || body.message || fallback;
+}
+
 const ProductFormContent = ({ product }: { product?: Product }) => {
     const { setIsOpen } = useMorphingDialog();
     const queryClient = useQueryClient();
@@ -67,29 +74,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
         isQualityAssured: product?.isQualityAssured || false,
         isGmpCertified: product?.isGmpCertified || false,
         isWhoApproved: product?.isWhoApproved || false,
-        // Auto-generated SEO fields
-        metaTitle: product ? `${product.name} | Aster Medicines Pvt Ltd`.slice(0, 70) : "",
-        metaDescription: product
-            ? `Buy ${product.name} (${product.category}) from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160)
-            : "",
     });
-
-    const handleNameChange = (name: string) => {
-        setFormData((f) => ({
-            ...f,
-            name,
-            metaTitle: `${name} | Aster Medicines Pvt Ltd`.slice(0, 70),
-            metaDescription: `Buy ${name}${f.category ? ` (${f.category})` : ""} from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
-        }));
-    };
-
-    const handleCategoryChange = (category: string) => {
-        setFormData((f) => ({
-            ...f,
-            category,
-            metaDescription: `Buy ${f.name}${category ? ` (${category})` : ""} from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
-        }));
-    };
 
     const createMutation = useMutation({
         mutationFn: async (data: any) => {
@@ -100,7 +85,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
             });
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to create product");
+                throw new Error(validationMessage(errorData, "Failed to create product"));
             }
             return response.json();
         },
@@ -122,7 +107,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
             });
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to update product");
+                throw new Error(validationMessage(errorData, "Failed to update product"));
             }
             return response.json();
         },
@@ -138,6 +123,10 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData.images.length) {
+            toast.error("Upload at least one product image before saving.");
+            return;
+        }
         const data = {
             ...formData,
             price: parseFloat(formData.price),
@@ -170,7 +159,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                         <Input
                             id="name"
                             value={formData.name}
-                            onChange={(e) => handleNameChange(e.target.value)}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             required
                             className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                         />
@@ -183,7 +172,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                         <Input
                             id="category"
                             value={formData.category}
-                            onChange={(e) => handleCategoryChange(e.target.value)}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                             required
                             className="w-full px-4 py-3 h-auto rounded-lg bg-secondary border border-border text-foreground focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all outline-none placeholder:text-muted-foreground"
                         />
@@ -309,7 +298,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
                         Product Images
                     </Label>
                     <ImageDropzone
-                        onImagesUploaded={(urls) => setFormData({ ...formData, images: urls })}
+                        onImagesUploaded={(urls) => setFormData(current => ({ ...current, images: urls }))}
                         existingImages={formData.images}
                         maxFiles={10}
                     />
