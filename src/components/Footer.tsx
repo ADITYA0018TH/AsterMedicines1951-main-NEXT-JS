@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowUp, Heart, MapPin, Phone, Mail, Globe, Check, ChevronUp } from "lucide-react"
 import { useRef, useState } from "react"
 import Link from "next/link"
+import { registeredOffice, factoryAddress } from "@/data/companyLocations";
 import { useSettings } from "@/context/SettingsContext";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -15,6 +16,18 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   const containerRef = useRef<HTMLElement>(null)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const { settings } = useSettings();
+  const contact = settings.contact;
+  const phone = contact.phone || "+91 9934006655";
+  const rows = [{ label: "phone", value: phone, href: "tel:" + phone.replace(/[^\d+]/g, "") }];
+  for (const [role, address] of [
+    ["enquiries", contact.email || "accounts@astermedicines.com"],
+    ["careers", contact.hrEmail], ["support", contact.supportEmail],
+  ]) {
+    const email = address?.trim();
+    if (!email || rows.some(row => row.value.toLowerCase() === email.toLowerCase())) continue;
+    rows.push({ label: /^accounts@/i.test(email) ? "accounts" : role!, value: email, href: "mailto:" + email });
+  }
+
   const { language, setLanguage, t } = useLanguage();
   const [isLangOpen, setIsLangOpen] = useState(false)
 
@@ -48,7 +61,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })
   }
 
   const handleMouseEnter = () => setCursorVariant("text")
@@ -176,82 +189,21 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
           <div className="space-y-6">
             <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">{t('footer.contact_title')}</h4>
             <div className="space-y-6">
-              {settings.contact.mapLink && (
-                <motion.a
-                  href={settings.contact.mapLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-3 group"
-                  whileHover={{ x: 5 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <MapPin className="w-5 h-5 text-brand-accent mt-0.5 shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors leading-tight whitespace-pre-line">
-                    {settings.contact.address || "Address not available"}
-                  </span>
+              <address className="flex gap-3 text-sm text-muted-foreground not-italic">
+                <MapPin className="mt-1 h-5 w-5 shrink-0 text-brand-accent" />
+                <div className="space-y-3">
+                  <p><strong className="block">{t("footer.office")}</strong>{contact.registeredOffice || registeredOffice}</p>
+                  <p><strong className="block">{t("footer.factory")}</strong>{contact.address || factoryAddress}</p>
+                  {contact.mapLink && <a href={contact.mapLink} className="text-brand-accent underline" target="_blank" rel="noopener noreferrer">{t("footer.map")}</a>}
+                </div>
+              </address>
+              {rows.map(row => (
+                <motion.a key={row.href} href={row.href} whileHover={{ x: 5 }}
+                  className="group flex min-h-12 w-full items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
+                  {row.label === "phone" ? <Phone className="h-5 w-5 shrink-0 text-brand-accent" /> : <Mail className="h-5 w-5 shrink-0 text-brand-accent" />}
+                  <span className="min-w-0 [overflow-wrap:anywhere]"><span className="block">{t("footer." + row.label)}</span>{row.value}</span>
                 </motion.a>
-              )}
-
-              {settings.contact.phone && (
-                <motion.a
-                  href={`tel:${settings.contact.phone}`}
-                  className="flex items-center gap-3 group"
-                  whileHover={{ x: 5 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Phone className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                    {settings.contact.phone}
-                  </span>
-                </motion.a>
-              )}
-
-              {settings.contact.email && (
-                <motion.a
-                  href={`mailto:${settings.contact.email}`}
-                  className="flex items-center gap-3 group"
-                  whileHover={{ x: 5 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                    {settings.contact.email}
-                  </span>
-                </motion.a>
-              )}
-
-              {settings.contact.hrEmail && (
-                <motion.a
-                  href={`mailto:${settings.contact.hrEmail}`}
-                  className="flex items-center gap-3 group"
-                  whileHover={{ x: 5 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                    {settings.contact.hrEmail}
-                  </span>
-                </motion.a>
-              )}
-
-              {settings.contact.supportEmail && (
-                <motion.a
-                  href={`mailto:${settings.contact.supportEmail}`}
-                  className="flex items-center gap-3 group"
-                  whileHover={{ x: 5 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Mail className="w-5 h-5 text-brand-accent shrink-0 group-hover:text-brand-accent/80 transition-colors" />
-                  <span className="text-muted-foreground text-sm group-hover:text-foreground transition-colors">
-                    {settings.contact.supportEmail}
-                  </span>
-                </motion.a>
-              )}
+              ))}
             </div>
           </div>
 
@@ -391,22 +343,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
             {/* Separator */}
             <div className="h-4 w-px bg-border hidden sm:block" />
 
-            {["GMP Certified", "ISO 9001:2015"].map((tech, index) => (
-              <motion.span
-                key={tech}
-                className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border rounded bg-secondary/50 text-muted-foreground"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{
-                  borderColor: "rgba(251, 146, 60, 0.5)",
-                  color: "rgb(251, 146, 60)",
-                  boxShadow: "0 0 15px rgba(251, 146, 60, 0.1)"
-                }}
-              >
-                {tech === "GMP Certified" ? t('footer.badges.gmp') : t('footer.badges.iso')}
-              </motion.span>
-            ))}
+            <span className="rounded border border-border px-3 py-1 text-[10px] font-mono text-muted-foreground">CIN U24230BR2008PTC013937</span>
           </div>
         </div>
       </div>

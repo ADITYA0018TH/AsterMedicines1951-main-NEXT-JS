@@ -10,6 +10,7 @@ interface SettingsData {
         phone: string;
         email: string;
         address: string;
+        registeredOffice?: string;
         mapLink: string;
         supportEmail?: string;
         hrEmail?: string;

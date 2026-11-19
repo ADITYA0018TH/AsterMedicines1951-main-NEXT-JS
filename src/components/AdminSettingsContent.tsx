@@ -38,12 +38,15 @@ import { homepageImage, type HomepageSlot } from "@/data/homepageImages";
 import { useSettings } from "@/context/SettingsContext";
 import type { HomepageImages } from "@/data/homepageImages";
 
+import { registeredOffice } from "@/data/companyLocations";
+
 interface SettingsData {
     homepageImages?: HomepageImages;
     contact: {
         phone: string;
         email: string;
         address: string;
+        registeredOffice?: string;
         mapLink: string;
         supportEmail?: string;
         hrEmail?: string;
@@ -89,6 +92,7 @@ const DEFAULT_SETTINGS: SettingsData = {
         phone: "",
         email: "",
         address: "",
+        registeredOffice,
         mapLink: "",
         supportEmail: "",
         hrEmail: "",
@@ -592,7 +596,7 @@ const AdminSettingsContent = () => {
                                     <div className="flex flex-wrap gap-2">
                                         <Button variant="outline" size="sm" onClick={() => openExternalLink(settings.contact.mapLink, "Map link")}>
                                             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                                            Test Map Link
+                                            Test factory map link
                                         </Button>
                                         <Button variant="outline" size="sm" onClick={() => openExternalLink(settings.social.facebook, "Facebook link")}>
                                             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
@@ -750,9 +754,14 @@ const AdminSettingsContent = () => {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label>Address</Label>
+                                        <Label htmlFor="registered-office">Registered office address</Label>
+                                        <Textarea id="registered-office" disabled={!isEditing} maxLength={500} value={settings.contact.registeredOffice ?? registeredOffice} placeholder={registeredOffice}
+                                            onChange={e => handleChange("contact", "registeredOffice", e.target.value)}/>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="factory-address">Factory address</Label>
                                         <Textarea
-                                            disabled={!isEditing}
+                                            id="factory-address" disabled={!isEditing}
                                             value={settings.contact.address}
                                             onChange={(e) => handleChange("contact", "address", e.target.value)}
                                             placeholder="123 Street Name, City, Country"
@@ -763,9 +772,9 @@ const AdminSettingsContent = () => {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label>Google Maps Link</Label>
+                                        <Label htmlFor="factory-map">Factory map link</Label>
                                         <Input
-                                            disabled={!isEditing}
+                                            id="factory-map" disabled={!isEditing}
                                             value={settings.contact.mapLink}
                                             onChange={(e) => handleChange("contact", "mapLink", e.target.value)}
                                             placeholder="https://maps.app.goo.gl/..."

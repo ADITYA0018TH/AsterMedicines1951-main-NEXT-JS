@@ -58,6 +58,7 @@ const settingsUpdateSchema = z.object({
     phone: optionalText(32),
     email: optionalEmail,
     address: optionalText(500),
+    registeredOffice: optionalText(500),
     mapLink: optionalUrl,
     supportEmail: optionalEmail,
     hrEmail: optionalEmail,

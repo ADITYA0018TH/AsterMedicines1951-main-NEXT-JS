@@ -7,6 +7,7 @@ export interface ISettings extends Document {
     phone: string;
     email: string;
     address: string;
+        registeredOffice?: string;
     mapLink: string;
     supportEmail?: string;
     hrEmail?: string;
@@ -35,6 +36,7 @@ const SettingsSchema: Schema = new Schema({
   contact: {
     phone: { type: String, default: '' },
     email: { type: String, default: '' },
+    registeredOffice: String,
     address: { type: String, default: '' },
     mapLink: { type: String, default: '' },
     supportEmail: { type: String, default: '' },
