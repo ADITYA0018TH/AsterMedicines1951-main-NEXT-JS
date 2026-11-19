@@ -31,7 +31,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
   doc.setTextColor(...lightGray);
   doc.text("ASTER MEDICINES PVT LTD", margin, yPos);
   doc.setFontSize(8);
-  doc.text("WHO-GMP Certified Pharmaceutical Manufacturer", margin, yPos + 5);
+  doc.text("GMP CERTIFIED Pharmaceutical Manufacturer", margin, yPos + 5);
   doc.text("Bihar, India", margin, yPos + 9);
 
   // Product Spec Sheet Title
@@ -71,7 +71,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
   // Helper function for sections
   const addSection = (title: string, content: string | undefined, icon?: string) => {
     if (!content) return;
-    
+
     // Check if we need a new page
     if (yPos > 260) {
       doc.addPage();
@@ -126,7 +126,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...darkGray);
-    
+
     product.features
       .filter(f => !f.toLowerCase().includes("price"))
       .forEach((feature) => {
@@ -151,12 +151,12 @@ export async function generateProductPDF(product: Product): Promise<void> {
     yPos += 5;
     doc.setFillColor(250, 250, 250);
     doc.roundedRect(margin, yPos, contentWidth, 25, 3, 3, "F");
-    
+
     doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...lightGray);
     doc.text("CERTIFICATIONS", margin + 5, yPos + 8);
-    
+
     doc.setFontSize(10);
     doc.setTextColor(...darkGray);
     doc.text(certifications.join("  •  "), margin + 5, yPos + 17);
@@ -165,7 +165,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
 
   // Footer
   const footerY = doc.internal.pageSize.getHeight() - 15;
-  
+
   doc.setDrawColor(220, 220, 220);
   doc.setLineWidth(0.3);
   doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
@@ -173,10 +173,10 @@ export async function generateProductPDF(product: Product): Promise<void> {
   doc.setFontSize(8);
   doc.setTextColor(...lightGray);
   doc.text("Aster Medicines Pvt Ltd | www.astermedicines.com", margin, footerY);
-  doc.text(`Generated: ${new Date().toLocaleDateString("en-IN", { 
-    year: "numeric", 
-    month: "long", 
-    day: "numeric" 
+  doc.text(`Generated: ${new Date().toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
   })}`, pageWidth - margin - 45, footerY);
 
   // Document ID

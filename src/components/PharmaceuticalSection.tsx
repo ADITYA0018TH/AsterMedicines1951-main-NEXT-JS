@@ -48,7 +48,7 @@ const PharmaceuticalSection = () => {
     },
     {
       id: 3,
-      title: "WHO-GMP Certified",
+      title: "GMP Certified",
       subtitle: "Quality Standards",
       description: "Our WHO-GMP & ISO 9001:2015 certified plant in Hajipur, Bihar sets the industry benchmark. Rigorous quality control for every liquid and dry injection.",
       icon: <ShieldCheck className="w-8 h-8 text-green-600 dark:text-green-500" />,

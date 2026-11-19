@@ -42,7 +42,7 @@ const AboutContent = () => {
         { text: "we have evolved from a local unit into a high-volume manufacturing powerhouse, serving over" },
         { text: "12 states", highlight: true },
         { text: "with" },
-        { text: "WHO-GMP certified", highlight: true },
+        { text: "GMP CERTIFIED", highlight: true },
         { text: "injectables." }
     ];
 
@@ -215,12 +215,12 @@ const AboutContent = () => {
                         <div className="flex gap-12 text-xs font-mono uppercase text-muted-foreground overflow-hidden">
                             <div className="animate-marquee flex gap-12 whitespace-nowrap">
                                 <span>{"///"} Third Party Manufacturing</span>
-                                <span>{"///"} WHO-GMP Certified</span>
+                                <span>{"///"} GMP CERTIFIED</span>
                                 <span>{"///"} GLP Lab</span>
                                 <span>{"///"} 12+ States Served</span>
                                 <span>{"///"} 1.5M Daily Output</span>
                                 <span>{"///"} Third Party Manufacturing</span>
-                                <span>{"///"} WHO-GMP Certified</span>
+                                <span>{"///"} GMP CERTIFIED</span>
                             </div>
                         </div>
                     </div>

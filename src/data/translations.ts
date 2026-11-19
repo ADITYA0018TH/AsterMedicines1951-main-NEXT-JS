@@ -13,7 +13,7 @@ export const translations = {
             title_start: "Aster Medicines",
             title_highlight: "Pharma Manufacturer",
             title_end: "in Patna & Hajipur, Bihar.",
-            description: "WHO-GMP Certified Manufacturer of Critical Care Injections (Meropenem, Ceftriaxone), Syrups & Baby Oil. Your trusted partner for Third Party Manufacturing in East India.",
+            description: "GMP CERTIFIED Manufacturer of Critical Care Injections (Meropenem, Ceftriaxone), Syrups & Baby Oil. Your trusted partner for Third Party Manufacturing in East India.",
             cta_quote: "Get Quote",
             gmp_certified: "GMP Certified Unit"
         },
@@ -94,7 +94,7 @@ export const translations = {
                     stats: ["50+ Formulations", "Critical Care"]
                 },
                 {
-                    title: "WHO-GMP Certified",
+                    title: "GMP CERTIFIED",
                     subtitle: "Quality Standards",
                     description: "Our WHO-GMP & ISO 9001:2015 certified plant in Hajipur, Bihar sets the industry benchmark. Rigorous quality control for every liquid and dry injection.",
                     stats: ["ISO 9001:2015", "GLP Certified"]

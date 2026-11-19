@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     product.composition ? `Composition: ${product.composition}.` : "",
     product.indications ? `Used for: ${product.indications}.` : "",
     product.dosage ? `Dosage: ${product.dosage}.` : "",
-    `Category: ${product.category}. Manufactured by Aster Medicines Pvt Ltd, Bihar, India. WHO-GMP Certified.`,
+    `Category: ${product.category}. Manufactured by Aster Medicines Pvt Ltd, Bihar, India. GMP CERTIFIED.`,
   ].filter(Boolean).join(" ");
 
   // Trim to ~300 chars for meta description but keep full for keywords
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: productKeywords,
     openGraph: {
       title: `${product.name} — ${product.category} | Aster Medicines`,
-      description: product.detailedDescription || product.description || `WHO-GMP Certified ${product.name} manufactured by Aster Medicines Pvt Ltd.`,
+      description: product.detailedDescription || product.description || `GMP CERTIFIED ${product.name} manufactured by Aster Medicines Pvt Ltd.`,
       url: productUrl,
       images: [
         {

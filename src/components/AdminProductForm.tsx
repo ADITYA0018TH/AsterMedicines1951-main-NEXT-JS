@@ -70,7 +70,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
         // Auto-generated SEO fields
         metaTitle: product ? `${product.name} | Aster Medicines Pvt Ltd`.slice(0, 70) : "",
         metaDescription: product
-            ? `Buy ${product.name} (${product.category}) from Aster Medicines — WHO-GMP certified manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160)
+            ? `Buy ${product.name} (${product.category}) from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160)
             : "",
     });
 
@@ -79,7 +79,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
             ...f,
             name,
             metaTitle: `${name} | Aster Medicines Pvt Ltd`.slice(0, 70),
-            metaDescription: `Buy ${name}${f.category ? ` (${f.category})` : ""} from Aster Medicines — WHO-GMP certified manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
+            metaDescription: `Buy ${name}${f.category ? ` (${f.category})` : ""} from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
         }));
     };
 
@@ -87,7 +87,7 @@ const ProductFormContent = ({ product }: { product?: Product }) => {
         setFormData((f) => ({
             ...f,
             category,
-            metaDescription: `Buy ${f.name}${category ? ` (${category})` : ""} from Aster Medicines — WHO-GMP certified manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
+            metaDescription: `Buy ${f.name}${category ? ` (${category})` : ""} from Aster Medicines — GMP CERTIFIED manufacturer in Bihar. Bulk orders & third party manufacturing available.`.slice(0, 160),
         }));
     };
 

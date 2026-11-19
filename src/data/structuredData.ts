@@ -190,7 +190,7 @@ export const websiteStructuredData = {
   "name": "Aster Medicines Pvt Ltd",
   "alternateName": ["Aster Medicines", "Aster Pharma"],
   "url": "https://astermedicines.com",
-  "description": "Official website of Aster Medicines Pvt Ltd - Leading WHO-GMP certified pharmaceutical manufacturer in Bihar, India. Manufacturer of injections, syrups, and baby care products.",
+  "description": "Official website of Aster Medicines Pvt Ltd - Leading GMP CERTIFIED pharmaceutical manufacturer in Bihar, India. Manufacturer of injections, syrups, and baby care products.",
   "publisher": { "@id": "https://astermedicines.com/#organization" },
   "inLanguage": ["en", "hi", "ja"],
   "potentialAction": {
@@ -312,12 +312,12 @@ export const faqStructuredData = {
       "name": "Where is Aster Medicines located?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Aster Medicines has two locations in Bihar, India. Our registered office is at North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Our WHO-GMP certified manufacturing plant is at Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844102."
+        "text": "Aster Medicines has two locations in Bihar, India. Our registered office is at North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Our GMP CERTIFIED manufacturing plant is at Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844102."
       }
     },
     {
       "@type": "Question",
-      "name": "Is Aster Medicines WHO-GMP certified?",
+      "name": "Is Aster Medicines GMP CERTIFIED?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, Aster Medicines Pvt Ltd holds WHO-GMP (Good Manufacturing Practices) certification and ISO 9001:2015 certification. Our manufacturing facility in Hajipur follows strict quality control measures and international pharmaceutical manufacturing standards."
@@ -397,7 +397,7 @@ export const localBusinessStructuredData = {
   "@type": ["LocalBusiness", "ManufacturingBusiness"],
   "@id": "https://astermedicines.com/#localbusiness",
   "name": "Aster Medicines Pvt Ltd - Manufacturing Unit",
-  "description": "WHO-GMP Certified Pharmaceutical Manufacturing Plant. Manufacturer of Beta-Lactam & Non-Beta Lactam Injections, Syrups, and Baby Care Products.",
+  "description": "GMP CERTIFIED Pharmaceutical Manufacturing Plant. Manufacturer of Beta-Lactam & Non-Beta Lactam Injections, Syrups, and Baby Care Products.",
   "image": "https://astermedicines.com/og-image.webp",
   "url": "https://astermedicines.com",
   "telephone": "+91-9934006655",

@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://astermedicines.com"),
 
   title: {
-    default: "Aster Medicines Pvt Ltd (Private Limited) | WHO-GMP Certified Injection & Syrup Manufacturer in Bihar, Patna & Hajipur",
+    default: "Aster Medicines Pvt Ltd (Private Limited) | GMP Certified Injection & Syrup Manufacturer in Bihar, Patna & Hajipur",
     template: "%s | Aster Medicines Pvt Ltd",
   },
 
@@ -135,7 +135,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Aster Medicines Pvt Ltd - WHO-GMP Certified Pharma Manufacturer",
+    title: "Aster Medicines Pvt Ltd - GMP CERTIFIED Pharma Manufacturer",
     description: "Manufacturing Meropenem, Ceftriaxone, Adrenaline injections, syrups & baby oil since 1982. Factory at Hajipur, Bihar. PCD Franchise & Third Party Manufacturing.",
     images: ["/og-image.webp"],
   },

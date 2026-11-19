@@ -85,7 +85,7 @@ const SpecsSection = () => {
       const counterElement = card.querySelector(".counter-value");
       if (counterElement) {
         const targetValue = parseFloat(counterElement.getAttribute("data-target") || "0");
-        
+
         gsap.to(counterElement, {
           innerText: targetValue,
           duration: 2,
@@ -94,14 +94,14 @@ const SpecsSection = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
-            once: true, 
+            once: true,
           },
           onUpdate: function () {
             const current = parseFloat(this.targets()[0].innerText);
-            if(Number.isInteger(targetValue)) {
-                this.targets()[0].innerText = Math.round(current);
+            if (Number.isInteger(targetValue)) {
+              this.targets()[0].innerText = Math.round(current);
             } else {
-                this.targets()[0].innerText = current.toFixed(1);
+              this.targets()[0].innerText = current.toFixed(1);
             }
           },
         });
@@ -121,7 +121,7 @@ const SpecsSection = () => {
       </div>
 
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto relative z-10">
-        
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24 gap-8">
           <div className="max-w-3xl specs-title opacity-0">
@@ -133,14 +133,14 @@ const SpecsSection = () => {
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-foreground leading-[1.1]">
-              Certified for <br/>
+              Certified for <br />
               {/* Using your specific 'text-gradient' utility here */}
               <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-primary to-orange-400">
                 Global Standards.
               </span>
             </h2>
           </div>
-          
+
           <div className="md:max-w-xs specs-title opacity-0 text-muted-foreground text-lg leading-relaxed text-left md:text-right">
             We adhere to strict WHO-GMP & GLP guidelines to ensure safety in every vial.
           </div>
@@ -161,7 +161,7 @@ const SpecsSection = () => {
 
               <div className="relative z-10 mt-12">
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span 
+                  <span
                     className="counter-value text-5xl md:text-6xl font-display font-bold text-foreground"
                     data-target={stat.value}
                   >
@@ -172,7 +172,7 @@ const SpecsSection = () => {
                     {stat.suffix}
                   </span>
                 </div>
-                
+
                 <h3 className="text-lg font-bold text-foreground mb-2">
                   {stat.label}
                 </h3>
@@ -187,7 +187,7 @@ const SpecsSection = () => {
         {/* BOTTOM TICKER - "The Stamp of Approval" */}
         <div className="mt-20 pt-10 border-t border-border flex flex-wrap justify-center md:justify-between items-center gap-8 opacity-60 hover:opacity-100 transition-opacity duration-500">
           {[
-            "WHO-GMP Certified",
+            "GMP CERTIFIED",
             "ISO 9001:2015",
             "GLP Compliant Labs",
             "Indian Pharmacopoeia (IP)",

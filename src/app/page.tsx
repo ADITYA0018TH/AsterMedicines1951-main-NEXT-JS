@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Aster Medicines Pvt Ltd — WHO-GMP Certified Injection & Syrup Manufacturer | Patna, Bihar",
+    title: "Aster Medicines Pvt Ltd — GMP CERTIFIED Injection & Syrup Manufacturer | Patna, Bihar",
     description: "Leading manufacturer of Meropenem, Ceftriaxone, Adrenaline, Dexamethasone injections, syrups & baby massage oil. ISO certified. Third Party Manufacturing & PCD Franchise available. Est. 1982.",
     url: "https://astermedicines.com",
     siteName: "Aster Medicines Pvt Ltd",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Aster Medicines Pvt Ltd - Pharmaceutical Manufacturer in Bihar",
-    description: "WHO-GMP certified. Manufacturing Meropenem, Ceftriaxone, Adrenaline injections, syrups & baby oil since 1982. PCD Franchise & Third Party Manufacturing available.",
+    description: "GMP CERTIFIED. Manufacturing Meropenem, Ceftriaxone, Adrenaline injections, syrups & baby oil since 1982. PCD Franchise & Third Party Manufacturing available.",
     images: ["/og-image.webp"],
   },
 };
