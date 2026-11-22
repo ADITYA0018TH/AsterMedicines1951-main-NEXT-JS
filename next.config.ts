@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   output: "standalone",
+  async rewrites() {
+    return [{ source: "/vc", destination: "/api/visiting-card" }];
+  },
   images: {
     remotePatterns: [
       {
