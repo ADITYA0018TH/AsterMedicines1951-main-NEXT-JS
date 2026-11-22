@@ -6,7 +6,7 @@ const height = 51;
 const navy = "#11254C";
 const gold = "#FFCD0A";
 const white = "#FFFFFF";
-const phone = "+91 99340 06655";
+const phone = "+91 7909071165";
 const email = "astermedicinespvtltd@gmail.com";
 const website = "astermedicines.com";
 
@@ -42,15 +42,20 @@ function drawFront(pdf: jsPDF) {
   pdf.setFillColor(gold).rect(5.5, 7.2, 5, 0.8, "F");
   label(pdf, "MANAGING DIRECTOR", 12.2, 8.3);
   pdf.setFont("times", "normal").setFontSize(22).setTextColor(navy);
-  pdf.text("Mr. Rupesh Anand", 5.2, 20.6);
+  pdf.text("Rupesh Anand", 5.2, 20.6);
   pdf.setDrawColor("#C8CFDA").setLineWidth(0.18).line(5.5, 25, 84.5, 25);
 
   label(pdf, "CONTACT", 5.5, 31);
   label(pdf, "REGISTERED OFFICE", 52.5, 31);
   pdf.setFont("helvetica", "normal").setFontSize(7.25).setTextColor(navy);
-  pdf.textWithLink(phone, 5.5, 36.3, { url: "tel:+919934006655" });
+  pdf.textWithLink(phone, 5.5, 36.3, { url: "tel:+917909071165" });
+  pdf.setTextColor("#184A88");
   pdf.textWithLink(email, 5.5, 40.9, { url: `mailto:${email}` });
   pdf.textWithLink(website, 5.5, 45.5, { url: `https://${website}` });
+  pdf.setDrawColor("#7091B4").setLineWidth(0.12);
+  pdf.line(5.5, 41.4, 5.5 + pdf.getTextWidth(email), 41.4);
+  pdf.line(5.5, 46, 5.5 + pdf.getTextWidth(website), 46);
+  pdf.setTextColor(navy);
   pdf.text(["North of Janta Hotel, 1st Floor", "Govind Mitra Road", "Patna, Bihar - 800004"], 52.5, 36.3, { lineHeightFactor: 1.8 });
 }
 
@@ -61,14 +66,19 @@ function drawBack(pdf: jsPDF) {
   pdf.setFillColor("#3458A2").ellipse(96, 22, 31, 36, "F");
   pdf.setFillColor(navy).ellipse(100, 19, 32, 35, "F");
   pdf.setDrawColor(gold).setLineWidth(0.25).ellipse(102, 19, 31, 35, "S");
-  drawLogo(pdf, 5.5, 4.8, 22, true);
-  pdf.setTextColor(white).setFont("times", "normal").setFontSize(23);
-  pdf.text("Aster Medicines", 5.2, 29.5);
-  pdf.setFont("helvetica", "bold").setFontSize(7.4);
-  pdf.text("PRIVATE LIMITED", 5.7, 35, { charSpace: 0.55 });
-  pdf.setFillColor(gold).rect(5.7, 44.2, 5.5, 0.6, "F");
-  pdf.setTextColor("#E0E6F2").setFont("helvetica", "normal").setFontSize(7.5);
-  pdf.text("Quality Healthcare Solutions", 13, 45.4);
+  drawLogo(pdf, 5.5, 3.2, 18, true);
+  pdf.setTextColor("#E0E6F2").setFont("helvetica", "normal").setFontSize(6.7);
+  pdf.text("Quality Healthcare Solutions", 26, 10.6);
+  pdf.setTextColor(white).setFont("times", "normal").setFontSize(18);
+  pdf.text("Aster Medicines", 5.3, 20);
+  pdf.setFont("helvetica", "bold").setFontSize(6.4);
+  pdf.text("PRIVATE LIMITED", 5.7, 24, { charSpace: 0.45 });
+  pdf.setFont("helvetica", "normal").setFontSize(7.6);
+  pdf.text(["Manufacturer of parentals, oral liquid,", "Tablets & external preparation"], 5.7, 29, { lineHeightFactor: 1.2 });
+  pdf.setTextColor(gold).setFont("helvetica", "bold").setFontSize(6.1);
+  pdf.text("FACTORY", 5.7, 38, { charSpace: 0.38 });
+  pdf.setTextColor(white).setFont("helvetica", "normal").setFontSize(7.25);
+  pdf.text(["Plot No. E-4(Part), Phase II, Industrial Area,", "Hajipur-844101, Vaishali"], 5.7, 42.6, { lineHeightFactor: 1.35 });
 }
 
 export function createVisitingCard() {

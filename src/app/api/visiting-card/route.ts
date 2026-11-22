@@ -6,7 +6,7 @@ export function GET() {
   return new Response(createVisitingCard(), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": 'attachment; filename="Aster_Medicines_Mr_Anand_Rupesh_VC.pdf"',
+      "Content-Disposition": 'attachment; filename="Aster_Medicines_Anand_Rupesh_VC.pdf"',
     },
   });
 }
