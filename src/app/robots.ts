@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      allow: ["/", "/api/visiting-card$"],
       disallow: [
         "/admin/",        // Keep your admin panel private
         "/api/",          // Don't index your backend API routes
