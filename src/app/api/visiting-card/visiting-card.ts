@@ -60,24 +60,24 @@ function drawFront(pdf: jsPDF) {
 }
 
 function drawBack(pdf: jsPDF) {
-  pdf.setFillColor(navy).rect(0, 0, width, height, "F");
+  pdf.setFillColor(white).rect(0, 0, width, height, "F");
   // An enlarged crescent echoes the curve of the Aster mark across the trim.
-  pdf.setFillColor("#213D83").ellipse(93, 24, 33, 39, "F");
-  pdf.setFillColor("#3458A2").ellipse(96, 22, 31, 36, "F");
-  pdf.setFillColor(navy).ellipse(100, 19, 32, 35, "F");
+  pdf.setFillColor("#EDF1F8").ellipse(93, 24, 33, 39, "F");
+  pdf.setFillColor("#DFE7F3").ellipse(96, 22, 31, 36, "F");
+  pdf.setFillColor(white).ellipse(100, 19, 32, 35, "F");
   pdf.setDrawColor(gold).setLineWidth(0.25).ellipse(102, 19, 31, 35, "S");
-  drawLogo(pdf, 5.5, 3.2, 18, true);
-  pdf.setTextColor("#E0E6F2").setFont("helvetica", "normal").setFontSize(6.7);
+  drawLogo(pdf, 5.5, 3.2, 18);
+  pdf.setTextColor("#425678").setFont("helvetica", "normal").setFontSize(6.7);
   pdf.text("Quality Healthcare Solutions", 26, 10.6);
-  pdf.setTextColor(white).setFont("times", "normal").setFontSize(18);
+  pdf.setTextColor(navy).setFont("times", "normal").setFontSize(18);
   pdf.text("Aster Medicines", 5.3, 20);
   pdf.setFont("helvetica", "bold").setFontSize(6.4);
   pdf.text("PRIVATE LIMITED", 5.7, 24, { charSpace: 0.45 });
   pdf.setFont("helvetica", "normal").setFontSize(7.6);
   pdf.text(["Manufacturer of parentals, oral liquid,", "Tablets & external preparation"], 5.7, 29, { lineHeightFactor: 1.2 });
-  pdf.setTextColor(gold).setFont("helvetica", "bold").setFontSize(6.1);
+  pdf.setTextColor("#425678").setFont("helvetica", "bold").setFontSize(6.1);
   pdf.text("FACTORY", 5.7, 38, { charSpace: 0.38 });
-  pdf.setTextColor(white).setFont("helvetica", "normal").setFontSize(7.25);
+  pdf.setTextColor(navy).setFont("helvetica", "normal").setFontSize(7.25);
   pdf.text(["Plot No. E-4(Part), Phase II, Industrial Area,", "Hajipur-844101, Vaishali"], 5.7, 42.6, { lineHeightFactor: 1.35 });
 }
 
