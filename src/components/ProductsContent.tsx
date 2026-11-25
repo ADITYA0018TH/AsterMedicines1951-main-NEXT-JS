@@ -12,7 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 import {
-    GitCompare, Send, Loader2, Search, Filter, X,
+    Download, GitCompare, Send, Loader2, Search, Filter, X,
     Check, ArrowUpRight, FlaskConical, Microscope, Atom
 } from "lucide-react";
 import { Product } from "@/data/products";
@@ -161,6 +161,25 @@ const ProductsContent = () => {
         queryKey: ['products'],
         queryFn: fetchProducts,
     });
+    const [catalogueStatus, setCatalogueStatus] = useState("");
+    async function downloadCatalogue() {
+        setCatalogueStatus("Loading products…");
+        try {
+            const [response, { generateProductCatalogue }] = await Promise.all([
+                fetch("/api/products", { cache: "no-store" }),
+                import("@/lib/generateProductPDF"),
+            ]);
+            if (!response.ok) throw new Error("Products unavailable");
+            await generateProductCatalogue(await response.json(), (current, total) =>
+                setCatalogueStatus(`Preparing product ${current} of ${total}…`)
+            );
+        } catch {
+            toast.error("Could not generate the catalogue. Please try again.");
+        } finally {
+            setCatalogueStatus("");
+        }
+    }
+
     const products = fetchedProducts.length > 0 ? fetchedProducts : dummyProducts;
 
     const { data: categories = ["All"] } = useQuery({
@@ -244,6 +263,11 @@ const ProductsContent = () => {
                         Advanced search for global pharmaceutical standards. <br />
                         Explore our index of high-efficacy formulations.
                     </p>
+
+                    <Button className="mb-6 rounded-full" onClick={downloadCatalogue} disabled={!!catalogueStatus}>
+                        {catalogueStatus ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Download aria-hidden="true" />}
+                        <span aria-live="polite">{catalogueStatus || "Download Product Catalogue (PDF)"}</span>
+                    </Button>
 
                     {/* Main Search Input */}
                     <div className="max-w-xl mx-auto">

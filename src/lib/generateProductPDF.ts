@@ -198,13 +198,8 @@ function drawImageContained(
 /**
  * Main PDF Generation function for Aster Medicines Specification Sheets
  */
-export async function generateProductPDF(product: Product): Promise<void> {
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
-  });
-
+async function drawProductSheet(doc: jsPDF, product: Product) {
+  const firstPage = doc.getNumberOfPages();
   const pageWidth = 210;
   const pageHeight = 297;
   const margin = 14;
@@ -740,7 +735,7 @@ export async function generateProductPDF(product: Product): Promise<void> {
   // FOOTER ON ALL PAGES (CLEAN & NON-OVERLAPPING)
   // ==========================================
   const totalPages = doc.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = firstPage; i <= totalPages; i++) {
     doc.setPage(i);
 
     const footerY = pageHeight - 11;
@@ -758,12 +753,90 @@ export async function generateProductPDF(product: Product): Promise<void> {
     );
 
     doc.setFont("helvetica", "bold");
-    doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin, footerY + 1, { align: "right" });
+    doc.text(`Sheet ${i - firstPage + 1} of ${totalPages - firstPage + 1}`, pageWidth - margin, footerY + 1, { align: "right" });
   }
 
-  // Save the PDF
+}
+
+export async function generateProductPDF(product: Product): Promise<void> {
+  const doc = new jsPDF({ compress: true });
+  await drawProductSheet(doc, product);
   const cleanFileName = `${(product.slug || product.name)
     .replace(/[^a-zA-Z0-9]/g, "-")
     .toLowerCase()}-specification.pdf`;
   doc.save(cleanFileName);
+}
+
+export async function generateProductCatalogue(
+  products: Product[],
+  onProgress: (current: number, total: number) => void,
+): Promise<void> {
+  if (!products.length) throw new Error("No products available");
+
+  const sorted = [...products].sort((a, b) =>
+    decodeHtmlEntities(a.category).localeCompare(decodeHtmlEntities(b.category))
+    || a.name.localeCompare(b.name)
+  );
+  const doc = new jsPDF({ compress: true });
+  doc.setProperties({ title: "Aster Medicines Product Catalogue", author: "Aster Medicines Pvt. Ltd." });
+  doc.addImage(LOGO_BASE64, "PNG", 16, 14, 44, 26);
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 58, 210, 239, "F");
+  doc.setTextColor(255, 188, 114);
+  doc.setFontSize(13);
+  doc.text("ASTER MEDICINES PVT. LTD.", 18, 91);
+  doc.setTextColor(255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(44);
+  doc.text(["Product", "Catalogue"], 16, 127);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.text(new Date().toLocaleDateString("en-IN", { dateStyle: "long" }), 18, 249);
+  doc.text("www.astermedicines.com", 18, 260);
+
+  const entries: { page: number; y: number; height: number }[] = [];
+  let y = 300;
+  let previousCategory = "";
+  for (const product of sorted) {
+    const category = decodeHtmlEntities(product.category) || "Products";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const lines: string[] = doc.splitTextToSize(decodeHtmlEntities(product.name), 157);
+    const height = lines.length * 5 + 4;
+    if (y + height + 13 > 277) {
+      doc.addPage();
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(25);
+      doc.text("Product index", 16, 26);
+      previousCategory = "";
+      y = 42;
+    }
+    if (category !== previousCategory) {
+      doc.setTextColor(176, 68, 9);
+      doc.setFontSize(10);
+      doc.text(category, 16, y, { maxWidth: 178 });
+      y += doc.getTextDimensions(category, { maxWidth: 178 }).h + 3;
+      previousCategory = category;
+    }
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(11);
+    doc.text(lines, 19, y);
+    entries.push({ page: doc.getNumberOfPages(), y, height });
+    y += height;
+  }
+
+  for (const [index, product] of sorted.entries()) {
+    onProgress(index + 1, sorted.length);
+    doc.addPage();
+    const destination = doc.getNumberOfPages();
+    await drawProductSheet(doc, product);
+    const entry = entries[index];
+    doc.setPage(entry.page);
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(11);
+    doc.text(String(destination), 193, entry.y, { align: "right" });
+    doc.link(16, entry.y - 4, 180, entry.height, { pageNumber: destination });
+    doc.setPage(doc.getNumberOfPages());
+  }
+  doc.save("Aster-Product-Catalogue.pdf");
 }
