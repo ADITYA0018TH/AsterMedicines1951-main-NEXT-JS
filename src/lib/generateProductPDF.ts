@@ -758,6 +758,469 @@ async function drawProductSheet(doc: jsPDF, product: Product) {
 
 }
 
+/**
+ * Compact 1-Page-Per-Product layout for the full Aster Medicines Product Catalogue.
+ * Displays company header, up to 2 product images side-by-side, and structured clinical specs on a single A4 page.
+ */
+async function drawCatalogueProductPage(doc: jsPDF, product: Product, pageNumber: number) {
+  const pageWidth = 210;
+  const pageHeight = 297;
+  const margin = 14;
+  const contentWidth = pageWidth - margin * 2; // 182mm
+
+  // Brand Colors
+  const brandOrange: [number, number, number] = [234, 88, 12];
+  const brandNavy: [number, number, number] = [15, 23, 42];
+  const textDark: [number, number, number] = [30, 41, 59];
+  const textBody: [number, number, number] = [51, 65, 85];
+  const textMuted: [number, number, number] = [100, 116, 139];
+  const borderLight: [number, number, number] = [226, 232, 240];
+  const borderCard: [number, number, number] = [203, 213, 225];
+  const bgCard: [number, number, number] = [248, 250, 252];
+  const brandGreen: [number, number, number] = [5, 150, 105];
+
+  // Sanitize & Decode strings
+  const name = decodeHtmlEntities(product.name);
+  const category = decodeHtmlEntities(product.category) || "Pharmaceutical Formulation";
+
+  let dosage = decodeHtmlEntities(product.dosage);
+  if (!dosage || dosage.toLowerCase().includes("available") || dosage.toLowerCase().includes("unit")) {
+    const strengthMatch = name.match(/(\d+(?:\.\d+)?\s*(?:gm|g|mg|mcg|ml|%)\b)/i);
+    dosage = strengthMatch ? strengthMatch[0] : "As directed by physician";
+  }
+
+  const composition = decodeHtmlEntities(product.composition);
+  const description = decodeHtmlEntities(product.detailedDescription || product.description);
+  const indications = decodeHtmlEntities(product.indications);
+  const dosageInstructions = decodeHtmlEntities(product.dosageInstructions || product.dosage);
+  const precautions = decodeHtmlEntities(product.precautions);
+  const sideEffects = decodeHtmlEntities(product.sideEffects);
+  const storage = decodeHtmlEntities(product.storageConditions) || "Store below 25°C, dry place";
+  const shelfLife = decodeHtmlEntities(product.shelfLife) || "24 - 36 Months";
+
+  const productCode = (product.id ? String(product.id) : "ASTER")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .slice(-8)
+    .toUpperCase();
+  const dateFormatted = new Date().toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  // Load up to 2 images for the product
+  const imageUrls = (product.images || []).slice(0, 2);
+  const loadedResults = await Promise.allSettled(
+    imageUrls.map((url) => loadImageAsDataUrl(url, 4500))
+  );
+  const images = loadedResults
+    .map((r) => (r.status === "fulfilled" ? r.value : null))
+    .filter((img): img is LoadedImage => img !== null);
+
+  // ==========================================
+  // 1. HEADER
+  // ==========================================
+  doc.setFillColor(...brandOrange);
+  doc.rect(0, 0, pageWidth, 3.5, "F");
+  doc.setFillColor(...brandNavy);
+  doc.rect(0, 3.5, pageWidth, 0.8, "F");
+
+  try {
+    doc.addImage(LOGO_BASE64, "PNG", margin, 7.5, 36, 21);
+  } catch {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(...brandOrange);
+    doc.text("ASTER MEDICINES", margin, 18);
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10.5);
+  doc.setTextColor(...brandNavy);
+  doc.text("ASTER MEDICINES PVT. LTD.", 54, 12.5);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...brandOrange);
+  doc.text("GMP CERTIFIED PHARMACEUTICAL MANUFACTURER", 54, 17);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(...textMuted);
+  doc.text("Govind Mitra Road, Patna - 800004, Bihar, India", 54, 21);
+  doc.text("Web: www.astermedicines.com · Email: contact@astermedicines.com", 54, 25);
+
+  const metaBoxW = 56;
+  const metaBoxX = pageWidth - margin - metaBoxW;
+  doc.setFillColor(...bgCard);
+  doc.setDrawColor(...borderLight);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(metaBoxX, 7.5, metaBoxW, 20, 2, 2, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...brandOrange);
+  doc.text("PRODUCT CATALOGUE", metaBoxX + 4, 12);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.5);
+  doc.setTextColor(...textMuted);
+  doc.text("OFFICIAL PRODUCT SHEET", metaBoxX + 4, 16);
+
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...brandNavy);
+  doc.text(`DOC REF: AM-${productCode}`, metaBoxX + 4, 20);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...textMuted);
+  doc.text(`DATE: ${dateFormatted}`, metaBoxX + 4, 24);
+
+  doc.setDrawColor(...borderLight);
+  doc.line(margin, 30.5, pageWidth - margin, 30.5);
+
+  // ==========================================
+  // 2. CATEGORY, BADGES & PRODUCT TITLE
+  // ==========================================
+  let curY = 33.5;
+
+  // Verification Badges (right-aligned so they never collide with category pill)
+  const badgeLabels = ["GMP Certified", "Quality Assured"];
+  if (product.isWhoApproved) badgeLabels.push("WHO Approved");
+
+  let badgeRightX = pageWidth - margin;
+  for (let i = badgeLabels.length - 1; i >= 0; i--) {
+    const label = badgeLabels[i];
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.3);
+    const pillW = doc.getTextWidth(label) + 8.5;
+    const pillH = 4.8;
+    const pillX = badgeRightX - pillW;
+
+    doc.setFillColor(236, 253, 245);
+    doc.setDrawColor(167, 243, 208);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(pillX, curY, pillW, pillH, 1.4, 1.4, "FD");
+
+    doc.setFillColor(...brandGreen);
+    doc.circle(pillX + 2.6, curY + pillH / 2, 0.7, "F");
+
+    doc.setTextColor(...brandGreen);
+    doc.text(label, pillX + 4.6, curY + 3.4);
+
+    badgeRightX = pillX - 2.5;
+  }
+
+  // Category Pill on the left (clamped before badges)
+  const maxCatW = Math.max(badgeRightX - margin - 4, 50);
+  const catText = category.toUpperCase();
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(6.6);
+  const catFits = doc.splitTextToSize(catText, maxCatW - 8)[0] || catText;
+  const catWidth = Math.min(doc.getTextWidth(catFits) + 8, maxCatW);
+  doc.setFillColor(255, 247, 237);
+  doc.setDrawColor(254, 215, 170);
+  doc.roundedRect(margin, curY, catWidth, 5, 1.5, 1.5, "FD");
+  doc.setTextColor(194, 65, 12);
+  doc.text(catFits, margin + 4, curY + 3.5);
+
+  curY += 9.5;
+
+  // Product Name Title (max 2 lines)
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13.5);
+  doc.setTextColor(...brandNavy);
+  const nameLines = doc.splitTextToSize(name, contentWidth).slice(0, 2);
+  doc.text(nameLines, margin, curY);
+  curY += nameLines.length * 5.2 + 1.5;
+
+  // ==========================================
+  // 3. TWO-PICTURE PRODUCT SHOWCASE
+  // ==========================================
+  const showcaseH = 60;
+  doc.setFillColor(...bgCard);
+  doc.setDrawColor(...borderLight);
+  doc.setLineWidth(0.35);
+  doc.roundedRect(margin, curY, contentWidth, showcaseH, 3, 3, "FD");
+
+  const frameY = curY + 4;
+  const frameH = showcaseH - 8; // 52mm
+
+  if (images.length >= 2) {
+    const frameW = (contentWidth - 12) / 2; // 85mm each
+    const labels = ["PRIMARY PACKAGING VIEW", "SECONDARY / DETAIL VIEW"];
+
+    for (let i = 0; i < 2; i++) {
+      const fX = margin + 4 + i * (frameW + 4);
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(...borderCard);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(fX, frameY, frameW, frameH, 2, 2, "FD");
+
+      drawImageContained(doc, images[i], fX + 3, frameY + 2.5, frameW - 6, frameH - 9);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(5.8);
+      doc.setTextColor(...textMuted);
+      doc.text(labels[i], fX + frameW / 2, frameY + frameH - 2.5, { align: "center" });
+    }
+  } else if (images.length === 1) {
+    const frameW = 112;
+    const fX = margin + (contentWidth - frameW) / 2;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(...borderCard);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(fX, frameY, frameW, frameH, 2, 2, "FD");
+
+    drawImageContained(doc, images[0], fX + 4, frameY + 2.5, frameW - 8, frameH - 9);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(5.8);
+    doc.setTextColor(...textMuted);
+    doc.text("APPROVED PACKAGING & PRODUCT VIEW", fX + frameW / 2, frameY + frameH - 2.5, { align: "center" });
+  } else {
+    const frameW = 112;
+    const fX = margin + (contentWidth - frameW) / 2;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(...borderCard);
+    doc.roundedRect(fX, frameY, frameW, frameH, 2, 2, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(...brandOrange);
+    doc.text("ASTER MEDICINES", fX + frameW / 2, frameY + 23, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(...textMuted);
+    doc.text("Pharmaceutical Grade Formulation", fX + frameW / 2, frameY + 30, { align: "center" });
+  }
+
+  curY += showcaseH + 3.5;
+
+  // ==========================================
+  // 4. QUICK SPECIFICATIONS 4-CARD RIBBON
+  // ==========================================
+  const ribbonH = 11.5;
+  const cardW = (contentWidth - 9) / 4; // 43.25mm
+  const metricCards = [
+    { title: "DOSAGE / STRENGTH", val: dosage },
+    { title: "CATEGORY", val: category },
+    { title: "SHELF LIFE", val: shelfLife },
+    { title: "STORAGE", val: storage },
+  ];
+
+  metricCards.forEach((c, idx) => {
+    const cardX = margin + idx * (cardW + 3);
+    doc.setFillColor(...bgCard);
+    doc.setDrawColor(...borderLight);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(cardX, curY, cardW, ribbonH, 2, 2, "FD");
+
+    doc.setFillColor(...brandOrange);
+    doc.rect(cardX + 2, curY, cardW - 4, 0.7, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.2);
+    doc.setTextColor(...brandOrange);
+    doc.text(c.title, cardX + 2.5, curY + 4.3);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.3);
+    doc.setTextColor(...textDark);
+    const valLine = doc.splitTextToSize(c.val, cardW - 5)[0] || c.val;
+    doc.text(valLine, cardX + 2.5, curY + 8.5);
+  });
+
+  curY += ribbonH + 4.5;
+
+  // Helper for section headers
+  const drawSecTitle = (title: string, x: number, y: number) => {
+    doc.setFillColor(...brandOrange);
+    doc.rect(x, y, 2, 3.8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...brandNavy);
+    doc.text(title.toUpperCase(), x + 4, y + 3.1);
+    return y + 5.8;
+  };
+
+  // ==========================================
+  // 5. COMPOSITION & OVERVIEW (FULL WIDTH)
+  // ==========================================
+  if (composition) {
+    curY = drawSecTitle("Active Pharmaceutical Composition", margin, curY);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    const compLines = doc.splitTextToSize(composition, contentWidth - 8).slice(0, 3);
+    const compH = Math.max(compLines.length * 3.6 + 5, 10);
+
+    doc.setFillColor(241, 245, 249);
+    doc.setDrawColor(...borderLight);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, curY, contentWidth, compH, 1.8, 1.8, "FD");
+
+    doc.setTextColor(...textDark);
+    doc.text(compLines, margin + 4, curY + 4.2);
+    curY += compH + 4;
+  }
+
+  if (description && curY < 215) {
+    curY = drawSecTitle("Product Overview & Clinical Profile", margin, curY);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.4);
+    doc.setTextColor(...textBody);
+    const descLines = doc.splitTextToSize(description, contentWidth).slice(0, 4);
+    doc.text(descLines, margin, curY);
+    curY += descLines.length * 3.6 + 4;
+  }
+
+  // ==========================================
+  // 6. TWO-COLUMN CLINICAL & SAFETY GRID
+  // ==========================================
+  const colW = (contentWidth - 6) / 2; // 88mm
+  const leftX = margin;
+  const rightX = margin + colW + 6;
+  const maxGridY = 256;
+
+  let leftY = curY;
+  let rightY = curY;
+
+  if (indications && leftY + 14 < maxGridY) {
+    leftY = drawSecTitle("Indications & Usage", leftX, leftY);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...textBody);
+    const indLines = doc.splitTextToSize(indications, colW).slice(0, 4);
+    doc.text(indLines, leftX, leftY);
+    leftY += indLines.length * 3.5 + 3.5;
+  }
+
+  if (dosageInstructions && leftY + 14 < maxGridY) {
+    leftY = drawSecTitle("Dosage & Administration", leftX, leftY);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...textBody);
+    const doseLines = doc.splitTextToSize(dosageInstructions, colW).slice(0, 4);
+    doc.text(doseLines, leftX, leftY);
+    leftY += doseLines.length * 3.5 + 3.5;
+  }
+
+  if (precautions && rightY + 16 < maxGridY) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    const precLines = doc.splitTextToSize(precautions, colW - 8).slice(0, 5);
+    const alertH = Math.max(precLines.length * 3.4 + 8.5, 16);
+
+    doc.setFillColor(255, 251, 235);
+    doc.setDrawColor(253, 230, 138);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(rightX, rightY, colW, alertH, 1.8, 1.8, "FD");
+
+    doc.setFillColor(217, 119, 6);
+    doc.rect(rightX, rightY, 2, alertH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(180, 83, 9);
+    doc.text("PRECAUTIONS & WARNINGS", rightX + 4.5, rightY + 4.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.9);
+    doc.setTextColor(...textDark);
+    doc.text(precLines, rightX + 4.5, rightY + 8.5);
+
+    rightY += alertH + 3.5;
+  }
+
+  if (sideEffects && rightY + 14 < maxGridY) {
+    rightY = drawSecTitle("Safety & Side Effects", rightX, rightY);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...textBody);
+    const sideLines = doc.splitTextToSize(sideEffects, colW).slice(0, 3);
+    doc.text(sideLines, rightX, rightY);
+    rightY += sideLines.length * 3.5 + 3.5;
+  }
+
+  curY = Math.max(leftY, rightY) + 2;
+
+  // ==========================================
+  // 7. KEY FEATURES & COMPLIANCE STRIP
+  // ==========================================
+  const validFeatures = (product.features || [])
+    .filter((f) => !f.toLowerCase().includes("price"))
+    .map((f) => decodeHtmlEntities(f))
+    .slice(0, 4);
+
+  if (validFeatures.length > 0 && curY + 10 < 266) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(...brandNavy);
+    doc.text("KEY FEATURES:", margin, curY + 3);
+
+    let featX = margin + 25;
+    validFeatures.forEach((feat) => {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.8);
+      const w = doc.getTextWidth(feat) + 6;
+      if (featX + w <= pageWidth - margin) {
+        doc.setFillColor(...brandGreen);
+        doc.circle(featX + 1.5, curY + 2.1, 0.7, "F");
+        doc.setTextColor(...textDark);
+        doc.text(feat, featX + 3.5, curY + 3);
+        featX += w + 3;
+      }
+    });
+    curY += 7;
+  }
+
+  // Bottom GMP & Order Inquiry Strip (anchored cleanly above footer)
+  const stripY = Math.max(curY + 1, 263);
+  if (stripY <= 268) {
+    const stripH = 14.5;
+    doc.setFillColor(...bgCard);
+    doc.setDrawColor(...borderLight);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, stripY, contentWidth, stripH, 2, 2, "FD");
+
+    doc.setFillColor(...brandGreen);
+    doc.rect(margin, stripY, 2.2, stripH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(...brandGreen);
+    doc.text("SCHEDULE M / GMP COMPLIANT · BATCH TESTED & CERTIFIED", margin + 5, stripY + 5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.8);
+    doc.setTextColor(...textMuted);
+    doc.text(
+      "Institutional Orders & PCD Franchise: +91 7061452180 · contact@astermedicines.com · www.astermedicines.com",
+      margin + 5,
+      stripY + 10.5
+    );
+  }
+
+  // ==========================================
+  // 8. PAGE FOOTER
+  // ==========================================
+  const footerY = pageHeight - 11;
+  doc.setDrawColor(...borderLight);
+  doc.setLineWidth(0.3);
+  doc.line(margin, footerY - 3, pageWidth - margin, footerY - 3);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.8);
+  doc.setTextColor(...textMuted);
+  doc.text(
+    "Aster Medicines Pvt. Ltd. · Product Catalogue · www.astermedicines.com",
+    margin,
+    footerY + 1
+  );
+
+  doc.setFont("helvetica", "bold");
+  doc.text(`Page ${pageNumber}`, pageWidth - margin, footerY + 1, { align: "right" });
+}
+
 export async function generateProductPDF(product: Product): Promise<void> {
   const doc = new jsPDF({ compress: true });
   await drawProductSheet(doc, product);
@@ -829,7 +1292,7 @@ export async function generateProductCatalogue(
     onProgress(index + 1, sorted.length);
     doc.addPage();
     const destination = doc.getNumberOfPages();
-    await drawProductSheet(doc, product);
+    await drawCatalogueProductPage(doc, product, destination);
     const entry = entries[index];
     doc.setPage(entry.page);
     doc.setTextColor(15, 23, 42);
