@@ -2,6 +2,7 @@
 
 import { jsPDF } from "jspdf";
 import { Product } from "@/types/product";
+import { getProductPath } from "./productSlug";
 import asterLogo from "@/app/api/visiting-card/aster-logo.json";
 
 const COMPANY_CONTACT = {
@@ -737,18 +738,346 @@ async function drawProductSheet(doc: jsPDF, product: Product) {
 }
 
 // ==========================================================================
-// CATALOGUE
+// CATALOGUE — INTERACTIVE CARTOONISH / COMIC-POP EDITION
 // ==========================================================================
-function drawCatalogueRunningHeader(doc: jsPDF, rightTitle: string, rightSub: string, accent: RGB) {
-  box(doc, 0, 0, PAGE_W, 2.2, C.navy);
-  box(doc, 0, 0, 62, 2.2, C.gold);
-  drawVectorLogo(doc, M, 6, 22, false);
+const SITE_ORIGIN = "https://www.astermedicines.com";
+
+const TOON = {
+  ink: [27, 27, 58] as RGB,         // Rich cartoon indigo-black ink outline
+  paper: [255, 253, 243] as RGB,    // Sunny cream storybook paper
+  dotGold: [253, 232, 165] as RGB,  // Soft pastel polka-dot
+  dotBlue: [216, 236, 255] as RGB,  // Soft pastel sky polka-dot
+  blue: [30, 64, 175] as RGB,       // Vibrant comic royal blue
+  sun: [255, 217, 61] as RGB,       // Sunny comic yellow
+  coral: [255, 119, 82] as RGB,     // Playful coral tangerine
+  mint: [110, 231, 165] as RGB,     // Fresh cartoon mint green
+  sky: [137, 207, 255] as RGB,      // Bubblegum sky blue
+  butter: [254, 243, 152] as RGB,   // Butter yellow warning card
+  lavender: [198, 174, 255] as RGB, // Playful pastel grape
+};
+
+/** Warm sunny paper filled with cheerful pastel Ben-Day / comic polka dots & corner sparkles. */
+function drawComicPaper(doc: jsPDF, dotAccent: RGB = TOON.dotBlue) {
+  box(doc, 0, 0, PAGE_W, PAGE_H, TOON.paper);
+  const spacing = 11;
+  for (let gy = 6; gy < PAGE_H; gy += spacing) {
+    const offset = ((Math.round(gy / spacing) % 2) * spacing) / 2;
+    for (let gx = 5 + offset; gx < PAGE_W; gx += spacing) {
+      // Skip dense center dots cleanly or keep subtle pastel margins/dots
+      const isEdge = gx < 22 || gx > PAGE_W - 22 || gy < 28 || gy > PAGE_H - 25;
+      const dotColor: RGB = isEdge ? dotAccent : [249, 243, 224];
+      doc.setFillColor(...dotColor);
+      doc.circle(gx, gy, isEdge ? 1.15 : 0.75, "F");
+    }
+  }
+}
+
+/** Draw a crisp 4-point cartoon sparkle star with dark ink outline. */
+function drawCartoonStar(doc: jsPDF, cx: number, cy: number, size: number, fill: RGB = TOON.sun) {
+  const outer = size;
+  const inner = size * 0.34;
+  const pts: [number, number][] = [];
+  for (let i = 0; i < 8; i++) {
+    const a = (i * Math.PI) / 4;
+    const r = i % 2 === 0 ? outer : inner;
+    pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
+  }
+  doc.setFillColor(...fill);
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.4);
+  doc.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) doc.lineTo(pts[i][0], pts[i][1]);
+  doc.close();
+  doc.fillStroke();
+}
+
+/** Draw a 14-point jagged comic starburst seal with chunky shadow & outline. */
+function drawComicStarburst(
+  doc: jsPDF,
+  cx: number,
+  cy: number,
+  outerR: number,
+  innerR: number,
+  fill: RGB,
+  line1: string,
+  line2?: string
+) {
+  const spikes = 14;
+  const buildPoly = (ox: number, oy: number) => {
+    const pts: [number, number][] = [];
+    for (let i = 0; i < spikes * 2; i++) {
+      const a = (i * Math.PI) / spikes - Math.PI / 2;
+      const r = i % 2 === 0 ? outerR : innerR;
+      pts.push([ox + Math.cos(a) * r, oy + Math.sin(a) * r]);
+    }
+    return pts;
+  };
+
+  // Shadow starburst
+  const sh = buildPoly(cx + 1.2, cy + 1.4);
+  doc.setFillColor(...TOON.ink);
+  doc.moveTo(sh[0][0], sh[0][1]);
+  for (let i = 1; i < sh.length; i++) doc.lineTo(sh[i][0], sh[i][1]);
+  doc.close();
+  doc.fill();
+
+  // Main bright starburst
+  const main = buildPoly(cx, cy);
+  doc.setFillColor(...fill);
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.6);
+  doc.moveTo(main[0][0], main[0][1]);
+  for (let i = 1; i < main.length; i++) doc.lineTo(main[i][0], main[i][1]);
+  doc.close();
+  doc.fillStroke();
+
+  type(doc, 6.2, TOON.ink, "bold");
+  if (line2) {
+    doc.text(line1, cx, cy - 0.8, { align: "center" });
+    doc.text(line2, cx, cy + 3.4, { align: "center" });
+  } else {
+    doc.text(line1, cx, cy + 1.4, { align: "center" });
+  }
+}
+
+/**
+ * Draw an adorable smiling Cartoon Capsule Mascot (vertical two-tone pill buddy with glossy shine & sparkles).
+ */
+function drawCartoonCapsule(doc: jsPDF, cx: number, cy: number, scale = 1.0) {
+  const w = 22 * scale;
+  const h = 38 * scale;
+  const r = w / 2;
+  const x = cx - w / 2;
+  const y = cy - h / 2;
+  const midY = cy;
+
+  // Chubby cartoon drop shadow
+  doc.setFillColor(...TOON.ink);
+  doc.roundedRect(x + 2 * scale, y + 2.2 * scale, w, h, r, r, "F");
+
+  // Full capsule silhouette in Sunny Yellow
+  doc.setFillColor(...TOON.sun);
+  doc.roundedRect(x, y, w, h, r, r, "F");
+
+  // Top coral semicircle dome + upper straight band spanning cleanly to midY
+  // (midY - (y + r) = h/2 - r > 0, so covering [midY, y + h - r] stays strictly on vertical walls)
+  doc.setFillColor(...TOON.coral);
+  doc.circle(cx, y + r, r, "F");
+  doc.rect(x, y + r, w, h / 2 - r, "F");
+  doc.setFillColor(...TOON.sun);
+  doc.rect(x, midY, w, h / 2 - r, "F");
+
+  // Seam divider line & thick outer capsule ink stroke
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.95 * scale);
+  doc.line(x, midY, x + w, midY);
+  doc.roundedRect(x, y, w, h, r, r, "S");
+
+  // Smooth Glossy White Shine Highlight pill on top-left dome
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(x + 3.2 * scale, y + 4.4 * scale, 2.4 * scale, 8.2 * scale, 1.2 * scale, 1.2 * scale, "F");
+
+  // Cute Friendly Cartoon Eyes + Rosy Cheeks + Smile!
+  const eyeY = midY + 4.8 * scale;
+  const eyeOffset = 4.2 * scale;
+  // Rosy cheeks
+  doc.setFillColor(255, 162, 162);
+  doc.ellipse(cx - 6.3 * scale, eyeY + 2.4 * scale, 1.8 * scale, 1.0 * scale, "F");
+  doc.ellipse(cx + 6.3 * scale, eyeY + 2.4 * scale, 1.8 * scale, 1.0 * scale, "F");
+  // Eyes
+  doc.setFillColor(...TOON.ink);
+  doc.circle(cx - eyeOffset, eyeY, 1.7 * scale, "F");
+  doc.circle(cx + eyeOffset, eyeY, 1.7 * scale, "F");
+  // Bright eye catchlights
+  doc.setFillColor(255, 255, 255);
+  doc.circle(cx - eyeOffset - 0.5 * scale, eyeY - 0.5 * scale, 0.65 * scale, "F");
+  doc.circle(cx + eyeOffset - 0.5 * scale, eyeY - 0.5 * scale, 0.65 * scale, "F");
+  // Happy smile arc
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.8 * scale);
+  const sy = eyeY + 2.3 * scale;
+  doc.moveTo(cx - 2.6 * scale, sy);
+  doc.curveTo(
+    cx - 1.3 * scale,
+    sy + 2.6 * scale,
+    cx + 1.3 * scale,
+    sy + 2.6 * scale,
+    cx + 2.6 * scale,
+    sy
+  );
+  doc.stroke();
+
+  // Floating cheerful sparkle stars around mascot
+  drawCartoonStar(doc, cx - 15 * scale, cy - 15 * scale, 3.2 * scale, TOON.sun);
+  drawCartoonStar(doc, cx + 15.5 * scale, cy - 10 * scale, 2.5 * scale, TOON.mint);
+  drawCartoonStar(doc, cx + 14 * scale, cy + 14 * scale, 2.2 * scale, TOON.sky);
+}
+
+/** Bubbly Cartoon Card: chubby rounded corners, thick dark cartoon outline, solid offset shadow & glossy shine pill. */
+function comicCard(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  fill: RGB,
+  opts: { border?: number; shadow?: number; r?: number; shine?: boolean } = {}
+) {
+  const bw = opts.border ?? 0.65;
+  const sh = opts.shadow ?? 1.6;
+  const r = opts.r ?? 5;
+
+  if (sh > 0) {
+    doc.setFillColor(...TOON.ink);
+    doc.roundedRect(x + sh * 0.85, y + sh, w, h, r, r, "F");
+  }
+
+  doc.setFillColor(...fill);
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(bw);
+  doc.roundedRect(x, y, w, h, r, r, "FD");
+
+  // Classic cartoon glossy white bubble shine pill on top-left corner
+  if (opts.shine && w > 18 && h > 9) {
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(x + 2.8, y + 1.6, Math.min(8, w * 0.14), 1.3, 0.65, 0.65, "F");
+  }
+}
+
+interface ComicRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Tactile 3D Glossy Cartoon Button Pill with thick bottom shadow lip & white shine highlight. */
+function comicButton(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  text: string,
+  opts: {
+    align?: "left" | "right";
+    fill?: RGB;
+    textColor?: RGB;
+    fontSize?: number;
+    height?: number;
+    padX?: number;
+    dotColor?: RGB;
+    shadow?: number;
+  } = {}
+): ComicRect {
+  const fontSize = opts.fontSize ?? 6.4;
+  const h = opts.height ?? 5.8;
+  const padX = opts.padX ?? 3.4;
+  const dotSpace = opts.dotColor ? 3.2 : 0;
+
+  type(doc, fontSize, opts.textColor ?? TOON.ink, "bold");
+  const tw = doc.getTextWidth(text);
+  const w = tw + padX * 2 + dotSpace;
+  const drawX = opts.align === "right" ? x - w : x;
+  const r = h / 2;
+
+  comicCard(doc, drawX, y, w, h, opts.fill ?? C.white, {
+    border: 0.5,
+    shadow: opts.shadow ?? 1.0,
+    r,
+  });
+
+  // Glossy white highlight streak along upper inner pill curve
+  if (w > 12) {
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(drawX + r * 0.8, y + 0.9, Math.min(w * 0.28, 7), 0.85, 0.4, 0.4, "F");
+  }
+
+  if (opts.dotColor) {
+    doc.setFillColor(...opts.dotColor);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.3);
+    doc.circle(drawX + padX + 0.8, y + h / 2, 1.0, "FD");
+  }
+
+  type(doc, fontSize, opts.textColor ?? TOON.ink, "bold");
+  doc.text(text, drawX + padX + dotSpace, y + h / 2 + fontSize * 0.13);
+
+  return { x: drawX, y, w, h };
+}
+
+/** Chunky Cartoon Image Frame with double-circle pin accents and cheerful bottom label ribbon. */
+function comicImageCard(
+  doc: jsPDF,
+  img: LoadedImage | null,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  caption: string,
+  accent: RGB
+) {
+  comicCard(doc, x, y, w, h, C.white, { border: 0.6, shadow: 1.5, r: 4.5 });
+
+  const footerH = 6.5;
+  if (img) {
+    drawImageContained(doc, img, x + 3, y + 2.5, w - 6, h - footerH - 4.5);
+  } else {
+    box(doc, x + w / 2 - 12, y + h / 2 - 15, 24, 16, TOON.sun, 5);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.55);
+    doc.roundedRect(x + w / 2 - 12, y + h / 2 - 15, 24, 16, 5, 5, "S");
+    type(doc, 18, TOON.ink, "bold");
+    doc.text("Rx", x + w / 2, y + h / 2 - 4, { align: "center" });
+    type(doc, 7.2, TOON.ink, "bold");
+    doc.text("ASTER MEDICINES", x + w / 2, y + h / 2 + 8, { align: "center" });
+    type(doc, 6.4, C.muted);
+    doc.text("Official Product View", x + w / 2, y + h / 2 + 12.5, { align: "center" });
+  }
+
+  // Cheerful pill label pinned cleanly at bottom of comic frame
+  const pillW = Math.min(w - 10, 56);
+  const pillX = x + (w - pillW) / 2;
+  const pillY = y + h - footerH - 0.8;
+  doc.setFillColor(...TOON.ink);
+  doc.roundedRect(pillX, pillY, pillW, 5.4, 2.7, 2.7, "F");
+  doc.setFillColor(...accent);
+  doc.circle(pillX + 3.2, pillY + 2.7, 1.1, "F");
+
+  type(doc, 5.8, TOON.sun, "bold");
+  doc.text(caption, pillX + pillW / 2 + 1.2, pillY + 3.7, { align: "center" });
+}
+
+/** Comic Top Navbar Card for interior catalogue pages. */
+function drawCatalogueComicHeader(
+  doc: jsPDF,
+  rightTitle: string,
+  rightSub: string,
+  accent: RGB
+) {
+  box(doc, 0, 0, PAGE_W, 2.2, TOON.ink);
+  box(doc, 0, 0, 62, 2.2, TOON.sun);
+
+  const navY = 4.6;
+  const navH = 14.0;
+  comicCard(doc, M, navY, CW, navH, C.white, { border: 0.6, shadow: 1.5, r: 5.5, shine: true });
+
+  drawVectorLogo(doc, M + 4.5, navY + 2.0, 19.5, false);
+
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.45);
+  doc.line(M + 26.8, navY + 2.6, M + 26.8, navY + navH - 2.6);
 
   type(doc, 6.8, accent, "bold");
-  tracked(doc, oneLine(doc, rightTitle, 100, 0.4), RIGHT, 10.8, 0.4, "right");
-  type(doc, 6.4, C.muted);
-  doc.text(rightSub, RIGHT, 15.2, { align: "right" });
-  hline(doc, M, RIGHT, 19.5);
+  doc.text(oneLine(doc, rightTitle, 60), M + 29.8, navY + 6.2);
+  type(doc, 6.2, TOON.ink, "bold");
+  doc.text(oneLine(doc, rightSub, 60), M + 29.8, navY + 10.5);
+}
+
+interface CoverCategoryPillRect {
+  cat: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 function drawCatalogueCover(
@@ -757,151 +1086,348 @@ function drawCatalogueCover(
   categories: string[],
   issueDate: string
 ) {
-  gradient(doc, 0, PAGE_H, C.navy, C.navyDeep);
+  drawComicPaper(doc, TOON.dotGold);
 
-  // Concentric rings (right edge se bahar nikalte hue)
-  const rings: [number, RGB, number][] = [
-    [82, [24, 58, 148], 0.4],
-    [68, [51, 45, 153], 7],
-    [52, [30, 66, 160], 0.4],
-    [40, C.gold, 1.4],
-  ];
-  rings.forEach(([r, color, width]) => {
-    doc.setDrawColor(...color);
-    doc.setLineWidth(width);
-    doc.circle(214, 114, r, "S");
+  // 1. Comic Banner Ribbon at top
+  box(doc, 0, 0, PAGE_W, 8.5, TOON.ink);
+  type(doc, 6.8, TOON.sun, "bold");
+  tracked(
+    doc,
+    "ASTER MEDICINES   *   WHO-GMP CERTIFIED   *   CARE FOR LIFE   *   EST. 1982",
+    PAGE_W / 2,
+    5.6,
+    0.35,
+    "center"
+  );
+
+  // 2. Cloud Masthead Card with Starburst Seal
+  const topY = 13.5;
+  comicCard(doc, M, topY, CW, 22, C.white, { border: 0.7, shadow: 1.8, r: 6, shine: true });
+  drawVectorLogo(doc, M + 5.5, topY + 2.8, 30.5, false);
+
+  // Cheerful 14-point Comic Starburst Seal
+  drawComicStarburst(doc, RIGHT - 16, topY + 11, 13.5, 10.2, TOON.sun, "WHO-GMP", "CERTIFIED!");
+
+  const edPill = comicButton(doc, RIGHT - 35, topY + 7.5, issueDate.toUpperCase(), {
+    align: "right",
+    fill: TOON.sky,
+    textColor: TOON.ink,
+    fontSize: 7.0,
+    height: 6.4,
+    padX: 3.8,
+    shadow: 1.0,
+  });
+  void edPill;
+
+  // 3. Vibrant Comic Hero Card with Mascot Buddy & Comic Lettering Shadow!
+  const heroY = 41.5;
+  const heroH = 95;
+  comicCard(doc, M, heroY, CW, heroH, TOON.blue, { border: 0.85, shadow: 2.8, r: 8, shine: true });
+
+  // Playful comic halftone circles accent inside top-right corner
+  doc.setFillColor(44, 84, 200);
+  doc.circle(RIGHT - 28, heroY + 42, 26, "F");
+  doc.setFillColor(56, 102, 220);
+  doc.circle(RIGHT - 28, heroY + 42, 19, "F");
+
+  // Smiling Cartoon Capsule Buddy on right inside Hero Card!
+  drawCartoonCapsule(doc, RIGHT - 28, heroY + 42, 1.05);
+
+  const hx = M + 8;
+  comicButton(doc, hx, heroY + 8.5, "ASTER MEDICINES PVT. LTD.", {
+    fill: TOON.coral,
+    textColor: C.white,
+    fontSize: 7.0,
+    height: 6.0,
+    padX: 3.8,
+    shadow: 1.1,
   });
 
-  box(doc, 0, 0, PAGE_W, 3, C.gold);
-  drawVectorLogo(doc, M + 2, 17, 52, true);
+  // Comic Headline with crisp cartoon ink drop-shadow layer!
+  type(doc, 44, TOON.ink, "bold");
+  doc.text("PRODUCT", hx + 1.0, heroY + 34.0);
+  doc.text("CATALOGUE", hx + 1.0, heroY + 51.0);
+  type(doc, 44, C.white, "bold");
+  doc.text("PRODUCT", hx, heroY + 33);
+  type(doc, 44, TOON.sun, "bold");
+  doc.text("CATALOGUE", hx, heroY + 50);
 
-  type(doc, 7.2, C.white, "bold");
-  tracked(doc, "ESTABLISHED 1982  ·  INDIA", RIGHT, 22, 0.45, "right");
-  type(doc, 7.2, C.gold, "bold");
-  tracked(doc, "WHO-GMP & ISO 9001:2015 CERTIFIED", RIGHT, 27.5, 0.3, "right");
-  type(doc, 6.8, C.onNavy);
-  doc.text(`CIN: ${COMPANY_CONTACT.cin}`, RIGHT, 33, { align: "right" });
-
-  const x = M + 2;
-  box(doc, x, 72, 18, 1.4, C.gold);
-  type(doc, 8.2, C.gold, "bold");
-  tracked(doc, "ASTER MEDICINES PRIVATE LIMITED", x, 82, 0.65);
-
-  type(doc, 58, C.white, "normal", "times");
-  doc.text("Product", x - 1, 106);
-  type(doc, 58, C.gold, "italic", "times");
-  doc.text("Catalogue", x - 1, 127);
-
-  type(doc, 11, C.onNavy);
+  type(doc, 9.6, C.white, "bold");
   const lead: string[] = doc.splitTextToSize(
-    "Comprehensive Formulary of Sterile Parenteral Injections, Critical Care & General Pharmaceutical Formulations.",
-    112
+    "Illustrated & Interactive Formulary -- Parenteral Injections, Syrups & Critical Care!",
+    114
   );
-  doc.text(lead, x, 141, { lineHeightFactor: 1.5 });
+  doc.text(lead, hx, heroY + 61.5, { lineHeightFactor: 1.4 });
 
-  // Metrics card
-  const bandY = 164;
-  box(doc, M, bandY, CW, 29, C.white, 4);
+  // 3 Toy-Like Glossy Cartoon Interactive CTA Buttons
+  const btnY = heroY + 78;
+  const indexBtn = comicButton(doc, hx, btnY, "OPEN PRODUCT INDEX ->", {
+    fill: TOON.sun,
+    textColor: TOON.ink,
+    fontSize: 7.4,
+    height: 8.2,
+    padX: 5.2,
+    shadow: 1.4,
+  });
+
+  const webBtn = comicButton(doc, indexBtn.x + indexBtn.w + 4, btnY, "WEBSITE ->", {
+    fill: C.white,
+    textColor: TOON.ink,
+    fontSize: 7.2,
+    height: 8.2,
+    padX: 4.8,
+    shadow: 1.4,
+  });
+
+  const enquireBtn = comicButton(doc, webBtn.x + webBtn.w + 4, btnY, "BULK ORDER ->", {
+    fill: TOON.mint,
+    textColor: TOON.ink,
+    fontSize: 7.2,
+    height: 8.2,
+    padX: 4.8,
+    shadow: 1.4,
+  });
+
+  // 4. Three Bouncy Toy-Card Metrics (clickable -> Index)
+  const mY = 143;
+  const mH = 26;
+  const mGap = 4.5;
+  const mW = (CW - mGap * 2) / 3;
   const metrics = [
-    { val: String(productCount), label: "ACTIVE FORMULATIONS" },
-    { val: String(categories.length), label: "THERAPEUTIC CATEGORIES" },
-    { val: "GMP / ISO", label: "MANUFACTURING STANDARD" },
+    { val: String(productCount), label: "ACTIVE PRODUCTS", bg: TOON.mint },
+    { val: String(categories.length), label: "CATEGORIES", bg: TOON.sky },
+    { val: "100% GMP", label: "QUALITY TESTED", bg: TOON.sun },
   ];
-  const mw = CW / 3;
+
   metrics.forEach((m, i) => {
-    const cx = M + i * mw + mw / 2;
-    if (i) {
-      doc.setDrawColor(...C.rule);
-      doc.setLineWidth(0.3);
-      doc.line(M + i * mw, bandY + 6, M + i * mw, bandY + 23);
+    const mx = M + i * (mW + mGap);
+    comicCard(doc, mx, mY, mW, mH, m.bg, { border: 0.65, shadow: 1.8, r: 5.5, shine: true });
+    type(doc, 21, TOON.ink, "bold");
+    doc.text(m.val, mx + mW / 2, mY + 13.5, { align: "center" });
+    type(doc, 6.4, TOON.ink, "bold");
+    tracked(doc, m.label, mx + mW / 2, mY + 21, 0.35, "center");
+  });
+  const metricBox: ComicRect = { x: M, y: mY, w: CW, h: mH };
+
+  // 5. Interactive Category Toybox Panel (auto-sized to wrap neatly around category pills)
+  const catBoxY = 174.5;
+  const maxPx = RIGHT - 5.5;
+  const candyFills: RGB[] = [TOON.sun, TOON.mint, TOON.sky, TOON.butter, TOON.lavender, tint(TOON.coral, 0.45)];
+  const pillSpecs: { cat: string; label: string; x: number; y: number }[] = [];
+  let px = M + 5.5;
+  let py = catBoxY + 12.2;
+  const ph = 6.5;
+
+  categories.slice(0, 12).forEach((cat) => {
+    const label = oneLine(doc, cat.toUpperCase(), 68);
+    type(doc, 6.4, TOON.ink, "bold");
+    const pw = doc.getTextWidth(label) + 7.5;
+    if (px + pw > maxPx) {
+      px = M + 5.5;
+      py += 8.6;
     }
-    type(doc, 23, C.navy, "bold", "times");
-    doc.text(m.val, cx, bandY + 15, { align: "center" });
-    type(doc, 6.3, C.muted, "bold");
-    tracked(doc, m.label, cx, bandY + 22, 0.45, "center");
+    pillSpecs.push({ cat, label, x: px, y: py });
+    px += pw + 3.2;
   });
 
-  // Therapeutic scope, colour coded
-  type(doc, 6.6, C.gold, "bold");
-  tracked(doc, "THERAPEUTIC SCOPE", x, 205, 0.5);
-  const max = 8;
-  const shown = categories.length > max ? categories.slice(0, max - 1) : categories;
-  const labels = shown.map((c, i) => ({ text: c, color: tint(ACCENTS[i % ACCENTS.length], 0.45) }));
-  if (categories.length > max) {
-    labels.push({ text: `+${categories.length - shown.length} more categories`, color: C.gold });
-  }
-  labels.forEach((l, i) => {
-    const lx = x + (i % 2) * 90;
-    const ly = 213 + Math.floor(i / 2) * 6.4;
-    box(doc, lx, ly - 2.4, 2.6, 2.6, l.color, 0.6);
-    type(doc, 8, C.white);
-    doc.text(oneLine(doc, l.text, 80), lx + 5.5, ly);
+  const catBoxH = Math.max(32, py + ph + 4.5 - catBoxY);
+  comicCard(doc, M, catBoxY, CW, catBoxH, C.white, { border: 0.65, shadow: 1.8, r: 6 });
+  doc.setFillColor(...TOON.lavender);
+  doc.roundedRect(M + 0.3, catBoxY + 0.3, CW - 0.6, 8.2, 5.5, 5.5, "F");
+  doc.rect(M + 0.3, catBoxY + 4.5, CW - 0.6, 4.2, "F");
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.5);
+  doc.line(M, catBoxY + 8.7, RIGHT, catBoxY + 8.7);
+
+  type(doc, 6.7, TOON.ink, "bold");
+  tracked(doc, "PICK A CATEGORY TO JUMP RIGHT IN!", M + 5.5, catBoxY + 5.8, 0.4);
+
+  const catPills: CoverCategoryPillRect[] = pillSpecs.map((sp, idx) => {
+    const rect = comicButton(doc, sp.x, sp.y, sp.label, {
+      fill: candyFills[idx % candyFills.length],
+      textColor: TOON.ink,
+      fontSize: 6.4,
+      height: ph,
+      padX: 3.4,
+      shadow: 1.0,
+    });
+    return { cat: sp.cat, ...rect };
   });
 
-  // Footer directory
-  const fy = 242;
-  hline(doc, M, RIGHT, fy, [45, 76, 160], 0.3);
-  type(doc, 6.4, C.gold, "bold");
-  tracked(doc, "CORPORATE & MANUFACTURING", x, fy + 9, 0.4);
-  tracked(doc, "INSTITUTIONAL ENQUIRIES", RIGHT - 2, fy + 9, 0.4, "right");
+  // 5b. Playful Cartoon Highlights Strip filling space above footer
+  const stripY = catBoxY + catBoxH + 5.5;
+  const stripH = Math.max(14, 232.5 - stripY);
+  const badgesRow = [
+    { title: "WHO-GMP PLANTS", sub: "Strict QC Batch Testing", fill: TOON.butter },
+    { title: "HOSPITAL SUPPLY", sub: "Tender & Bulk Ready", fill: TOON.mint },
+    { title: "PCD FRANCHISE", sub: "Pan-India Distribution", fill: TOON.sky },
+  ];
+  const bgGap = 4.5;
+  const bgW = (CW - bgGap * 2) / 3;
+  badgesRow.forEach((b, i) => {
+    const bx = M + i * (bgW + bgGap);
+    comicCard(doc, bx, stripY, bgW, stripH, b.fill, { border: 0.6, shadow: 1.5, r: 5, shine: true });
+    type(doc, 7.6, TOON.ink, "bold");
+    doc.text(b.title, bx + bgW / 2, stripY + stripH * 0.46, { align: "center" });
+    type(doc, 6.4, C.body, "bold");
+    doc.text(b.sub, bx + bgW / 2, stripY + stripH * 0.76, { align: "center" });
+  });
 
-  type(doc, 7.4, C.white);
-  const office: string[] = doc.splitTextToSize(`Regd. Office: ${COMPANY_CONTACT.office}`, 96);
-  doc.text(office, x, fy + 16, { lineHeightFactor: 1.4 });
-  const plant: string[] = doc.splitTextToSize(
-    `Manufacturing Plant: ${COMPANY_CONTACT.factory}`,
-    96
+  // 6. Friendly Rounded Contact Footer Box
+  const dirY = 238;
+  const dirH = 44;
+  comicCard(doc, M, dirY, CW, dirH, C.white, { border: 0.65, shadow: 1.8, r: 6 });
+
+  doc.setFillColor(...TOON.ink);
+  doc.roundedRect(M + 0.3, dirY + 0.3, CW - 0.6, 7.6, 5.5, 5.5, "F");
+  doc.rect(M + 0.3, dirY + 4, CW - 0.6, 4.0, "F");
+  type(doc, 6.4, TOON.sun, "bold");
+  doc.text("WHERE TO FIND US", M + 5.5, dirY + 5.3);
+  doc.text("LET'S CHAT!", RIGHT - 5.5, dirY + 5.3, { align: "right" });
+
+  type(doc, 7.3, TOON.ink, "bold");
+  const office: string[] = doc.splitTextToSize(`Regd. Office: ${COMPANY_CONTACT.office}`, 92);
+  doc.text(office, M + 5.5, dirY + 14.5, { lineHeightFactor: 1.35 });
+  type(doc, 7.1, C.body);
+  const plant: string[] = doc.splitTextToSize(`Factory: ${COMPANY_CONTACT.factory}`, 92);
+  doc.text(plant, M + 5.5, dirY + 16.5 + office.length * 3.8, { lineHeightFactor: 1.35 });
+  type(doc, 6.4, C.muted, "bold");
+  doc.text(`CIN: ${COMPANY_CONTACT.cin}`, M + 5.5, dirY + 39.5);
+
+  const phoneBtn = comicButton(doc, RIGHT - 5.5, dirY + 11.2, COMPANY_CONTACT.phone, {
+    align: "right",
+    fill: TOON.sun,
+    textColor: TOON.ink,
+    fontSize: 9.0,
+    height: 7.4,
+    padX: 4,
+    shadow: 1.1,
+  });
+  doc.link(phoneBtn.x, phoneBtn.y, phoneBtn.w, phoneBtn.h, {
+    url: `tel:${COMPANY_CONTACT.phone.replace(/[^\d+]/g, "")}`,
+  });
+
+  type(doc, 7.5, TOON.blue, "bold");
+  doc.textWithLink(
+    COMPANY_CONTACT.email,
+    RIGHT - 5.5 - doc.getTextWidth(COMPANY_CONTACT.email),
+    dirY + 25.5,
+    { url: `mailto:${COMPANY_CONTACT.email}` }
   );
-  doc.text(plant, x, fy + 18.5 + office.length * 4, { lineHeightFactor: 1.4 });
+  doc.textWithLink(
+    COMPANY_CONTACT.web,
+    RIGHT - 5.5 - doc.getTextWidth(COMPANY_CONTACT.web),
+    dirY + 31.5,
+    { url: `https://${COMPANY_CONTACT.web}` }
+  );
 
-  type(doc, 12, C.white, "bold");
-  doc.text(COMPANY_CONTACT.phone, RIGHT - 2, fy + 17, { align: "right" });
-  type(doc, 7.6, C.onNavy);
-  doc.text(COMPANY_CONTACT.email, RIGHT - 2, fy + 23, { align: "right" });
-  doc.textWithLink(COMPANY_CONTACT.web, RIGHT - 2 - doc.getTextWidth(COMPANY_CONTACT.web), fy + 28, {
-    url: `https://${COMPANY_CONTACT.web}`,
-  });
+  type(doc, 6.6, TOON.ink, "bold");
+  doc.text("ALL INDIA SUPPLY & PCD FRANCHISE", RIGHT - 5.5, dirY + 39.5, { align: "right" });
 
-  box(doc, 0, PAGE_H - 11, PAGE_W, 11, C.gold);
-  type(doc, 7, C.navyDeep, "bold");
-  tracked(doc, `EDITION: ${issueDate.toUpperCase()}`, PAGE_W / 2, PAGE_H - 4.3, 0.6, "center");
+  return { indexBtn, webBtn, enquireBtn, metricBox, catPills };
 }
 
-function drawCatalogueBackCover(doc: jsPDF) {
-  gradient(doc, 0, PAGE_H, C.navyDeep, C.navy);
-  doc.setDrawColor(...C.indigo);
-  doc.setLineWidth(8);
-  doc.circle(-6, 292, 62, "S");
-  doc.setDrawColor(...C.gold);
-  doc.setLineWidth(1.4);
-  doc.circle(-6, 292, 44, "S");
+function drawCatalogueBackCover(doc: jsPDF, indexPage: number) {
+  drawComicPaper(doc, TOON.dotBlue);
+
+  box(doc, 0, 0, PAGE_W, 8.5, TOON.ink);
+  type(doc, 6.8, TOON.sun, "bold");
+  tracked(doc, "ASTER MEDICINES   *   CARE FOR LIFE   *   EST. 1982", PAGE_W / 2, 5.6, 0.35, "center");
 
   const mid = PAGE_W / 2;
-  drawVectorLogo(doc, mid - 35, 52, 70, true);
-  type(doc, 30, C.white, "normal", "times");
-  doc.text("Let's work together", mid, 125, { align: "center" });
-  box(doc, mid - 9, 133, 18, 1.4, C.gold);
-  type(doc, 9.5, C.onNavy);
-  doc.text("Institutional supply and product enquiries", mid, 144, { align: "center" });
+  comicCard(doc, mid - 34, 22, 68, 34, C.white, { border: 0.7, shadow: 2.0, r: 7, shine: true });
+  drawVectorLogo(doc, mid - 26, 25.5, 52, false);
 
-  type(doc, 22, C.gold, "bold");
-  doc.text(COMPANY_CONTACT.phone, mid, 164, { align: "center" });
-  type(doc, 10, C.white);
-  doc.text(COMPANY_CONTACT.email, mid, 174, { align: "center" });
-  doc.text(COMPANY_CONTACT.web, mid, 181, { align: "center" });
+  const cardX = 20;
+  const cardW = PAGE_W - 40;
+  const cardY = 68;
+  const cardH = 178;
+  comicCard(doc, cardX, cardY, cardW, cardH, TOON.blue, { border: 0.85, shadow: 3.0, r: 9, shine: true });
 
-  type(doc, 7.6, C.onNavy);
-  doc.text(`Regd. Office: ${COMPANY_CONTACT.office}`, mid, 204, { align: "center" });
-  doc.text(`Manufacturing Plant: ${COMPANY_CONTACT.factory}`, mid, 210, { align: "center" });
-  doc.text(`CIN: ${COMPANY_CONTACT.cin}`, mid, 216, { align: "center" });
+  // Cheerful Cartoon Capsule Buddy cheering on Back Cover!
+  drawCartoonCapsule(doc, mid, cardY + 29, 0.92);
+
+  type(doc, 27, TOON.ink, "bold");
+  doc.text("LET'S TEAM UP!", mid + 0.9, cardY + 64.9, { align: "center" });
+  type(doc, 27, TOON.sun, "bold");
+  doc.text("LET'S TEAM UP!", mid, cardY + 64, { align: "center" });
+
+  type(doc, 9.4, C.white, "bold");
+  doc.text("Institutional supply, third-party manufacturing & PCD enquiries!", mid, cardY + 75, {
+    align: "center",
+  });
+
+  // Centered Call Pill
+  const cText = `CALL  ${COMPANY_CONTACT.phone}`;
+  type(doc, 10.5, TOON.ink, "bold");
+  const cW = doc.getTextWidth(cText) + 14;
+  const callBtn = comicButton(doc, mid - cW / 2, cardY + 84, cText, {
+    fill: TOON.sun,
+    textColor: TOON.ink,
+    fontSize: 10.5,
+    height: 10.5,
+    padX: 7,
+    shadow: 1.6,
+  });
+  doc.link(callBtn.x, callBtn.y, callBtn.w, callBtn.h, {
+    url: `tel:${COMPANY_CONTACT.phone.replace(/[^\d+]/g, "")}`,
+  });
+
+  type(doc, 9.5, C.white, "bold");
+  doc.textWithLink(
+    COMPANY_CONTACT.email,
+    mid - doc.getTextWidth(COMPANY_CONTACT.email) / 2,
+    cardY + 106,
+    { url: `mailto:${COMPANY_CONTACT.email}` }
+  );
+  type(doc, 9.5, TOON.sky, "bold");
+  doc.textWithLink(
+    COMPANY_CONTACT.web,
+    mid - doc.getTextWidth(COMPANY_CONTACT.web) / 2,
+    cardY + 113.5,
+    { url: `https://${COMPANY_CONTACT.web}` }
+  );
+
+  // Evenly centered 3 bouncy interactive buttons
+  const bY = cardY + 124;
+  const labels3 = [
+    { text: "GET A QUOTE ->", fill: TOON.mint, fs: 7.4, pad: 5, dest: { url: `${SITE_ORIGIN}/contact#contact-form` } },
+    { text: "BACK TO INDEX", fill: C.white, fs: 7.2, pad: 5, dest: { pageNumber: indexPage } },
+    { text: "COVER", fill: TOON.coral, fs: 7.2, pad: 5, dest: { pageNumber: 1 } },
+  ];
+  const widths3 = labels3.map((b) => {
+    type(doc, b.fs, TOON.ink, "bold");
+    return doc.getTextWidth(b.text) + b.pad * 2;
+  });
+  const totalBtnsW = widths3.reduce((s, w) => s + w, 0) + 4.5 * 2;
+  let bxCursor = mid - totalBtnsW / 2;
+  labels3.forEach((b, idx) => {
+    const r = comicButton(doc, bxCursor, bY, b.text, {
+      fill: b.fill,
+      textColor: TOON.ink,
+      fontSize: b.fs,
+      height: 8.2,
+      padX: b.pad,
+      shadow: 1.4,
+    });
+    doc.link(r.x, r.y, r.w, r.h, b.dest);
+    bxCursor += widths3[idx] + 4.5;
+  });
+
+  type(doc, 7.2, C.onNavy);
+  doc.text(`Regd. Office: ${COMPANY_CONTACT.office}`, mid, cardY + 148, { align: "center" });
+  doc.text(`Factory: ${COMPANY_CONTACT.factory}`, mid, cardY + 154.5, { align: "center" });
+  type(doc, 6.8, TOON.sun, "bold");
+  doc.text(`CIN: ${COMPANY_CONTACT.cin}`, mid, cardY + 163, { align: "center" });
 }
 
-/** One page per product. */
+/** Single-page Cartoonish Illustrated Product Sheet with 2 product images & interactive buttons. */
 async function drawCatalogueProductPage(
   doc: jsPDF,
   product: Product,
   accent: RGB,
-  categoryIndex: number
+  categoryIndex: number,
+  categoryStartPage: number
 ) {
   const name = decodeHtmlEntities(product.name);
   const category = decodeHtmlEntities(product.category) || "Pharmaceutical Formulation";
@@ -922,6 +1448,10 @@ async function drawCatalogueProductPage(
   const storage = decodeHtmlEntities(product.storageConditions) || "Store below 25°C, dry place";
   const shelfLife = decodeHtmlEntities(product.shelfLife) || "24 - 36 Months";
 
+  const productUrl = `${SITE_ORIGIN}${getProductPath(product)}`;
+  const enquiryUrl = `${SITE_ORIGIN}/contact?product=${encodeURIComponent(name)}&request=enquiry#contact-form`;
+  const sampleUrl = `${SITE_ORIGIN}/contact?product=${encodeURIComponent(name)}&request=sample#contact-form`;
+
   const loadedResults = await Promise.allSettled(
     (product.images || []).slice(0, 2).map((url) => loadImageAsDataUrl(url, 4500, 850, 0.86))
   );
@@ -929,184 +1459,334 @@ async function drawCatalogueProductPage(
     .map((r) => (r.status === "fulfilled" ? r.value : null))
     .filter((img): img is LoadedImage => img !== null);
 
-  drawCatalogueRunningHeader(doc, category.toUpperCase(), `REF: AM-${productRef(product)}`, accent);
+  drawComicPaper(doc, tint(accent, 0.72));
+  drawCatalogueComicHeader(doc, category.toUpperCase(), `REF #AM-${productRef(product)}`, accent);
 
-  // Thumb tab: har category ka tab alag height par, page palatte hue section dikhta hai
-  box(doc, PAGE_W - 4.5, 26 + (categoryIndex % 9) * 27, 7, 23, accent, 1.8);
+  // ---- Interactive Top Candy Pills Row ----
+  let y = 23.2;
+  const catPill = comicButton(doc, M, y, oneLine(doc, category.toUpperCase(), 68), {
+    fill: tint(accent, 0.65),
+    textColor: TOON.ink,
+    fontSize: 6.2,
+    height: 5.6,
+    padX: 3.4,
+    shadow: 0.9,
+  });
+  doc.link(catPill.x, catPill.y, catPill.w, catPill.h, { pageNumber: categoryStartPage });
 
-  // ---- Title ----
-  type(doc, 23, C.navy, "bold", "times");
+  let rxCursor = RIGHT;
+  const webPill = comicButton(doc, rxCursor, y, "LIVE PAGE ->", {
+    align: "right",
+    fill: TOON.sun,
+    textColor: TOON.ink,
+    fontSize: 6.1,
+    height: 5.6,
+    padX: 3.2,
+    shadow: 0.9,
+  });
+  doc.link(webPill.x, webPill.y, webPill.w, webPill.h, { url: productUrl });
+  rxCursor = webPill.x - 2.2;
+
+  const badges = ["GMP CERTIFIED", "QUALITY ASSURED"];
+  if (product.isWhoApproved) badges.push("WHO APPROVED");
+  for (let i = badges.length - 1; i >= 0; i--) {
+    const bp = comicButton(doc, rxCursor, y, badges[i], {
+      align: "right",
+      fill: i === 0 ? TOON.mint : TOON.sky,
+      textColor: TOON.ink,
+      dotColor: C.green,
+      fontSize: 6.0,
+      height: 5.6,
+      padX: 2.8,
+      shadow: 0.9,
+    });
+    rxCursor = bp.x - 2.2;
+  }
+
+  y += 12.6;
+
+  // ---- Bouncy Bold Comic Product Headline (clickable -> live page) ----
+  type(doc, 20, TOON.ink, "bold");
   let nameLines: string[] = doc.splitTextToSize(name, CW);
   if (nameLines.length > 1) {
-    doc.setFontSize(18);
+    doc.setFontSize(16);
     nameLines = fitLines(doc, name, CW, 2);
   }
-  const step = nameLines.length > 1 ? 7.2 : 8;
-  doc.text(nameLines, M, 30.5, { lineHeightFactor: step / (doc.getFontSize() * 0.3528) });
-  let y = 30.5 + (nameLines.length - 1) * step + 3.8;
-  box(doc, M, y, 16, 1.2, C.gold);
+  const step = nameLines.length > 1 ? 6.4 : 7.4;
+  doc.text(nameLines, M, y, { lineHeightFactor: step / (doc.getFontSize() * 0.3528) });
+  doc.link(M, y - 5.5, CW, nameLines.length * step + 1, { url: productUrl });
+  y += (nameLines.length - 1) * step + 2.8;
 
-  const badges = ["GMP Certified", "Quality Assured"];
-  if (product.isWhoApproved) badges.push("WHO Approved");
-  let bx = RIGHT;
-  for (let i = badges.length - 1; i >= 0; i--) {
-    type(doc, 6.4, C.green, "bold");
-    const w = doc.getTextWidth(badges[i]) + 8.5;
-    bx -= w;
-    box(doc, bx, y - 1.4, w, 5, tint(C.green, 0.91), 2.5);
-    doc.setFillColor(...C.green);
-    doc.circle(bx + 3, y + 1.1, 0.7, "F");
-    doc.text(badges[i], bx + 5.2, y + 1.95);
-    bx -= 2;
-  }
-  y += 6.5;
+  // Cute comic pill underline dots
+  box(doc, M, y, 22, 1.8, TOON.sun, 0.9);
+  box(doc, M + 24, y, 8, 1.8, TOON.coral, 0.9);
+  box(doc, M + 34, y, 4, 1.8, TOON.sky, 0.9);
+  y += 4.2;
 
-  // ---- Gallery ----
-  const galleryH = nameLines.length > 1 ? 70 : 76;
-  box(doc, M, y, CW, galleryH, tint(accent, 0.9), 4);
+  // ---- Two-Picture Comic Gallery Showcase ----
+  const galleryH = nameLines.length > 1 ? 64 : 69;
+  comicCard(doc, M, y, CW, galleryH, tint(accent, 0.78), { border: 0.65, shadow: 1.8, r: 6.5 });
+  // Cheerful cartoon sparkle stars in gallery corners!
+  drawCartoonStar(doc, M + 4.5, y + 4.5, 2.2, TOON.sun);
+  drawCartoonStar(doc, RIGHT - 4.5, y + 4.5, 2.2, TOON.mint);
+
   const cardY = y + 3.5;
   const cardH = galleryH - 7;
-  if (images.length >= 2) {
-    const w = (CW - 10.5) / 2;
-    imageCard(doc, images[0], M + 3.5, cardY, w, cardH, "PRIMARY PRESENTATION", accent);
-    imageCard(doc, images[1], M + 7 + w, cardY, w, cardH, "PACKAGING DETAIL", accent);
-  } else {
-    const w = 120;
-    imageCard(
-      doc,
-      images[0] || null,
-      M + (CW - w) / 2,
-      cardY,
-      w,
-      cardH,
-      "PRODUCT PRESENTATION",
-      accent
-    );
-  }
-  y += galleryH + 3.5;
 
-  // ---- Spec strip ----
+  if (images.length >= 2) {
+    const w = (CW - 11.5) / 2;
+    comicImageCard(doc, images[0], M + 3.5, cardY, w, cardH, "01 // PRODUCT SNAP!", accent);
+    comicImageCard(doc, images[1], M + 8 + w, cardY, w, cardH, "02 // PACK VIEW!", accent);
+    doc.link(M + 3.5, cardY, w, cardH, { url: productUrl });
+    doc.link(M + 8 + w, cardY, w, cardH, { url: productUrl });
+  } else {
+    const w = 122;
+    const cx = M + (CW - w) / 2;
+    comicImageCard(doc, images[0] || null, cx, cardY, w, cardH, "01 // PRODUCT VIEW!", accent);
+    doc.link(cx, cardY, w, cardH, { url: productUrl });
+  }
+  y += galleryH + 4.5;
+
+  // ---- Playful Toy-Block 4-Column Specs Strip ----
+  const specH = 19;
+  const headH = 6.2;
+  comicCard(doc, M, y, CW, specH, C.white, { border: 0.65, shadow: 1.8, r: 5 });
+
+  // Rounded dark cartoon top strip
+  doc.setFillColor(...TOON.ink);
+  doc.roundedRect(M + 0.3, y + 0.3, CW - 0.6, headH, 4.5, 4.5, "F");
+  doc.rect(M + 0.3, y + 3.0, CW - 0.6, headH - 3.0, "F");
+
   const specs = [
     { label: "STRENGTH / PACK", val: dosage },
-    { label: "THERAPEUTIC CLASS", val: category },
+    { label: "CATEGORY", val: category },
     { label: "SHELF LIFE", val: shelfLife },
     { label: "STORAGE", val: storage },
   ];
-  box(doc, M, y, CW, 19, C.navy, 3);
   const sw = CW / 4;
+
   specs.forEach((s, i) => {
     const sx = M + i * sw;
     if (i) {
-      doc.setDrawColor(40, 72, 156);
-      doc.setLineWidth(0.25);
-      doc.line(sx, y + 4, sx, y + 15);
+      doc.setDrawColor(...TOON.ink);
+      doc.setLineWidth(0.45);
+      doc.line(sx, y + headH, sx, y + specH);
     }
-    type(doc, 5.9, C.gold, "bold");
-    tracked(doc, s.label, sx + 4, y + 6, 0.4);
-    type(doc, 7.8, C.white, "bold");
-    doc.text(fitLines(doc, s.val, sw - 7, 2), sx + 4, y + 11, { lineHeightFactor: 1.22 });
+    type(doc, 5.9, TOON.sun, "bold");
+    doc.text(s.label, sx + 3.8, y + 4.4);
+
+    type(doc, 7.6, TOON.ink, "bold");
+    doc.text(fitLines(doc, s.val, sw - 6.5, 2), sx + 3.8, y + 10.8, { lineHeightFactor: 1.2 });
   });
-  y += 23;
+  y += specH + 4.5;
 
-  // ---- Composition ----
-  type(doc, 8.4, C.ink);
+  // ---- Active Composition Cartoon Callout Bubble (with cute top speech tag) ----
+  type(doc, 8.2, TOON.ink, "bold");
   const compLines = fitLines(doc, composition, CW - 12, 3);
-  const compH = 10 + compLines.length * 4.1;
-  box(doc, M, y, CW, compH, tint(accent, 0.93), 2.5);
-  box(doc, M, y + 2.5, 1.6, compH - 5, accent);
-  type(doc, 6.5, accent, "bold");
-  tracked(doc, "ACTIVE PHARMACEUTICAL COMPOSITION", M + 6, y + 5.6, 0.4);
-  type(doc, 8.4, C.ink);
-  doc.text(compLines, M + 6, y + 10.6, { lineHeightFactor: 1.38 });
-  y += compH + 4.5;
+  const compH = 10.2 + compLines.length * 4.0;
+  comicCard(doc, M, y, CW, compH, tint(accent, 0.84), { border: 0.6, shadow: 1.6, r: 5, shine: true });
 
-  // ---- Overview ----
+  // Top speech-tag header pill on Composition card
+  box(doc, M + 4.5, y + 1.8, 36, 4.8, TOON.ink, 2.4);
+  type(doc, 5.8, TOON.sun, "bold");
+  doc.text("ACTIVE FORMULA!", M + 22.5, y + 5.0, { align: "center" });
+
+  type(doc, 8.2, TOON.ink);
+  doc.text(compLines, M + 5, y + 10.6, { lineHeightFactor: 1.35 });
+  y += compH + 4.2;
+
+  // ---- Story / Overview Bubbly Card ----
   if (description) {
-    y = heading(doc, "Product Overview", M, y, accent) - 0.6;
-    type(doc, 8.1, C.body);
-    const lines = fitLines(doc, description, CW, 4);
-    doc.text(lines, M, y, { lineHeightFactor: 1.4 });
-    y += lines.length * 4 + 1.5;
+    type(doc, 8.0, C.body);
+    const lines = fitLines(doc, description, CW - 9, 3);
+    const ovH = 9.8 + lines.length * 3.85;
+    comicCard(doc, M, y, CW, ovH, C.white, { border: 0.55, shadow: 1.5, r: 5 });
+    box(doc, M + 4, y + 1.8, 28, 4.6, TOON.sky, 2.3);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(M + 4, y + 1.8, 28, 4.6, 2.3, 2.3, "S");
+    type(doc, 5.8, TOON.ink, "bold");
+    doc.text("WHAT IT DOES", M + 18, y + 4.9, { align: "center" });
+    type(doc, 8.0, TOON.ink);
+    doc.text(lines, M + 4.5, y + 10.0, { lineHeightFactor: 1.38 });
+    y += ovH + 4.2;
   }
 
-  // ---- Two column clinical grid ----
-  const MAX_Y = 262;
-  const LH = 3.9;
-  const gap = 8;
+  // ---- Two-Column Content-Fitted Cartoon Clinical Cards ----
+  const MAX_Y = 259;
+  const gap = 5.5;
   const colW = (CW - gap) / 2;
   const rx = M + colW + gap;
+  const maxAvailH = Math.max(MAX_Y - y, 34);
 
-  /** Lines that still fit below a heading placed at `top`. */
-  const room = (top: number) => Math.floor((MAX_Y - top - 10.4) / LH) + 1;
+  type(doc, 7.7, TOON.ink);
+  const indLines = indications ? fitLines(doc, indications, colW - 8, 5) : [];
+  const doseLines = dosageText ? fitLines(doc, dosageText, colW - 8, 4) : [];
+  const leftNeeded =
+    6 +
+    (indLines.length ? 5 + indLines.length * 3.85 + 4 : 0) +
+    (doseLines.length ? 5 + doseLines.length * 3.85 + 3 : 0);
 
-  const column = (title: string, text: string, x: number, top: number, maxLines: number) => {
-    if (!text || maxLines < 1) return top;
-    const by = heading(doc, title, x, top, accent) - 0.6;
-    type(doc, 7.8, C.body);
-    const lines = fitLines(doc, text, colW, maxLines);
-    doc.text(lines, x, by, { lineHeightFactor: LH / (7.8 * 0.3528) });
-    return by + lines.length * LH + 1.5;
-  };
-
-  // Right column pehle: safety information ko sabse zyada jagah milti hai
-  let rightY = y;
-  if (precautions) {
-    type(doc, 7.6, C.ink);
-    const fit = Math.floor((MAX_Y - rightY - 11) / LH);
-    if (fit >= 1) {
-      const lines = fitLines(doc, precautions, colW - 9, fit);
-      const h = 10 + lines.length * LH;
-      box(doc, rx, rightY, colW, h, C.amberSoft, 2.5);
-      box(doc, rx, rightY + 2.5, 1.4, h - 5, C.amber);
-      type(doc, 6.8, C.amberInk, "bold");
-      tracked(doc, "PRECAUTIONS & WARNINGS", rx + 5, rightY + 5.6, 0.35);
-      type(doc, 7.6, C.ink);
-      doc.text(lines, rx + 5, rightY + 10.4, { lineHeightFactor: LH / (7.6 * 0.3528) });
-      rightY += h + 3.5;
-    }
-  }
-  rightY = column("Safety & Adverse Effects", sideEffects, rx, rightY, room(rightY));
+  type(doc, 7.5, TOON.ink);
+  const precLines = precautions ? fitLines(doc, precautions, colW - 9, 4) : [];
+  const precH = precLines.length ? 10.5 + precLines.length * 3.75 : 0;
 
   const features = cleanFeatures(product).slice(0, 4);
-  if (features.length && rightY + 15 < MAX_Y) {
-    rightY = heading(doc, "Formulation Highlights", rx, rightY, accent) - 0.6;
-    for (const f of features) {
-      if (rightY > MAX_Y) break;
-      box(doc, rx, rightY - 2.1, 1.8, 1.8, C.gold, 0.4);
-      type(doc, 7.6, C.ink);
-      doc.text(oneLine(doc, f, colW - 6), rx + 4.4, rightY);
-      rightY += 4.4;
+  type(doc, 7.6, TOON.ink);
+  const sideLines = sideEffects ? fitLines(doc, sideEffects, colW - 8, 3) : [];
+  const secondRightNeeded =
+    (sideLines.length ? 8.5 + sideLines.length * 3.8 + 4 : 0) +
+    (features.length ? 8.5 + features.length * 4.4 : 0);
+
+  const rightNeeded = (precH ? precH + 4 : 0) + (secondRightNeeded ? secondRightNeeded + 3 : 0);
+  const matchedH = Math.min(maxAvailH, Math.max(leftNeeded, rightNeeded, 32));
+
+  // Left Cloud Card: Indications & Dosage
+  comicCard(doc, M, y, colW, matchedH, C.white, { border: 0.6, shadow: 1.6, r: 5 });
+  let ly = y + 5.8;
+  const maxLeftY = y + matchedH - 3.5;
+
+  const drawLeftSection = (title: string, lines: string[]) => {
+    if (!lines.length || ly + 8 > maxLeftY) return;
+    doc.setFillColor(...accent);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.35);
+    doc.circle(M + 5.2, ly - 0.9, 1.3, "FD");
+    type(doc, 6.7, TOON.ink, "bold");
+    doc.text(title.toUpperCase(), M + 8.2, ly);
+    ly += 4.6;
+    type(doc, 7.7, C.body);
+    const cap = Math.max(1, Math.floor((maxLeftY - ly) / 3.85) + 1);
+    const keep = lines.slice(0, cap);
+    doc.text(keep, M + 4, ly, { lineHeightFactor: 1.38 });
+    ly += keep.length * 3.85 + 4.5;
+  };
+
+  drawLeftSection("Indications & Usage", indLines);
+  drawLeftSection("Dosage & How To Use", doseLines);
+
+  // Fill any comfortable spare height at bottom of left card with cheerful comic supply perks
+  if (ly + 11 <= maxLeftY) {
+    ly += 1;
+    doc.setFillColor(...TOON.sun);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.35);
+    doc.circle(M + 5.2, ly - 0.9, 1.3, "FD");
+    type(doc, 6.7, TOON.ink, "bold");
+    doc.text("PACKAGING & AVAILABILITY", M + 8.2, ly);
+    ly += 4.6;
+    type(doc, 7.4, C.body);
+    doc.text(`Strength: ${oneLine(doc, dosage, colW - 22)}`, M + 4, ly);
+    ly += 4.2;
+    if (ly + 3 <= maxLeftY) {
+      doc.text("Hospital Supply  *  Bulk Order  *  PCD", M + 4, ly);
     }
   }
 
-  // Left column: dosage ke liye jagah reserve karke indications
-  let leftY = column(
-    "Indications & Usage",
-    indications,
-    M,
-    y,
-    room(y) - (dosageText ? 6 : 0)
-  );
-  leftY = column("Dosage & Administration", dosageText, M, leftY, room(leftY));
+  // Right Column: Cartoon Caution Bubble Card + Highlights Card
+  let ry = y;
+  if (precLines.length && ry + precH <= y + matchedH) {
+    comicCard(doc, rx, ry, colW, precH, TOON.butter, { border: 0.6, shadow: 1.6, r: 5, shine: true });
+    // Cute coral "CARE NOTE!" pill badge
+    box(doc, rx + 3.5, ry + 1.8, 28, 4.5, TOON.coral, 2.2);
+    doc.setDrawColor(...TOON.ink);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(rx + 3.5, ry + 1.8, 28, 4.5, 2.2, 2.2, "S");
+    type(doc, 5.7, C.white, "bold");
+    doc.text("!  CARE NOTE", rx + 17.5, ry + 4.8, { align: "center" });
 
-  // ---- Quality & supply strip ----
-  const ay = 266;
-  box(doc, M, ay, CW, 13.5, C.paper, 2.5);
-  box(doc, M, ay + 2.5, 1.4, 8.5, C.green);
-  type(doc, 6.3, C.green, "bold");
-  tracked(doc, "QUALITY COMPLIANCE", M + 5, ay + 5.2, 0.35);
-  type(doc, 6.8, C.body);
-  doc.text(
-    "Manufactured under Schedule M & WHO-GMP norms. Batch CoA provided on supply.",
-    M + 5,
-    ay + 9.8
-  );
-  type(doc, 6.3, C.navy, "bold");
-  tracked(doc, "INSTITUTIONAL & PCD DESK", RIGHT - 4, ay + 5.2, 0.35, "right");
-  type(doc, 6.8, C.body);
-  doc.text(`${COMPANY_CONTACT.phone}  ·  ${COMPANY_CONTACT.email}`, RIGHT - 4, ay + 9.8, {
-    align: "right",
+    type(doc, 7.5, TOON.ink);
+    doc.text(precLines, rx + 4, ry + 10.2, { lineHeightFactor: 1.35 });
+    ry += precH + 4;
+  }
+
+  const remRightH = y + matchedH - ry;
+  if (remRightH >= 13 && (sideLines.length || features.length)) {
+    comicCard(doc, rx, ry, colW, remRightH, C.white, { border: 0.6, shadow: 1.6, r: 5 });
+    let innerRy = ry + 5.6;
+    const maxRightY = ry + remRightH - 2.5;
+
+    if (sideLines.length && innerRy + 8 <= maxRightY) {
+      doc.setFillColor(...TOON.coral);
+      doc.setDrawColor(...TOON.ink);
+      doc.setLineWidth(0.35);
+      doc.circle(rx + 5.2, innerRy - 0.9, 1.3, "FD");
+      type(doc, 6.6, TOON.ink, "bold");
+      doc.text("SIDE EFFECTS & SAFETY", rx + 8.2, innerRy);
+      innerRy += 4.5;
+      type(doc, 7.6, C.body);
+      const capS = Math.max(1, Math.floor((maxRightY - innerRy) / 3.8) + 1);
+      const keepS = sideLines.slice(0, capS);
+      doc.text(keepS, rx + 4, innerRy, { lineHeightFactor: 1.36 });
+      innerRy += keepS.length * 3.8 + 4;
+    }
+
+    if (features.length && innerRy + 8 <= maxRightY) {
+      doc.setFillColor(...TOON.sun);
+      doc.setDrawColor(...TOON.ink);
+      doc.setLineWidth(0.35);
+      doc.circle(rx + 5.2, innerRy - 0.9, 1.3, "FD");
+      type(doc, 6.6, TOON.ink, "bold");
+      doc.text("HIGHLIGHTS", rx + 8.2, innerRy);
+      innerRy += 4.8;
+      for (const f of features) {
+        if (innerRy > maxRightY) break;
+        doc.setFillColor(...TOON.mint);
+        doc.setDrawColor(...TOON.ink);
+        doc.setLineWidth(0.35);
+        doc.roundedRect(rx + 4, innerRy - 2.2, 2.3, 2.3, 0.7, 0.7, "FD");
+        type(doc, 7.6, TOON.ink, "bold");
+        doc.text(oneLine(doc, f, colW - 10), rx + 7.8, innerRy);
+        innerRy += 4.3;
+      }
+    }
+  }
+
+  // ---- Bottom Interactive Cartoon CTA Strip ----
+  const ay = 263.5;
+  const ah = 14.5;
+  comicCard(doc, M, ay, CW, ah, C.white, { border: 0.6, shadow: 1.6, r: 5.5, shine: true });
+
+  box(doc, M + 3.5, ay + 2.4, 3.2, ah - 4.8, TOON.mint, 1.6);
+  doc.setDrawColor(...TOON.ink);
+  doc.setLineWidth(0.35);
+  doc.roundedRect(M + 3.5, ay + 2.4, 3.2, ah - 4.8, 1.6, 1.6, "S");
+
+  type(doc, 6.4, C.green, "bold");
+  doc.text("WHO-GMP & SCHEDULE M CERTIFIED  *  BATCH COA READY", M + 9, ay + 5.5);
+
+  type(doc, 6.9, TOON.ink, "bold");
+  const phoneTxt = COMPANY_CONTACT.phone;
+  const mailTxt = COMPANY_CONTACT.email;
+  doc.textWithLink(phoneTxt, M + 9, ay + 10.6, {
+    url: `tel:${phoneTxt.replace(/[^\d+]/g, "")}`,
   });
+  const sepX = M + 9 + doc.getTextWidth(phoneTxt) + 2;
+  doc.text("*", sepX, ay + 10.6);
+  doc.textWithLink(mailTxt, sepX + 3.5, ay + 10.6, { url: `mailto:${mailTxt}` });
+
+  const btnY2 = ay + 3.7;
+  const enqBtn = comicButton(doc, RIGHT - 3.8, btnY2, "ORDER NOW ->", {
+    align: "right",
+    fill: TOON.sun,
+    textColor: TOON.ink,
+    fontSize: 6.4,
+    height: 6.6,
+    padX: 3.6,
+    shadow: 1.0,
+  });
+  doc.link(enqBtn.x, enqBtn.y, enqBtn.w, enqBtn.h, { url: enquiryUrl });
+
+  const smpBtn = comicButton(doc, enqBtn.x - 2.6, btnY2, "FREE SAMPLE", {
+    align: "right",
+    fill: TOON.sky,
+    textColor: TOON.ink,
+    fontSize: 6.2,
+    height: 6.6,
+    padX: 3.2,
+    shadow: 1.0,
+  });
+  doc.link(smpBtn.x, smpBtn.y, smpBtn.w, smpBtn.h, { url: sampleUrl });
 }
 
 export async function generateProductPDF(product: Product): Promise<void> {
@@ -1137,14 +1817,15 @@ export async function generateProductCatalogue(
 
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
   doc.setProperties({
-    title: "Aster Medicines Product Catalogue",
+    title: "Aster Medicines — Illustrated Interactive Product Catalogue",
     subject: "Pharmaceutical Product Formulary & Specifications",
     author: "Aster Medicines Pvt. Ltd.",
   });
 
-  drawCatalogueCover(doc, sorted.length, categories, issueDate);
+  // 1. Cartoonish Illustrated Cover
+  const coverRefs = drawCatalogueCover(doc, sorted.length, categories, issueDate);
 
-  // ---- Product index (2 columns) ----
+  // 2. Interactive 2-Column Cartoon Product Index
   interface IndexEntry {
     page: number;
     numX: number;
@@ -1156,146 +1837,350 @@ export async function generateProductCatalogue(
     leaderY: number;
   }
   const entries: IndexEntry[] = [];
-  const colGap = 9;
+  const colGap = 7;
   const colW = (CW - colGap) / 2;
   const colX = [M, M + colW + colGap];
-  const MAX_Y = 275;
-  const TOP_FIRST = 50;
-  const TOP_NEXT = 36;
+  const MAX_Y = 274;
+  const TOP_FIRST = 56;
+  const TOP_NEXT = 38;
 
   let col = 0;
   let y = 0;
   let indexPages = 0;
   let previousCategory = "";
+  const indexQuickPillCoords: CoverCategoryPillRect[] = [];
 
+  // Estimate per-category block height to balance Column 1 & Column 2 evenly!
+  const categoryBlockHeight = new Map<string, number>();
+  let totalListHeight = 0;
+  for (const cat of categories) {
+    const prods = sorted.filter((p) => categoryOf(p) === cat);
+    let bh = 12; // category header + spacing
+    for (const p of prods) {
+      type(doc, 7.9, TOON.ink, "bold");
+      const lns: string[] = doc.splitTextToSize(decodeHtmlEntities(p.name), colW - 19);
+      bh += lns.length * 3.6 + 2.5;
+    }
+    categoryBlockHeight.set(cat, bh);
+    totalListHeight += bh;
+  }
+
+  const drawIndexColumns = (topY: number) => {
+    const colH = 278 - topY;
+    comicCard(doc, colX[0], topY, colW, colH, C.white, { border: 0.65, shadow: 1.8, r: 5.5 });
+    comicCard(doc, colX[1], topY, colW, colH, C.white, { border: 0.65, shadow: 1.8, r: 5.5 });
+  };
+
+  let curTopY = 58;
   const startIndexPage = () => {
     doc.addPage();
     indexPages += 1;
-    drawCatalogueRunningHeader(
+    drawComicPaper(doc, TOON.dotBlue);
+    drawCatalogueComicHeader(
       doc,
       "PRODUCT INDEX",
-      indexPages > 1 ? "Formulary Directory (contd.)" : "Formulary Directory",
-      C.navy
+      indexPages > 1 ? "Directory (Contd.)" : "Click Any Product To Jump!",
+      TOON.blue
     );
+
     if (indexPages === 1) {
-      type(doc, 28, C.navy, "normal", "times");
-      doc.text("Product Index", M, 33);
-      box(doc, M, 37.5, 16, 1.2, C.gold);
-      type(doc, 8, C.muted);
+      type(doc, 22, TOON.ink, "bold");
+      doc.text("PRODUCT INDEX", M, 28.5);
+      type(doc, 7.6, TOON.blue, "bold");
       doc.text(
-        `${sorted.length} Formulations  ·  ${categories.length} Categories`,
+        `${sorted.length} Products  *  ${categories.length} Categories`,
         RIGHT,
-        33,
+        28.5,
         { align: "right" }
       );
-      y = TOP_FIRST;
+
+      let qx = M;
+      let qy = 33.0;
+      const candyFills: RGB[] = [TOON.sun, TOON.mint, TOON.sky, TOON.butter, TOON.lavender, tint(TOON.coral, 0.45)];
+      for (let i = 0; i < categories.length; i++) {
+        const cat = categories[i];
+        const label = oneLine(doc, cat.toUpperCase(), 38);
+        type(doc, 5.7, TOON.ink, "bold");
+        const pw = doc.getTextWidth(label) + 6;
+        if (qx + pw > RIGHT) {
+          qx = M;
+          qy += 6.6;
+        }
+        const rect = comicButton(doc, qx, qy, label, {
+          fill: candyFills[i % candyFills.length],
+          textColor: TOON.ink,
+          fontSize: 5.7,
+          height: 5.2,
+          padX: 2.6,
+          shadow: 0.9,
+        });
+        indexQuickPillCoords.push({ cat, ...rect });
+        qx += rect.w + 2.2;
+      }
+
+      const boxTop = qy + 8.5;
+      drawIndexColumns(boxTop);
+      curTopY = boxTop + 9.5;
+      y = curTopY;
     } else {
-      type(doc, 15, C.navy, "normal", "times");
-      doc.text("Product Index (Continued)", M, 28.5);
-      y = TOP_NEXT;
+      type(doc, 14, TOON.ink, "bold");
+      doc.text("PRODUCT INDEX (CONTD.)", M, 27.5);
+      drawIndexColumns(31);
+      curTopY = 39.5;
+      y = curTopY;
     }
     col = 0;
   };
 
   const categoryHeader = (cat: string, continued: boolean) => {
-    const x = colX[col];
+    const x = colX[col] + 3.5;
+    const innerW = colW - 7;
     const accent = accentOf(cat);
-    type(doc, 6.8, C.white, "bold");
+    type(doc, 6.5, C.white, "bold");
     const label = `${cat.toUpperCase()}${continued ? " (CONTD.)" : ""}`;
-    const lines: string[] = doc.splitTextToSize(label, colW - 17);
-    const h = lines.length * 3.5 + 3.4;
-    box(doc, x, y - 4, colW, h, accent, 1.6);
-    lines.forEach((l, i) => tracked(doc, l, x + 3.5, y + 0.1 + i * 3.5, 0.25));
+    const lines: string[] = doc.splitTextToSize(label, innerW - 14);
+    const h = lines.length * 3.4 + 3.6;
+
+    comicCard(doc, x, y - 4, innerW, h, accent, { border: 0.45, shadow: 0.9, r: 2.5 });
+    lines.forEach((l, i) => doc.text(l, x + 3, y + 0.1 + i * 3.4));
     const count = sorted.filter((p) => categoryOf(p) === cat).length;
-    doc.text(String(count), x + colW - 3.5, y + 0.1, { align: "right" });
-    y += h + 2.6;
+    type(doc, 6.8, TOON.sun, "bold");
+    doc.text(String(count), x + innerW - 3, y + 0.1, { align: "right" });
+    y += h + 2.8;
   };
 
   startIndexPage();
+  const availColH = MAX_Y - curTopY;
+  const colSplitTargetY =
+    indexPages === 1 && totalListHeight <= availColH * 1.85
+      ? curTopY + totalListHeight * 0.52
+      : MAX_Y;
 
   for (const product of sorted) {
     const category = categoryOf(product);
-    type(doc, 8.2, C.ink);
-    const lines: string[] = doc.splitTextToSize(decodeHtmlEntities(product.name), colW - 13);
-    const itemH = lines.length * 3.7 + 2.6;
+    const innerW = colW - 7;
+    type(doc, 7.9, TOON.ink, "bold");
+    const lines: string[] = doc.splitTextToSize(decodeHtmlEntities(product.name), innerW - 12);
+    const itemH = lines.length * 3.6 + 2.5;
     let isNew = category !== previousCategory;
+    const blockH = categoryBlockHeight.get(category) ?? 0;
 
-    if (y + (isNew ? 13 : 0) + itemH > MAX_Y) {
+    const shouldBalanceToCol2 =
+      col === 0 &&
+      isNew &&
+      y > curTopY &&
+      y + Math.min(blockH, 24) > colSplitTargetY;
+
+    if (shouldBalanceToCol2 || y + (isNew ? 13 : 0) + itemH > MAX_Y) {
       if (col === 0) {
         col = 1;
-        y = indexPages === 1 ? TOP_FIRST : TOP_NEXT;
+        y = curTopY;
       } else {
         startIndexPage();
       }
-      // naye column / page par category header dobara
       categoryHeader(category, !isNew);
       isNew = false;
     } else if (isNew) {
-      if (y > (indexPages === 1 ? TOP_FIRST : TOP_NEXT)) y += 2;
+      if (y > curTopY) y += 2.2;
       categoryHeader(category, false);
     }
     previousCategory = category;
 
-    const x = colX[col];
-    type(doc, 8.2, C.ink);
-    doc.text(lines, x + 1.5, y, { lineHeightFactor: 1.28 });
-    const leaderY = y + (lines.length - 1) * 3.7;
+    const x = colX[col] + 3.5;
+    type(doc, 7.9, TOON.ink);
+    doc.text(lines, x + 1, y, { lineHeightFactor: 1.25 });
+    const leaderY = y + (lines.length - 1) * 3.6;
     entries.push({
       page: doc.getNumberOfPages(),
-      numX: x + colW - 1.5,
+      numX: x + innerW - 1,
       y: leaderY,
-      linkX: x,
-      linkW: colW,
+      linkX: colX[col] + 2,
+      linkW: colW - 4,
       height: itemH,
-      leaderX: x + 1.5 + doc.getTextWidth(lines[lines.length - 1]) + 1.8,
+      leaderX: x + 1 + doc.getTextWidth(lines[lines.length - 1]) + 1.6,
       leaderY,
     });
     y += itemH;
   }
 
-  // ---- Product pages ----
+  // Track destinations before product pages
+  const categoryFirstPage = new Map<string, number>();
+  const productDestinations: { product: Product; category: string; pageNumber: number }[] = [];
+
+  let expectedPage = doc.getNumberOfPages() + 1;
+  for (const p of sorted) {
+    const c = categoryOf(p);
+    if (!categoryFirstPage.has(c)) categoryFirstPage.set(c, expectedPage);
+    expectedPage += 1;
+  }
+
+  // 3. Single-Page Cartoonish Product Sheets
   for (const [index, product] of sorted.entries()) {
     onProgress(index + 1, sorted.length);
     doc.addPage();
     const destination = doc.getNumberOfPages();
     const category = categoryOf(product);
-    await drawCatalogueProductPage(doc, product, accentOf(category), categories.indexOf(category));
+    productDestinations.push({ product, category, pageNumber: destination });
+
+    await drawCatalogueProductPage(
+      doc,
+      product,
+      accentOf(category),
+      categories.indexOf(category),
+      categoryFirstPage.get(category) ?? 2
+    );
 
     const e = entries[index];
     doc.setPage(e.page);
-    type(doc, 8.2, C.navy, "bold");
+    type(doc, 8.0, TOON.blue, "bold");
     doc.text(String(destination), e.numX, e.y, { align: "right" });
-    const leaderEnd = e.numX - doc.getTextWidth(String(destination)) - 1.8;
+    const leaderEnd = e.numX - doc.getTextWidth(String(destination)) - 1.6;
     if (leaderEnd - e.leaderX > 3) {
-      doc.setLineDashPattern([0.2, 1.1], 0);
-      hline(doc, e.leaderX, leaderEnd, e.leaderY, [170, 178, 200], 0.25);
+      doc.setLineDashPattern([0.5, 1.0], 0);
+      hline(doc, e.leaderX, leaderEnd, e.leaderY, C.muted, 0.3);
       doc.setLineDashPattern([], 0);
     }
-    const first = e.y - (e.height - 2.6 - 3.7);
+    const first = e.y - (e.height - 2.5 - 3.6);
     doc.link(e.linkX, first - 3.2, e.linkW, e.height, { pageNumber: destination });
     doc.setPage(doc.getNumberOfPages());
   }
 
-  // ---- Footer on interior pages ----
+  // 4. Closing Cartoon Page
   const lastInterior = doc.getNumberOfPages();
-  const totalPages = lastInterior + 1; // back cover
-  for (let p = 2; p <= lastInterior; p++) {
-    doc.setPage(p);
-    hline(doc, M, RIGHT, 283.5);
-    type(doc, 6.6, C.muted);
-    doc.text(
-      `Aster Medicines Pvt. Ltd.  ·  WHO-GMP Certified  ·  ${COMPANY_CONTACT.web}  ·  ${COMPANY_CONTACT.phone}`,
-      M,
-      289.3
-    );
-    box(doc, RIGHT - 20, 285.7, 20, 5.4, C.navy, 2.7);
-    type(doc, 6.8, C.white, "bold");
-    doc.text(`${p} / ${totalPages}`, RIGHT - 10, 289.4, { align: "center" });
-  }
-
   doc.setPage(lastInterior);
   doc.addPage();
-  drawCatalogueBackCover(doc);
+  const totalPages = doc.getNumberOfPages();
+  drawCatalogueBackCover(doc, 2);
+
+  // 5. Wire Cover & Index Quick-Jump Interactive Links
+  doc.setPage(1);
+  doc.link(coverRefs.indexBtn.x, coverRefs.indexBtn.y, coverRefs.indexBtn.w, coverRefs.indexBtn.h, { pageNumber: 2 });
+  doc.link(coverRefs.webBtn.x, coverRefs.webBtn.y, coverRefs.webBtn.w, coverRefs.webBtn.h, { url: SITE_ORIGIN });
+  doc.link(coverRefs.enquireBtn.x, coverRefs.enquireBtn.y, coverRefs.enquireBtn.w, coverRefs.enquireBtn.h, {
+    url: `${SITE_ORIGIN}/contact#contact-form`,
+  });
+  doc.link(coverRefs.metricBox.x, coverRefs.metricBox.y, coverRefs.metricBox.w, coverRefs.metricBox.h, { pageNumber: 2 });
+  for (const cp of coverRefs.catPills) {
+    doc.link(cp.x, cp.y, cp.w, cp.h, { pageNumber: categoryFirstPage.get(cp.cat) ?? 2 });
+  }
+
+  doc.setPage(2);
+  for (const qp of indexQuickPillCoords) {
+    doc.link(qp.x, qp.y, qp.w, qp.h, { pageNumber: categoryFirstPage.get(qp.cat) ?? 2 });
+  }
+
+  // 6. Stamp Comic Header Nav Buttons + Running Footer Pill across Interior Pages (2..lastInterior)
+  for (let p = 2; p <= lastInterior; p++) {
+    doc.setPage(p);
+    doc.link(M + 4, 5.5, 22, 12, { pageNumber: 1 });
+
+    const navPillY = 8.6;
+    let navX = RIGHT - 3.2;
+
+    const contactBtn = comicButton(doc, navX, navPillY, "CONTACT", {
+      align: "right",
+      fill: TOON.mint,
+      textColor: TOON.ink,
+      fontSize: 5.7,
+      height: 5.8,
+      padX: 2.5,
+      shadow: 0.85,
+    });
+    doc.link(contactBtn.x, contactBtn.y, contactBtn.w, contactBtn.h, { pageNumber: totalPages });
+    navX = contactBtn.x - 1.8;
+
+    const nextBtn = comicButton(doc, navX, navPillY, "NEXT >", {
+      align: "right",
+      fill: C.white,
+      textColor: p < totalPages ? TOON.ink : C.muted,
+      fontSize: 5.7,
+      height: 5.8,
+      padX: 2.4,
+      shadow: 0.85,
+    });
+    doc.link(nextBtn.x, nextBtn.y, nextBtn.w, nextBtn.h, { pageNumber: Math.min(totalPages, p + 1) });
+    navX = nextBtn.x - 1.8;
+
+    const prevBtn = comicButton(doc, navX, navPillY, "< PREV", {
+      align: "right",
+      fill: C.white,
+      textColor: TOON.ink,
+      fontSize: 5.7,
+      height: 5.8,
+      padX: 2.4,
+      shadow: 0.85,
+    });
+    doc.link(prevBtn.x, prevBtn.y, prevBtn.w, prevBtn.h, { pageNumber: Math.max(1, p - 1) });
+    navX = prevBtn.x - 1.8;
+
+    if (p !== 2) {
+      const idxBtn = comicButton(doc, navX, navPillY, "INDEX", {
+        align: "right",
+        fill: TOON.sun,
+        textColor: TOON.ink,
+        fontSize: 5.7,
+        height: 5.8,
+        padX: 2.6,
+        shadow: 0.85,
+      });
+      doc.link(idxBtn.x, idxBtn.y, idxBtn.w, idxBtn.h, { pageNumber: 2 });
+      navX = idxBtn.x - 1.8;
+    }
+
+    const covBtn = comicButton(doc, navX, navPillY, "COVER", {
+      align: "right",
+      fill: TOON.sky,
+      textColor: TOON.ink,
+      fontSize: 5.7,
+      height: 5.8,
+      padX: 2.4,
+      shadow: 0.85,
+    });
+    doc.link(covBtn.x, covBtn.y, covBtn.w, covBtn.h, { pageNumber: 1 });
+
+    // Bouncy Running Footer Pill
+    comicCard(doc, M, 282.5, CW, 8.6, C.white, { border: 0.5, shadow: 1.2, r: 4.3 });
+    type(doc, 6.4, TOON.ink, "bold");
+    const footLeft = "ASTER MEDICINES PVT. LTD.  *  WHO-GMP  *  ";
+    doc.text(footLeft, M + 4.5, 287.8);
+    const webX = M + 4.5 + doc.getTextWidth(footLeft);
+    doc.setTextColor(...TOON.blue);
+    doc.textWithLink(COMPANY_CONTACT.web, webX, 287.8, { url: SITE_ORIGIN });
+
+    const pPill = comicButton(doc, RIGHT - 2.2, 283.9, `${p} / ${totalPages}`, {
+      align: "right",
+      fill: TOON.sun,
+      textColor: TOON.ink,
+      fontSize: 6.4,
+      height: 5.6,
+      padX: 3.4,
+      shadow: 0.8,
+    });
+    doc.link(pPill.x, pPill.y, pPill.w, pPill.h, { pageNumber: 2 });
+  }
+
+  // 7. Collapsible PDF Sidebar Bookmarks Outline Tree
+  try {
+    doc.outline.add(null, "Cover Page — Aster Product Catalogue", { pageNumber: 1 });
+    doc.outline.add(null, `Product Index (${sorted.length} Products)`, { pageNumber: 2 });
+    const categoryNodes = new Map<string, ReturnType<typeof doc.outline.add>>();
+    for (const item of productDestinations) {
+      let catNode = categoryNodes.get(item.category);
+      if (!catNode) {
+        const count = sorted.filter((x) => categoryOf(x) === item.category).length;
+        catNode = doc.outline.add(null, `${item.category} (${count})`, {
+          pageNumber: categoryFirstPage.get(item.category) ?? item.pageNumber,
+        });
+        categoryNodes.set(item.category, catNode);
+      }
+      doc.outline.add(catNode, decodeHtmlEntities(item.product.name), {
+        pageNumber: item.pageNumber,
+      });
+    }
+    doc.outline.add(null, "Let's Team Up — Contact", { pageNumber: totalPages });
+  } catch (outlineErr) {
+    console.warn("Could not populate PDF sidebar outline:", outlineErr);
+  }
 
   doc.save("Aster-Product-Catalogue.pdf");
 }
