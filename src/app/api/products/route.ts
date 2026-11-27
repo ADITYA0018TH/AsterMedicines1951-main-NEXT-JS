@@ -91,7 +91,7 @@ export async function GET(request: Request) {
       category: product.category,
       stock: product.stock,
       featured: product.featured,
-      dosage: product.stock ? `${product.stock} ${product.stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
+      dosage: product.strengthVariants?.join(', ') || '',
       features: [
         `Price: ₹${product.price}`,
         `Category: ${product.category}`,
@@ -114,8 +114,8 @@ export async function GET(request: Request) {
       isWhoApproved: product.isWhoApproved || false,
       strengthVariants: product.strengthVariants || [],
       packagingOptions: product.packagingOptions || [],
-      storageConditions: product.storageConditions || 'Store below 25°C in a dry place, away from direct sunlight.',
-      shelfLife: product.shelfLife || '24 months',
+      storageConditions: product.storageConditions,
+      shelfLife: product.shelfLife,
     }));
 
     if (page && limit) {

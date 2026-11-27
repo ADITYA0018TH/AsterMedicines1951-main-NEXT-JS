@@ -84,18 +84,9 @@ function fitLines(
 /**
  * Extract clean formulation strength / dosage while ignoring raw inventory stock strings.
  */
-function extractCleanDosage(rawDosage: string | undefined, productName: string): string {
-  const decoded = decodeHtmlEntities(rawDosage);
-  if (
-    !decoded ||
-    decoded.toLowerCase().includes("available") ||
-    decoded.toLowerCase().includes("unit") ||
-    decoded.toLowerCase().includes("contact for")
-  ) {
-    const strengthMatch = productName.match(/(\d+(?:\.\d+)?\s*(?:gm|g|mg|mcg|ml|%)\b(?:\s*(?:\/|\+)\s*\d+(?:\.\d+)?\s*(?:gm|g|mg|mcg|ml|%))?)/i);
-    return strengthMatch ? strengthMatch[0] : "Standard Strength";
-  }
-  return decoded;
+function strengthAndPack(product: Product): string {
+  const strength = product.strengthVariants?.join(", ") || product.dosage;
+  return [strength, product.packagingOptions?.join(", ")].filter(Boolean).join(" / ") || "Details on request";
 }
 
 /**
@@ -464,24 +455,20 @@ async function drawProductSheet(doc: jsPDF, product: Product) {
 
   const name = decodeHtmlEntities(product.name);
   const category = decodeHtmlEntities(product.category) || "Pharmaceutical Formulation";
-  const rawDosage = decodeHtmlEntities(product.dosage);
-  const dosage =
-    !rawDosage || /available|unit|contact for/i.test(rawDosage)
-      ? extractCleanDosage(rawDosage, name).replace("Standard Strength", "As directed by physician")
-      : rawDosage;
+  const dosage = strengthAndPack(product);
 
   const composition = decodeHtmlEntities(product.composition);
   const description = decodeHtmlEntities(product.detailedDescription || product.description);
   const indications = decodeHtmlEntities(product.indications);
   const dosageInstructions = realText(
-    decodeHtmlEntities(product.dosageInstructions || product.dosage)
+    decodeHtmlEntities(product.dosageInstructions)
   );
   const precautions = decodeHtmlEntities(product.precautions);
   const sideEffects = decodeHtmlEntities(product.sideEffects);
   const storage =
     decodeHtmlEntities(product.storageConditions) ||
-    "Store below 25°C in a dry place. Protect from light.";
-  const shelfLife = decodeHtmlEntities(product.shelfLife) || "24 - 36 Months from MFG Date";
+    "Refer to product label";
+  const shelfLife = decodeHtmlEntities(product.shelfLife) || "Refer to product label";
   const dateFormatted = new Date().toLocaleDateString("en-IN", {
     year: "numeric",
     month: "long",
@@ -1431,7 +1418,7 @@ async function drawCatalogueProductPage(
 ) {
   const name = decodeHtmlEntities(product.name);
   const category = decodeHtmlEntities(product.category) || "Pharmaceutical Formulation";
-  const dosage = extractCleanDosage(product.dosage, name);
+  const dosage = strengthAndPack(product);
   const rawComposition = decodeHtmlEntities(product.composition);
   const composition = isGenericPlaceholder(rawComposition)
     ? "Detailed active ingredient formula available upon request / printed on product packaging."
@@ -1441,12 +1428,12 @@ async function drawCatalogueProductPage(
   const indications = isGenericPlaceholder(rawIndications)
     ? "For therapeutic use as directed by a registered medical practitioner."
     : rawIndications;
-  const dosageText = realText(decodeHtmlEntities(product.dosageInstructions || product.dosage));
+  const dosageText = realText(decodeHtmlEntities(product.dosageInstructions));
   const precautions = decodeHtmlEntities(product.precautions);
   const rawSideEffects = decodeHtmlEntities(product.sideEffects);
   const sideEffects = isGenericPlaceholder(rawSideEffects) ? "" : rawSideEffects;
-  const storage = decodeHtmlEntities(product.storageConditions) || "Store below 25°C, dry place";
-  const shelfLife = decodeHtmlEntities(product.shelfLife) || "24 - 36 Months";
+  const storage = decodeHtmlEntities(product.storageConditions) || "Refer to product label";
+  const shelfLife = decodeHtmlEntities(product.shelfLife) || "Refer to product label";
 
   const productUrl = `${SITE_ORIGIN}${getProductPath(product)}`;
   const enquiryUrl = `${SITE_ORIGIN}/contact?product=${encodeURIComponent(name)}&request=enquiry#contact-form`;

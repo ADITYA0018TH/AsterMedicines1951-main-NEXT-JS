@@ -20,6 +20,10 @@ type ProductRecord = {
   description: string;
   category: string;
   stock?: number;
+  strengthVariants?: string[];
+  packagingOptions?: string[];
+  storageConditions?: string;
+  shelfLife?: string;
   featured?: boolean;
   images: string[];
   price: number;
@@ -52,7 +56,11 @@ function buildProduct(product: ProductRecord, slug: string): Product {
     name: product.name,
     description: product.description,
     category: product.category,
-    dosage: stock ? `${stock} ${stock === 1 ? 'unit' : 'units'} available` : 'Contact for availability',
+    dosage: product.strengthVariants?.join(', ') || '',
+    strengthVariants: product.strengthVariants,
+    packagingOptions: product.packagingOptions,
+    storageConditions: product.storageConditions,
+    shelfLife: product.shelfLife,
     features: [
       `Price: ₹${product.price}`,
       `Category: ${product.category}`,
@@ -376,7 +384,7 @@ export async function getRelatedProducts(category: string, currentProductId: str
           name: record.name,
           description: record.description,
           category: record.category,
-          dosage: record.stock ? `${record.stock} units` : 'Contact',
+          dosage: product.strengthVariants?.join(', ') || '',
           features: [], // Minimal data for card
           images: record.images,
           price: record.price,

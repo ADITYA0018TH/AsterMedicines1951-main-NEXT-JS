@@ -411,8 +411,8 @@ const ProductsContent = () => {
 
                                                     <div className="flex items-center gap-3 pt-3 border-t border-border/40">
                                                         <div className="flex flex-col">
-                                                            <span className="text-[10px] uppercase text-muted-foreground font-mono">Dosage</span>
-                                                            <span className="text-xs font-semibold">{product.dosage}</span>
+                                                            <span className="text-[10px] uppercase text-muted-foreground font-mono">Strength / presentation</span>
+                                                            <span className="text-xs font-semibold">{product.dosage || 'Details on request'}</span>
                                                         </div>
                                                         <div className="w-px h-6 bg-border/60" />
                                                         <div className="flex gap-1 flex-wrap">

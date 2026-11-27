@@ -223,7 +223,7 @@ export const products: Product[] = [
     name: "Lignocaine Hydrochloride Injection I.P. (ALCAINE)",
     category: "Anesthetics",
     description: "Local anesthetic injection for regional anesthesia and pain management",
-    dosage: "30ml vial",
+    dosage: "2% / 30 mL vial",
     features: ["Local Anesthetic", "Regional Anesthesia", "Pain Management", "Hospital Grade"],
     images: ["https://res.cloudinary.com/diszdorz0/image/upload/v1770127435/aster-medicines/products/ALCAINE_INJ.webp"],
     detailedDescription: "Lignocaine is a local anesthetic used for regional anesthesia, infiltration anesthesia, and management of ventricular arrhythmias.",
