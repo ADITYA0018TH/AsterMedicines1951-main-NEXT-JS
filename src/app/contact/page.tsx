@@ -5,7 +5,7 @@ import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
     title: "Contact Aster Medicines Pvt Ltd | Govind Mitra Road Patna & Hajipur Factory, Bihar",
-    description: "Contact Aster Medicines Pvt Ltd: Registered Office — North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Factory — Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844102. Phone: +91-9934006655, +91-7909071165. Email: accounts@astermedicines.com. For Third Party Manufacturing, PCD Pharma Franchise, Government Tenders, and bulk orders.",
+    description: "Contact Aster Medicines Pvt Ltd: Registered Office — North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Factory — Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844101. Phone: +91-9934006655, +91-7909071165. Email: accounts@astermedicines.com. For Third Party Manufacturing, PCD Pharma Franchise, Government Tenders, and bulk orders.",
     keywords: [
         "Contact Aster Medicines",
         "Aster Medicines Phone Number",

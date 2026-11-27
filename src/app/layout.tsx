@@ -110,7 +110,7 @@ export const metadata: Metadata = {
     "ICBM": "25.6888, 85.2166",
     "business:contact_data:street_address": "Plot No E/4, Industrial Area",
     "business:contact_data:locality": "Hajipur",
-    "business:contact_data:postal_code": "844102",
+    "business:contact_data:postal_code": "844101",
     "business:contact_data:country_name": "India",
     "business:contact_data:phone_number": "+91-9934006655",
     "business:contact_data:email": "accounts@astermedicines.com",

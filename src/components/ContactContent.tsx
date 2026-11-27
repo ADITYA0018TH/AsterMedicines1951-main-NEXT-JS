@@ -157,7 +157,7 @@ const ContactContent = ({ initialSubject = "" }: { initialSubject?: string }) =>
                                 }, {
                                     icon: <MapPin className="w-5 h-5" />,
                                     label: "Visit HQ",
-                                    value: "E-4 Part, Phase-2, Industrial Area, Hajipur, Vaishali, Bihar-844102",
+                                    value: "E-4 Part, Phase-2, Industrial Area, Hajipur, Vaishali, Bihar-844101",
                                     color: "bg-red-500/10 text-red-600 dark:text-red-400"
                                 }, {
                                     icon: <Clock className="w-5 h-5" />,

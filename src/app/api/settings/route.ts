@@ -83,7 +83,7 @@ const settingsUpdateSchema = z.object({
 export async function GET() {
   try {
     await connectDB();
-    
+
     // Find the single settings document
     let settings = await Settings.findOne();
 
@@ -91,20 +91,20 @@ export async function GET() {
     if (!settings) {
       settings = await Settings.create({
         contact: {
-            phone: "+91 7909071165",
-            email: "astermedicinespvtltd@gmail.com",
-            address: "E-4 Part, Phase-2, Industrial Area, Hajipur, Vaishali, Bihar-844102",
-            mapLink: "https://maps.app.goo.gl/hQDTvWxUv5rqNafW7",
-            supportEmail: "accounts@astermedicines.com",
-            hrEmail: "hr@astermedicines.com"
+          phone: "+91 7909071165",
+          email: "astermedicinespvtltd@gmail.com",
+          address: "E-4 Part, Phase-2, Industrial Area, Hajipur, Vaishali, Bihar-844101",
+          mapLink: "https://maps.app.goo.gl/hQDTvWxUv5rqNafW7",
+          supportEmail: "accounts@astermedicines.com",
+          hrEmail: "hr@astermedicines.com"
         },
         social: {
-            instagram: "https://www.instagram.com/aster_medicines?igsh=MTRwODV4bXJwM3BtMg==",
-            youtube: "https://www.youtube.com/@astermedicines13"
+          instagram: "https://www.instagram.com/aster_medicines?igsh=MTRwODV4bXJwM3BtMg==",
+          youtube: "https://www.youtube.com/@astermedicines13"
         },
         meta: {
-            title: "Aster Medicines - Pharmaceutical Manufacturer",
-            description: "Advancing global health with high-quality pharmaceutical solutions. Trusted since 1982."
+          title: "Aster Medicines - Pharmaceutical Manufacturer",
+          description: "Advancing global health with high-quality pharmaceutical solutions. Trusted since 1982."
         }
       });
     }
@@ -134,9 +134,9 @@ export async function PUT(req: NextRequest) {
 
     // Update the single settings document (upsert ensures it's created if missing, though GET handles creation mainly)
     const settings = await Settings.findOneAndUpdate({}, { $set: parsedBody.data }, {
-      new: true, 
+      new: true,
       upsert: true,
-      setDefaultsOnInsert: true 
+      setDefaultsOnInsert: true
     });
 
     return NextResponse.json(settings);

@@ -4,7 +4,7 @@ import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
     title: "About Aster Medicines Pvt Ltd (Private Limited) | GMP CERTIFIED Pharma Company in Bihar Since 1982",
-    description: "Aster Medicines Pvt Ltd (CIN: U24230BR2008PTC013937), established in 1982 by Late Mr. Raj Kumar. Managed by MD Rupesh Anand. WHO-GMP & ISO 9001:2015 certified pharmaceutical manufacturer. Registered office at Govind Mitra Road, Patna 800004. Manufacturing plant at Industrial Area E/4, Hajipur, Vaishali, Bihar 844102. Specializing in Beta-Lactam & Non-Beta Lactam Injections, Syrups, and Baby Care Products.",
+    description: "Aster Medicines Pvt Ltd (CIN: U24230BR2008PTC013937), established in 1982 by Late Mr. Raj Kumar. Managed by MD Rupesh Anand. WHO-GMP & ISO 9001:2015 certified pharmaceutical manufacturer. Registered office at Govind Mitra Road, Patna 800004. Manufacturing plant at Industrial Area E/4, Hajipur, Vaishali, Bihar 844101. Specializing in Beta-Lactam & Non-Beta Lactam Injections, Syrups, and Baby Care Products.",
     keywords: [
         "About Aster Medicines",
         "Aster Medicines Pvt Ltd history",

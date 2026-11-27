@@ -72,7 +72,7 @@ export const generateOrganizationData = (products: any[], categories: string[]) 
       "streetAddress": "Plot No E/4, Industrial Area",
       "addressLocality": "Hajipur",
       "addressRegion": "Bihar",
-      "postalCode": "844102",
+      "postalCode": "844101",
       "addressCountry": "IN"
     }
   ],
@@ -312,7 +312,7 @@ export const faqStructuredData = {
       "name": "Where is Aster Medicines located?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Aster Medicines has two locations in Bihar, India. Our registered office is at North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Our GMP CERTIFIED manufacturing plant is at Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844102."
+        "text": "Aster Medicines has two locations in Bihar, India. Our registered office is at North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna 800004. Our GMP CERTIFIED manufacturing plant is at Plot No E/4, Industrial Area, Hajipur, Vaishali, Bihar 844101."
       }
     },
     {
@@ -344,7 +344,7 @@ export const faqStructuredData = {
       "name": "How to contact Aster Medicines?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You can contact Aster Medicines through: Phone: +91-9934006655 or +91-7909071165, Email: accounts@astermedicines.com or astermedicinespvtltd@gmail.com, Visit our registered office at Govind Mitra Road, Patna, Bihar 800004, or factory at Industrial Area E/4, Hajipur, Bihar 844102. You can also reach us through our website at https://astermedicines.com/contact."
+        "text": "You can contact Aster Medicines through: Phone: +91-9934006655 or +91-7909071165, Email: accounts@astermedicines.com or astermedicinespvtltd@gmail.com, Visit our registered office at Govind Mitra Road, Patna, Bihar 800004, or factory at Industrial Area E/4, Hajipur, Bihar 844101. You can also reach us through our website at https://astermedicines.com/contact."
       }
     },
     {
@@ -409,7 +409,7 @@ export const localBusinessStructuredData = {
     "streetAddress": "Plot No E/4, Industrial Area",
     "addressLocality": "Hajipur",
     "addressRegion": "Bihar",
-    "postalCode": "844102",
+    "postalCode": "844101",
     "addressCountry": "IN"
   },
   "geo": {
