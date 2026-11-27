@@ -17,7 +17,7 @@ export default function Footer({ setCursorVariant = () => { } }: FooterProps) {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const { settings } = useSettings();
   const contact = settings.contact;
-  const phone = contact.phone || "+91 9934006655";
+  const phone = contact.phone || "+91 7909071165";
   const rows = [{ label: "phone", value: phone, href: "tel:" + phone.replace(/[^\d+]/g, "") }];
   for (const [role, address] of [
     ["enquiries", contact.email || "accounts@astermedicines.com"],

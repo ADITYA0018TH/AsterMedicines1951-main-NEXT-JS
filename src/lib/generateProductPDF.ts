@@ -9,7 +9,7 @@ const COMPANY_CONTACT = {
   cin: "U24230BR2008PTC013937",
   office: "North of Janta Hotel, 1st Floor, Govind Mitra Road, Patna - 800004",
   factory: "Plot No. E/4, Industrial Area, Hajipur, Vaishali, Bihar - 844102",
-  phone: "+91 9934006655",
+  phone: "+91 7909071165",
   email: "accounts@astermedicines.com",
   web: "www.astermedicines.com",
   // Specification sheet par pehle se yahi alag email / order desk number use hote the
